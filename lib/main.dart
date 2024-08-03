@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/clients/env_loader.dart';
 import 'package:frontend/home.dart';
 
-void main() {
+void main() async {
+  await EnvLoader().load("L:\\MyProjects\\Ncrypt\\backend\\.env");
   runApp(const MyApp());
 }
 
