@@ -38,6 +38,6 @@ class _MasterPasswordPageState extends State<MasterPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    return _selectedWidget;
+    return Scaffold(body: _selectedWidget,);
   }
 }
