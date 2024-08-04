@@ -40,28 +40,36 @@ class _AddLoginDataState extends State<AddLoginData> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-          child: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            TextFormField(
-              controller: _nameController,
-              decoration: InputDecoration(hintText: "Name"),
-              maxLength: 16,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Name cannot be empty';
-                }
-              },
-            ),
-            TextFormField(
-              controller: _urlController,
-              decoration: InputDecoration(hintText: "URL", icon: Icon(Icons.link)),
-            ),
-            ListTile(
-              leading: _isFavourite
-                  ? IconButton(
+      appBar: AppBar(
+        leading: BackButton(),
+        title: Text("Add login data"),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Form(
+                key: _formKey,
+                child: Column(
+        children: [
+          TextFormField(
+            controller: _nameController,
+            decoration: InputDecoration(hintText: "Name", icon: Icon(Icons.person)),
+            maxLength: 16,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Name cannot be empty';
+              }
+            },
+          ),
+          TextFormField(
+            controller: _urlController,
+            decoration: InputDecoration(hintText: "URL", icon: Icon(Icons.link)),
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: ListTile(
+                  leading: _isFavourite
+                      ? IconButton(
                       onPressed: () {
                         setState(() {
                           _isFavourite = !_isFavourite;
@@ -71,18 +79,20 @@ class _AddLoginDataState extends State<AddLoginData> {
                         Icons.favorite,
                         color: Colors.red,
                       ))
-                  : IconButton(
+                      : IconButton(
                       onPressed: () {
                         setState(() {
                           _isFavourite = !_isFavourite;
                         });
                       },
                       icon: Icon(Icons.heart_broken_outlined)),
-              title: Text("Favourite"),
-            ),
-            ListTile(
-              leading: _requireMasterPassword
-                  ? IconButton(
+                  title: Text("Favourite"),
+                ),
+              ),
+              Expanded(
+                child: ListTile(
+                  leading: _requireMasterPassword
+                      ? IconButton(
                       onPressed: () {
                         setState(() {
                           _requireMasterPassword = !_requireMasterPassword;
@@ -92,107 +102,111 @@ class _AddLoginDataState extends State<AddLoginData> {
                         Icons.lock_rounded,
                         color: Colors.red,
                       ))
-                  : IconButton(
+                      : IconButton(
                       onPressed: () {
                         setState(() {
                           _requireMasterPassword = !_requireMasterPassword;
                         });
                       },
                       icon: Icon(Icons.key_off)),
-              title: Text("Require master password"),
-            ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: () {
-                  setState(() {
-                    _accountList.add(Account.empty());
-                  });
-                },
-                child: Text("Add account"),
+                  title: Text("Require master password"),
+                ),
               ),
+            ],
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton(
+              onPressed: () {
+                setState(() {
+                  _accountList.add(Account.empty());
+                });
+              },
+              child: Text("Add account"),
             ),
-            Flexible(
-              child: ListView.builder(
-                  // shrinkWrap: true,
-                  itemCount: _accountList.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ListTile(
-                                leading: Icon(Icons.person),
-                                title: TextFormField(
-                                  initialValue: _accountList[index].username,
-                                  decoration: InputDecoration(
-                                    hintText: "Username",
-                                  ),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _accountList[index].username = value;
-                                    });
-                                  },
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Username cannot be empty';
-                                    }
-                                  },
+          ),
+          Flexible(
+            child: ListView.builder(
+                // shrinkWrap: true,
+                itemCount: _accountList.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ListTile(
+                              leading: Icon(Icons.person),
+                              title: TextFormField(
+                                initialValue: _accountList[index].username,
+                                decoration: InputDecoration(
+                                  hintText: "Username",
                                 ),
+                                onChanged: (value) {
+                                  setState(() {
+                                    _accountList[index].username = value;
+                                  });
+                                },
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Username cannot be empty';
+                                  }
+                                },
                               ),
                             ),
                           ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ListTile(
-                                leading: Icon(Icons.password),
-                                title: TextFormField(
-                                  initialValue: _accountList[index].password,
-                                  obscureText: true,
-                                  decoration:
-                                      InputDecoration(hintText: "Password"),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _accountList[index].password = value;
-                                    });
-                                  },
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Password cannot be empty';
-                                    }
-                                  },
-                                ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ListTile(
+                              leading: Icon(Icons.password),
+                              title: TextFormField(
+                                initialValue: _accountList[index].password,
+                                obscureText: true,
+                                decoration:
+                                    InputDecoration(hintText: "Password"),
+                                onChanged: (value) {
+                                  setState(() {
+                                    _accountList[index].password = value;
+                                  });
+                                },
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Password cannot be empty';
+                                  }
+                                },
                               ),
                             ),
                           ),
-                          IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  print(
-                                      "Deleting: ${_accountList[index].username} - ${_accountList[index].password}");
-                                  _accountList.removeAt(index);
-                                });
-                              },
-                              icon: Icon(Icons.delete))
-                        ],
-                      ),
-                    );
-                  }),
-            ),
-            TextButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    addLoginData();
-                  }
-                },
-                child: Text("Add"))
-          ],
-        ),
-      )),
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              setState(() {
+                                print(
+                                    "Deleting: ${_accountList[index].username} - ${_accountList[index].password}");
+                                _accountList.removeAt(index);
+                              });
+                            },
+                            icon: Icon(Icons.delete))
+                      ],
+                    ),
+                  );
+                }),
+          ),
+          TextButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  addLoginData();
+                }
+              },
+              child: Text("Add"))
+        ],
+                ),
+              ),
+      ),
     );
   }
 }
