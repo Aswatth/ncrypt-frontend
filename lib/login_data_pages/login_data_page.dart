@@ -88,12 +88,7 @@ class _LoginDataPageState extends State<LoginDataPage> {
                           )
                         : Icon(Icons.star_border),
                     title: Text(data.name),
-                    subtitle: GestureDetector(
-                      child: Text(data.url),
-                      onTap: () {
-                        print("URL: ${data.url}");
-                      },
-                    ),
+                    subtitle: Text(data.url),
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,

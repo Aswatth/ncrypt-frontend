@@ -14,16 +14,17 @@ class AddLoginData extends StatefulWidget {
 class _AddLoginDataState extends State<AddLoginData> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
+  final _urlController = TextEditingController();
   bool _isFavourite = false;
   bool _requireMasterPassword = false;
 
-  List<Account> _accountList = [];
+  final List<Account> _accountList = [];
 
   void addLoginData() {
     LoginDataClient client = LoginDataClient();
     client.addLoginData(LoginData(
         name: _nameController.text,
-        url: "",
+        url: _urlController.text,
         attributes: Attributes(
             isFavourite: _isFavourite,
             requireMasterPassword: _requireMasterPassword),
@@ -53,6 +54,10 @@ class _AddLoginDataState extends State<AddLoginData> {
                   return 'Name cannot be empty';
                 }
               },
+            ),
+            TextFormField(
+              controller: _urlController,
+              decoration: InputDecoration(hintText: "URL", icon: Icon(Icons.link)),
             ),
             ListTile(
               leading: _isFavourite
