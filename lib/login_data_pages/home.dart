@@ -45,6 +45,9 @@ class _HomePageState extends State<HomePage> {
                 ListTile(
                   leading: Icon(Icons.logout),
                   title: Text("Logout"),
+                  onTap: (){
+                    Navigator.of(context).pop();
+                  },
                 ),
               ],
             ),
