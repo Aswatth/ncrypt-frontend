@@ -40,33 +40,35 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: Form(
-      key: _formKey,
-      child: Column(
-        children: [
-          TextFormField(
-            controller: _passwordController,
-            obscureText: true,
-            decoration: InputDecoration(hintText: "Enter master password"),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter password';
-              }
-            },
-          ),
-          TextButton(
-            onPressed: () {
-              if (_formKey.currentState?.validate() == false) {
-                //do nothing
-              } else {
-                login();
-              }
-            },
-            child: Text("Set password"),
-          ),
-        ],
-      ),
-    ));
+    return Scaffold(
+      body: Container(
+          child: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            TextFormField(
+              controller: _passwordController,
+              obscureText: true,
+              decoration: InputDecoration(hintText: "Enter master password"),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter password';
+                }
+              },
+            ),
+            TextButton(
+              onPressed: () {
+                if (_formKey.currentState?.validate() == false) {
+                  //do nothing
+                } else {
+                  login();
+                }
+              },
+              child: Text("Set password"),
+            ),
+          ],
+        ),
+      )),
+    );
   }
 }
