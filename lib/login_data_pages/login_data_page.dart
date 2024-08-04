@@ -70,7 +70,9 @@ class _LoginDataPageState extends State<LoginDataPage> {
             ),
             onChanged: (value) {
               setState(() {
-                _filteredDataList = _loginDataList.where((m) => m.name.startsWith(value)).toList();
+                _filteredDataList = _loginDataList
+                    .where((m) => m.name.startsWith(value))
+                    .toList();
               });
             },
           ),
@@ -91,48 +93,77 @@ class _LoginDataPageState extends State<LoginDataPage> {
                     subtitle: Text(data.url),
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          IconButton(onPressed: () {}, icon: Icon(Icons.edit)),
-                          IconButton(
-                              onPressed: () {
-                                client.deleteLoginData(data.name).then((value) {
-                                  if (value is String && value.isEmpty) {
-                                    setState(() {
-                                      _loginDataList.removeAt(index);
-                                    });
-                                    showSnackBar(data.name + " deleted!");
-                                  } else {
-                                    showSnackBar(value);
-                                  }
-                                });
-                              },
-                              icon: Icon(Icons.delete)),
+                          ElevatedButton.icon(
+                            onPressed: () {},
+                            label: Text("Edit"),
+                            iconAlignment: IconAlignment.start,
+                            icon: Icon(Icons.edit),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green,
+                              foregroundColor: Colors.white,
+                            ),
+                          ),
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              client.deleteLoginData(data.name).then((value) {
+                                if (value is String && value.isEmpty) {
+                                  setState(() {
+                                    _loginDataList.removeAt(index);
+                                  });
+                                  showSnackBar(data.name + " deleted!");
+                                } else {
+                                  showSnackBar(value);
+                                }
+                              });
+                            },
+                            label: Text("Delete"),
+                            iconAlignment: IconAlignment.start,
+                            icon: Icon(Icons.delete),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              foregroundColor: Colors.white,
+                            ),
+                          ),
                         ],
                       ),
                       Column(
                         children: data.accounts.map((m) {
-                          return Column(
+                          return Row(
                             children: [
-                              ListTile(
-                                leading: IconButton(
-                                  icon: Icon(Icons.copy),
-                                  onPressed: () async {
-                                    await Clipboard.setData(
-                                        ClipboardData(text: m.username!));
-                                  },
+                              Expanded(
+                                child: ListTile(
+                                  leading: Icon(Icons.person),
+                                  title: Text(m.username!),
+                                  trailing: IconButton(
+                                    icon: Icon(Icons.copy),
+                                    onPressed: () async {
+                                      await Clipboard.setData(
+                                          ClipboardData(text: m.username!));
+                                    },
+                                  ),
                                 ),
-                                title: Text("Username:" + m.username!),
                               ),
-                              ListTile(
-                                leading: IconButton(
-                                  icon: Icon(Icons.copy),
-                                  onPressed: () async {
-                                    await Clipboard.setData(
-                                        ClipboardData(text: m.password!));
-                                  },
+                              Expanded(
+                                child: ListTile(
+                                  leading: Icon(Icons.password),
+                                  title: Text(m.password!),
+                                  trailing: IconButton(
+                                    icon: Icon(Icons.copy),
+                                    onPressed: () async {
+                                      client.getDecryptedPassword(data.name, m.username!).then((value) async {
+                                        if(value is String && value.isNotEmpty) {
+                                          showSnackBar("Copied decrypted password to clipboard");
+                                        }
+                                        await Clipboard.setData(
+                                            ClipboardData(text: value));
+                                      });
+
+                                    },
+                                  ),
+
                                 ),
-                                title: Text("Password: " + m.password!),
                               ),
                               Divider()
                             ],

@@ -52,4 +52,17 @@ class LoginDataClient {
       return json;
     }
   }
+
+  Future<dynamic> getDecryptedPassword(String name, String username) async {
+    var url = Uri.http("localhost:${EnvLoader().PORT}", "/login/$name", {"username": username});
+
+    var response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      return convert.jsonDecode(response.body) as String;
+    } else {
+      var json = convert.jsonDecode(response.body);
+      return json;
+    }
+  }
 }
