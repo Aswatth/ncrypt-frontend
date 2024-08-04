@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/login_data_pages/login_data_page.dart';
 
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -10,6 +9,26 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late List<Widget> _optionList;
+
+  @override
+  void initState() {
+    super.initState();
+    _optionList = [
+      ListTile(leading: Icon(Icons.security), title: Text("Login Credentials")),
+      ListTile(leading: Icon(Icons.upload), title: Text("Import")),
+      ListTile(leading: Icon(Icons.download), title: Text("Export")),
+      ListTile(leading: Icon(Icons.settings), title: Text("Settings")),
+      ListTile(
+        leading: Icon(Icons.logout),
+        title: Text("Log out"),
+        onTap: () {
+          Navigator.of(context).pop();
+        },
+      ),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +37,9 @@ class _HomePageState extends State<HomePage> {
         children: [
           SizedBox(
             // color: Colors.deepPurple,
-            width: MediaQuery.sizeOf(context).width * 0.25 > 400 ? MediaQuery.sizeOf(context).width * 0.25 : 400,
+            width: MediaQuery.sizeOf(context).width * 0.25 > 400
+                ? MediaQuery.sizeOf(context).width * 0.25
+                : 400,
             // color: Colors.deepPurple,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -28,27 +49,19 @@ class _HomePageState extends State<HomePage> {
                     color: Colors.black,
                     child: Padding(
                       padding: EdgeInsets.all(50.0),
-                      child: Center(child: Text("Ncrypt", style: TextStyle(color: Colors.greenAccent, fontSize: 50),)),
+                      child: Center(
+                          child: Text(
+                        "Ncrypt",
+                        style:
+                            TextStyle(color: Colors.greenAccent, fontSize: 50),
+                      )),
                     )),
-                ListTile(
-                  leading: Icon(Icons.star),
-                  title: Text("Favourites"),
-                ),
-                ListTile(
-                  leading: Icon(Icons.lock),
-                  title: Text("Login"),
-                ),
-                ListTile(
-                  leading: Icon(Icons.note),
-                  title: Text("Note"),
-                ),
-                ListTile(
-                  leading: Icon(Icons.logout),
-                  title: Text("Logout"),
-                  onTap: (){
-                    Navigator.of(context).pop();
-                  },
-                ),
+                ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: _optionList.length,
+                    itemBuilder: (context, index) {
+                      return _optionList[index];
+                    })
               ],
             ),
           ),
