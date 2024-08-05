@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/clients/login_data_client.dart';
+import 'package:frontend/custom_snack_bar/custom_snackbar.dart';
+import 'package:frontend/custom_snack_bar/status.dart';
 import 'package:frontend/models/attributes.dart';
 import 'package:frontend/models/login.dart';
 import 'package:frontend/models/login_account.dart';
@@ -30,9 +32,10 @@ class _AddLoginDataState extends State<AddLoginData> {
             requireMasterPassword: _requireMasterPassword),
         accounts: _accountList)).then((value) {
           if(value is String && value.isEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(status: Status.success, content: "Successfully added!",).show());
             Navigator.of(context).pop();
           } else {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value)));
+            ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(status: Status.error, content: value,).show());
           }
     });
   }
