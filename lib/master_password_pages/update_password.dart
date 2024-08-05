@@ -7,7 +7,8 @@ class UpdateMasterPasswordPage extends StatefulWidget {
   const UpdateMasterPasswordPage({super.key});
 
   @override
-  State<UpdateMasterPasswordPage> createState() => _UpdateMasterPasswordPageState();
+  State<UpdateMasterPasswordPage> createState() =>
+      _UpdateMasterPasswordPageState();
 }
 
 class _UpdateMasterPasswordPageState extends State<UpdateMasterPasswordPage> {
@@ -16,12 +17,20 @@ class _UpdateMasterPasswordPageState extends State<UpdateMasterPasswordPage> {
   final _confirmPasswordController = TextEditingController();
 
   void updateMasterPassword() {
-    MasterPasswordClient().updateMasterPassword(_passwordController.text).then((value) {
-      if(value.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(status: Status.success, content: "Successfully updated!",).show());
+    MasterPasswordClient()
+        .updateMasterPassword(_passwordController.text)
+        .then((value) {
+      if (value.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(
+          status: Status.success,
+          content: "Successfully updated!",
+        ).show());
         Navigator.of(context).pop();
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(status: Status.error, content: value,).show());
+        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(
+          status: Status.error,
+          content: value,
+        ).show());
       }
     });
   }
@@ -40,16 +49,15 @@ class _UpdateMasterPasswordPageState extends State<UpdateMasterPasswordPage> {
                   TextFormField(
                     controller: _passwordController,
                     obscureText: true,
-                    decoration: InputDecoration(
-                        hintText: "Enter new master password"),
+                    decoration:
+                        InputDecoration(hintText: "Enter new master password"),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "Password cannot be empty";
                       }
                       RegExp digitRegex = RegExp(r'\d');
                       RegExp uppercaseRegex = RegExp(r'[A-Z]');
-                      RegExp specialCharRegex =
-                      RegExp(r'[!@#$%^&*]');
+                      RegExp specialCharRegex = RegExp(r'[!@#$%^&*]');
 
                       if (!value.contains(digitRegex)) {
                         return "Must contain at least one digit";
@@ -63,8 +71,7 @@ class _UpdateMasterPasswordPageState extends State<UpdateMasterPasswordPage> {
                         return "Must contain at least one special character";
                       }
 
-                      if (!(value.length >= 8 &&
-                          value.length <= 16)) {
+                      if (!(value.length >= 8 && value.length <= 16)) {
                         return "Must be of length between 8-16";
                       }
                       return null;
@@ -74,8 +81,7 @@ class _UpdateMasterPasswordPageState extends State<UpdateMasterPasswordPage> {
                     controller: _confirmPasswordController,
                     obscureText: true,
                     decoration: InputDecoration(
-                        hintText:
-                        "Confirm new master password"),
+                        hintText: "Confirm new master password"),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "Password cannot be empty";
@@ -87,20 +93,24 @@ class _UpdateMasterPasswordPageState extends State<UpdateMasterPasswordPage> {
                       return null;
                     },
                   ),
+                  const SizedBox(
+                    height: 20.0,
+                  ),
+                  SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            updateMasterPassword();
+                          }
+                        },
+                        child: Text(
+                          "Update".toUpperCase(),
+                        ),
+                      ))
                 ],
               ),
             )),
-        SimpleDialogOption(
-          child: SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                  onPressed: () {
-                    if(_formKey.currentState!.validate()) {
-                      updateMasterPassword();
-                    }
-                  },
-                  child: Text("Update".toUpperCase()))),
-        )
       ],
     );
   }
