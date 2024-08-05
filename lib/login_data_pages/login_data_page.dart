@@ -47,6 +47,22 @@ class _LoginDataPageState extends State<LoginDataPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: TextFormField(
+          decoration: InputDecoration(
+            hintText: "Search",
+            icon: Icon(Icons.search),
+          ),
+          onChanged: (value) {
+            setState(() {
+              _filteredDataList = _loginDataList
+                  .where((m) => m.name.toLowerCase().startsWith(value.toLowerCase()))
+                  .toList();
+            });
+          },
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context)
@@ -63,20 +79,6 @@ class _LoginDataPageState extends State<LoginDataPage> {
       ),
       body: Column(
         children: [
-          TextFormField(
-            decoration: InputDecoration(
-              hintText: "Search",
-              icon: Icon(Icons.search),
-            ),
-            onChanged: (value) {
-              setState(() {
-                _filteredDataList = _loginDataList
-                    .where((m) => m.name.startsWith(value))
-                    .toList();
-              });
-            },
-          ),
-          // TextButton(onPressed: () {}, child: Text("Add login data")),
           ListView.builder(
               shrinkWrap: true,
               itemCount: _filteredDataList.length,
