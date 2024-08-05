@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/clients/master_password_client.dart';
-import 'package:frontend/login_data_pages/home.dart';
+import 'package:frontend/home.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/clients/env_loader.dart';
 import 'package:frontend/home.dart';
+import 'package:frontend/master_password_pages/main.dart';
 
 void main() async {
   await EnvLoader().load("L:\\MyProjects\\Ncrypt\\backend\\.env");
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       title: 'Ncrypt',
       // home: MyHomePage(title: 'Ncrypt'),
-      home: HomePage()
+      home: MasterPasswordPage()
     );
   }
 }
