@@ -17,6 +17,20 @@ class MasterPasswordClient {
     }
   }
 
+  Future<String> updateMasterPassword(String password) async {
+    var url = Uri.http("localhost:${EnvLoader().PORT}", "/master_password");
+
+    String jsonString = convert.jsonEncode({"master_password": password});
+    var response = await http.put(url,body: jsonString);
+
+    if (response.statusCode == 200) {
+      return "";
+    } else {
+      var json = convert.jsonDecode(response.body) as String;
+      return json;
+    }
+  }
+
   Future<String> login(String password) async {
     var url = Uri.http("localhost:${EnvLoader().PORT}", "/master_password/validate");
 
