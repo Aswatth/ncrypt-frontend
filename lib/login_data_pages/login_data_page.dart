@@ -4,9 +4,8 @@ import 'package:frontend/clients/login_data_client.dart';
 import 'package:frontend/custom_snack_bar/custom_snackbar.dart';
 import 'package:frontend/custom_snack_bar/status.dart';
 import 'package:frontend/login_data_pages/add_login_data.dart';
-import 'package:frontend/models/attributes.dart';
+import 'package:frontend/login_data_pages/edit_login_data.dart';
 import 'package:frontend/models/login.dart';
-import 'package:frontend/models/login_account.dart';
 
 class LoginDataPage extends StatefulWidget {
   const LoginDataPage({super.key});
@@ -27,6 +26,13 @@ class _LoginDataPageState extends State<LoginDataPage> {
 
     client = LoginDataClient();
 
+    getAllLoginData();
+  }
+
+  @override
+  void didUpdateWidget(covariant LoginDataPage oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
     getAllLoginData();
   }
 
@@ -51,84 +57,55 @@ class _LoginDataPageState extends State<LoginDataPage> {
               Column(
                 children: [
                   Text.rich(TextSpan(children: [
-                    TextSpan(
-                        text:
-                        "Do you want to delete "),
+                    TextSpan(text: "Do you want to delete "),
                     TextSpan(
                         text: data.name,
-                        style: TextStyle(
-                            fontWeight:
-                            FontWeight.bold)),
+                        style: TextStyle(fontWeight: FontWeight.bold)),
                     TextSpan(text: " entirely?")
                   ])),
                   Padding(
-                    padding:
-                    const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: Row(
-                      mainAxisAlignment:
-                      MainAxisAlignment
-                          .spaceEvenly,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         ElevatedButton.icon(
                           onPressed: () {
-                            Navigator.of(context)
-                                .pop();
+                            Navigator.of(context).pop();
                           },
                           label: Text("No"),
-                          icon: Icon(Icons.close),
-                          style: ElevatedButton
-                              .styleFrom(
-                            backgroundColor:
-                            Colors.red,
-                            foregroundColor:
-                            Colors.white,
-                          ),
+                          // icon: Icon(Icons.close),
                         ),
                         ElevatedButton.icon(
-                          onPressed: () {
-                            client
-                                .deleteLoginData(
-                                data.name)
-                                .then((value) {
-                              if (value is String &&
-                                  value.isEmpty) {
-                                setState(() {
-                                  _loginDataList
-                                      .removeAt(
-                                      index);
-                                });
-                                Navigator.of(context)
-                                    .pop();
-                                ScaffoldMessenger.of(
-                                    context)
-                                    .showSnackBar(CustomSnackBar(
-                                    status: Status
-                                        .success,
-                                    content:
-                                    "Successfully deleted!")
-                                    .show());
-                              } else {
-                                ScaffoldMessenger.of(
-                                    context)
-                                    .showSnackBar(CustomSnackBar(
-                                    status: Status
-                                        .error,
-                                    content:
-                                    value)
-                                    .show());
-                              }
-                            });
-                          },
-                          label: Text("Yes"),
-                          icon: Icon(Icons.check),
-                          style: ElevatedButton
-                              .styleFrom(
-                            backgroundColor:
-                            Colors.green,
-                            foregroundColor:
-                            Colors.white,
-                          ),
-                        )
+                            onPressed: () {
+                              client.deleteLoginData(data.name).then((value) {
+                                if (value is String && value.isEmpty) {
+                                  setState(() {
+                                    _loginDataList.removeAt(index);
+                                  });
+                                  Navigator.of(context).pop();
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      CustomSnackBar(
+                                              status: Status.success,
+                                              content: "Successfully deleted!")
+                                          .show());
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      CustomSnackBar(
+                                              status: Status.error,
+                                              content: value)
+                                          .show());
+                                }
+                              });
+                            },
+                            label: Text("Yes"),
+                            // icon: Icon(Icons.check),
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.primary,
+                                iconColor:
+                                    Theme.of(context).colorScheme.surface,
+                                foregroundColor:
+                                    Theme.of(context).colorScheme.surface)),
                       ],
                     ),
                   )
@@ -194,14 +171,20 @@ class _LoginDataPageState extends State<LoginDataPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           ElevatedButton.icon(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      EditLoginDataPage(dataToEdit: data))).then((value){
+                                        getAllLoginData();
+                              });
+                            },
                             label: Text("Edit"),
                             iconAlignment: IconAlignment.start,
                             icon: Icon(Icons.edit),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.green,
-                              foregroundColor: Colors.white,
-                            ),
+                            // style: ElevatedButton.styleFrom(
+                            //   backgroundColor: Colors.green,
+                            //   foregroundColor: Colors.white,
+                            // ),
                           ),
                           ElevatedButton.icon(
                             onPressed: () {
@@ -210,10 +193,10 @@ class _LoginDataPageState extends State<LoginDataPage> {
                             label: Text("Delete"),
                             iconAlignment: IconAlignment.start,
                             icon: Icon(Icons.delete),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red,
-                              foregroundColor: Colors.white,
-                            ),
+                            // style: ElevatedButton.styleFrom(
+                            //   backgroundColor: Colors.red,
+                            //   foregroundColor: Colors.white,
+                            // ),
                           ),
                         ],
                       ),

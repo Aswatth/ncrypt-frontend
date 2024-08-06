@@ -39,6 +39,22 @@ class LoginDataClient {
     }
   }
 
+  Future<dynamic> updateLoginData(String name, LoginData data) async {
+    var url = Uri.http("localhost:${EnvLoader().PORT}", "/login/${name}");
+
+    String jsonString = convert.jsonEncode(data.toJson());
+
+    print(jsonString);
+    var response = await http.put(url, body: jsonString);
+
+    if (response.statusCode == 200) {
+      return "";
+    } else {
+      var json = convert.jsonDecode(response.body);
+      return json;
+    }
+  }
+
   Future<dynamic> deleteLoginData(String loginDataName) async {
     var url =
         Uri.http("localhost:${EnvLoader().PORT}", "/login/$loginDataName");
