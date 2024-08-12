@@ -14,7 +14,7 @@ class CustomSnackBar {
       case Status.success:
         return Icons.thumb_up_sharp;
       case Status.error:
-        return Icons.error;
+        return Icons.dangerous;
       case Status.warning:
         return Icons.warning;
     }
