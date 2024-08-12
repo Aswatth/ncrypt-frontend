@@ -105,6 +105,14 @@ class MyApp extends StatelessWidget {
           filled: true,
           fillColor: backgroundColor,
           labelStyle: TextStyle(color: textColor, fontSize: 16),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.0),
+            borderSide: BorderSide(color: secondaryColor, width: 1.0),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.0),
+            borderSide: BorderSide(color: secondaryColor, width: 1.0),
+          ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.0),
             borderSide: BorderSide(color: secondaryColor, width: 1.0),
