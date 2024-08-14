@@ -4,6 +4,7 @@ import 'package:frontend/clients/system_data_client.dart';
 import 'package:frontend/custom_snack_bar/custom_snackbar.dart';
 import 'package:frontend/custom_snack_bar/status.dart';
 import 'package:frontend/general_pages/home.dart';
+import 'package:frontend/general_pages/import.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -110,7 +111,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        print("clicked");
+                        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ImportPage(showBackButton: true,)));
                       },
                       child: MouseRegion(
                         cursor: SystemMouseCursors.click,

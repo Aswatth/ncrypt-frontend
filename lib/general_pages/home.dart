@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/general_pages/export.dart';
+import 'package:frontend/general_pages/import.dart';
 import 'package:frontend/general_pages/settings.dart';
 import 'package:frontend/login_data_pages/login_data_page.dart';
 
@@ -12,7 +14,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final List<IconData> _optionIconList = [Icons.security, Icons.note, Icons.upload, Icons.download, Icons.settings, Icons.logout];
   final List<String> _optionText = ["Login", "Notes", "Import", "Export", "Settings", "Logout"];
-  final List<Widget> _optionContent = [LoginDataPage(), Text("Notes"), Text("Import"), Text("Export"), SettingsPage()];
+  final List<Widget> _optionContent = [LoginDataPage(), Text("Notes"), ImportPage(showBackButton: false), ExportPage(), SettingsPage()];
   int _selectedIndex = 0;
 
   late HSLColor primaryHSL;

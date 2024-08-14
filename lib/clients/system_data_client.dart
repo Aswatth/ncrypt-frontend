@@ -45,4 +45,32 @@ class SystemDataClient {
       return json;
     }
   }
+
+  Future<dynamic> export(String path, String fileName) async {
+    var url = Uri.http("localhost:${EnvLoader().PORT}", "/system/export");
+
+    String jsonString = convert.jsonEncode({"file_name": fileName, "path": path});
+    var response = await http.post(url, body: jsonString,headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
+
+    if (response.statusCode == 200) {
+      return "";
+    } else {
+      var json = convert.jsonDecode(response.body) as String;
+      return json;
+    }
+  }
+
+  Future<dynamic> import(String path, String fileName, String password) async {
+    var url = Uri.http("localhost:${EnvLoader().PORT}", "/system/import");
+
+    String jsonString = convert.jsonEncode({"file_name": fileName, "path": path, "master_password": password});
+    var response = await http.post(url, body: jsonString);
+
+    if (response.statusCode == 200) {
+      return "";
+    } else {
+      var json = convert.jsonDecode(response.body) as String;
+      return json;
+    }
+  }
 }
