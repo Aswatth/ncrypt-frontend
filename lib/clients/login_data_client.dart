@@ -1,7 +1,6 @@
 import 'package:frontend/clients/env_loader.dart';
 import 'package:frontend/clients/system_data_client.dart';
 import 'package:frontend/models/login.dart';
-import 'package:frontend/models/login_account.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 
@@ -45,7 +44,7 @@ class LoginDataClient {
 
     String jsonString = convert.jsonEncode(data.toJson());
 
-    var response = await http.put(url, body: jsonString);
+    var response = await http.put(url, body: jsonString,headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
 
     if (response.statusCode == 200) {
       return "";
@@ -59,7 +58,7 @@ class LoginDataClient {
     var url =
         Uri.http("localhost:${EnvLoader().PORT}", "/login/$loginDataName");
 
-    var response = await http.delete(url);
+    var response = await http.delete(url,headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
 
     if (response.statusCode == 200) {
       return "";
