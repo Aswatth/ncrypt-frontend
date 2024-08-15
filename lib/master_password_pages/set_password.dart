@@ -254,7 +254,7 @@ class _SetPasswordState extends State<SetPassword> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ImportPage(showBackButton: true,)));
+                          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ImportPage(showBackButton: true,navigateToLogin: true,)));
                         },
                         child: MouseRegion(
                           cursor: SystemMouseCursors.click,

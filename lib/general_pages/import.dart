@@ -7,7 +7,10 @@ import 'package:frontend/general_pages/login_page.dart';
 
 class ImportPage extends StatefulWidget {
   final bool showBackButton;
-  ImportPage({super.key, required this.showBackButton});
+  final bool navigateToLogin;
+
+  ImportPage(
+      {super.key, required this.showBackButton, required this.navigateToLogin});
 
   @override
   State<ImportPage> createState() => _ImportPageState();
@@ -20,11 +23,11 @@ class _ImportPageState extends State<ImportPage> {
   bool _visibility = false;
 
   void loadFile() {
-    FilePicker.platform.pickFiles(allowedExtensions: ['ncrypt']).then((value){
-      if(value != null) {
-       setState(() {
-         _selectedLocation = value.files.single.path!;
-       });
+    FilePicker.platform.pickFiles(allowedExtensions: ['ncrypt']).then((value) {
+      if (value != null) {
+        setState(() {
+          _selectedLocation = value.files.single.path!;
+        });
       }
     });
   }
@@ -44,7 +47,11 @@ class _ImportPageState extends State<ImportPage> {
         ScaffoldMessenger.of(context).showSnackBar(
             CustomSnackBar(status: Status.success, content: "Import successful")
                 .show());
-        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => LoginPage()), (route)=>false);
+        if (widget.navigateToLogin) {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (BuildContext context) => LoginPage()),
+              (route) => false);
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
             CustomSnackBar(status: Status.error, content: response).show());
@@ -78,7 +85,9 @@ class _ImportPageState extends State<ImportPage> {
                   child: Text("Choose"),
                 ),
               ),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
               TextFormField(
                 controller: _passwordController,
                 obscureText: !_visibility,
@@ -87,15 +96,14 @@ class _ImportPageState extends State<ImportPage> {
                     "Enter master password",
                   ),
                   hintMaxLines: 16,
-                  hintStyle:
-                  TextStyle(color: Colors.white24, fontSize: 14),
+                  hintStyle: TextStyle(color: Colors.white24, fontSize: 14),
                   hintText: "master password",
                   suffixIcon: IconButton(
                     icon: _visibility
                         ? Icon(Icons.visibility)
                         : Icon(
-                      Icons.visibility_off,
-                    ),
+                            Icons.visibility_off,
+                          ),
                     onPressed: () {
                       setState(() {
                         _visibility = !_visibility;
@@ -104,19 +112,25 @@ class _ImportPageState extends State<ImportPage> {
                   ),
                 ),
                 validator: (value) {
-                  if(value == null || value.isEmpty) {
+                  if (value == null || value.isEmpty) {
                     return "Password cannot be empty";
                   }
                 },
               ),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
               ElevatedButton(
                 onPressed: () {
-                  if(_formKey.currentState!.validate()) {
-                    if(_selectedLocation.isEmpty) {
-                      showDialog(context: context, builder: (BuildContext context) {
-                        return SimpleDialog(title: Text("Please choose a file to import"),);
-                      });
+                  if (_formKey.currentState!.validate()) {
+                    if (_selectedLocation.isEmpty) {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return SimpleDialog(
+                              title: Text("Please choose a file to import"),
+                            );
+                          });
                     } else {
                       import();
                     }
