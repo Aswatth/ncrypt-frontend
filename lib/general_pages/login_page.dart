@@ -100,48 +100,6 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  children: [
-                    Text(
-                      "Want to import existing information?",
-                      style: TextStyle(color: Colors.white60),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ImportPage(showBackButton: true,)));
-                      },
-                      child: MouseRegion(
-                        cursor: SystemMouseCursors.click,
-                        onEnter: (_) {
-                          setState(() {
-                            _onMouseOverImport = true;
-                          });
-                        },
-                        onExit: (_) {
-                          setState(() {
-                            _onMouseOverImport = false;
-                          });
-                        },
-                        child: Row(
-                          children: [
-                            Icon(Icons.upload),
-                            Text(
-                              "Import",
-                              style: TextStyle(
-                                  decoration: _onMouseOverImport
-                                      ? TextDecoration.underline
-                                      : TextDecoration.none,
-                                  decorationThickness: 2),
-                            )
-                          ],
-                        ),
-                      ),
-                    )
-                  ],
-                )
               ],
             ),
           ),

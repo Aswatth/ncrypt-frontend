@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/custom_snack_bar/custom_snackbar.dart';
 import 'package:frontend/custom_snack_bar/status.dart';
+import 'package:frontend/general_pages/import.dart';
 import 'package:frontend/general_pages/login_page.dart';
 
 import '../clients/master_password_client.dart';
@@ -15,6 +16,7 @@ class SetPassword extends StatefulWidget {
 class _SetPasswordState extends State<SetPassword> {
   bool _passwordVisibility = false;
   bool _confirmPasswordVisibility = false;
+  bool _onMouseOverImport = false;
 
   final Map<String, bool> _passwordValidation = Map<String, bool>.from({
     "Should have at least one digit": false,
@@ -240,7 +242,49 @@ class _SetPasswordState extends State<SetPassword> {
                   Text(
                       "This will be the only password you need to remember! ;)",
                       style:
-                          TextStyle(fontSize: 14, fontStyle: FontStyle.italic)),
+                          TextStyle(fontSize: 14, fontStyle: FontStyle.italic),),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        "Want to import existing information?",
+                        style: TextStyle(color: Colors.white60),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ImportPage(showBackButton: true,)));
+                        },
+                        child: MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          onEnter: (_) {
+                            setState(() {
+                              _onMouseOverImport = true;
+                            });
+                          },
+                          onExit: (_) {
+                            setState(() {
+                              _onMouseOverImport = false;
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              Icon(Icons.upload),
+                              Text(
+                                "Import",
+                                style: TextStyle(
+                                    decoration: _onMouseOverImport
+                                        ? TextDecoration.underline
+                                        : TextDecoration.none,
+                                    decorationThickness: 2),
+                              )
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  )
                 ],
               ),
             ),
