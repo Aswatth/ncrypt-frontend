@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/general_pages/export.dart';
 import 'package:frontend/general_pages/import.dart';
+import 'package:frontend/general_pages/session_timer.dart';
 import 'package:frontend/general_pages/settings.dart';
 import 'package:frontend/login_data_pages/login_data_page.dart';
 
@@ -74,7 +75,8 @@ class _HomePageState extends State<HomePage> {
                           });
                         },
                       );
-                    })
+                    }),
+                SessionTimer(time_in_seconds: 120)
               ],
             ),
           ),
