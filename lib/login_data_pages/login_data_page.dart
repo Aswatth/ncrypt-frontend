@@ -29,18 +29,11 @@ class _LoginDataPageState extends State<LoginDataPage> {
     getAllLoginData();
   }
 
-  @override
-  void didUpdateWidget(covariant LoginDataPage oldWidget) {
-    // TODO: implement didUpdateWidget
-    super.didUpdateWidget(oldWidget);
-    getAllLoginData();
-  }
-
   void getAllLoginData() {
     client.getAllLoginData().then((value) {
-      if (value is List<LoginData>) {
+      if(value is List<dynamic>) {
         setState(() {
-          _loginDataList = value;
+          _loginDataList = value.map((m) => m as LoginData).toList();
           _filteredDataList = _loginDataList;
         });
       }

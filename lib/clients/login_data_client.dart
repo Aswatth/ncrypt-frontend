@@ -27,12 +27,11 @@ class LoginDataClient {
 
     if (response.statusCode == 200) {
       var data = convert.jsonDecode(response.body);
-      List<dynamic> jsonArray = data == null ? [] : data;
 
-      List<LoginData> _loginDataList =
-          jsonArray.map((json) => LoginData.fromJson(json)).toList();
+      List<dynamic> loginDataList =
+      data.map((json) => LoginData.fromJson(json)).toList();
 
-      return _loginDataList;
+      return loginDataList;
     } else {
       var json = convert.jsonDecode(response.body);
       return json;
