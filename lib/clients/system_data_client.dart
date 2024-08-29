@@ -12,18 +12,40 @@ class SystemDataClient {
 
   late String jwtToken;
 
-  factory SystemDataClient () {
+  factory SystemDataClient() {
     return _instance;
   }
 
-  Future<dynamic> getSystemData() async {
+  Future<dynamic> getGeneratedPassword(bool hasDigits, bool hasUpperCase,
+      bool hasSpecialChar, int length) async {
+    var url =
+        Uri.http("localhost:${EnvLoader().PORT}", "/system/generate_password", {
+      "hasDigits": hasDigits.toString(),
+      "hasUpperCase": hasUpperCase.toString(),
+      "hasSpecialChar": hasSpecialChar.toString(),
+      "length": length.toString()
+    });
 
+      var response = await http.get(
+      url,
+    );
+
+    if (response.statusCode == 200) {
+      return convert.jsonDecode(response.body);
+    } else {
+      var json = convert.jsonDecode(response.body) as String;
+      return json;
+    }
+  }
+
+  Future<dynamic> getSystemData() async {
     var url = Uri.http("localhost:${EnvLoader().PORT}", "/system/login_info");
 
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
-      _instance.SYSTEM_DATA = SystemData.fromJson(convert.jsonDecode(response.body));
+      _instance.SYSTEM_DATA =
+          SystemData.fromJson(convert.jsonDecode(response.body));
       return SYSTEM_DATA;
     } else {
       var json = convert.jsonDecode(response.body) as String;
@@ -35,7 +57,7 @@ class SystemDataClient {
     var url = Uri.http("localhost:${EnvLoader().PORT}", "/system/login");
 
     String jsonString = convert.jsonEncode({"master_password": password});
-    var response = await http.post(url,body: jsonString);
+    var response = await http.post(url, body: jsonString);
 
     if (response.statusCode == 200) {
       _instance.jwtToken = convert.jsonDecode(response.body) as String;
@@ -49,8 +71,11 @@ class SystemDataClient {
   Future<dynamic> export(String path, String fileName) async {
     var url = Uri.http("localhost:${EnvLoader().PORT}", "/system/export");
 
-    String jsonString = convert.jsonEncode({"file_name": fileName, "path": path});
-    var response = await http.post(url, body: jsonString,headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
+    String jsonString =
+        convert.jsonEncode({"file_name": fileName, "path": path});
+    var response = await http.post(url,
+        body: jsonString,
+        headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
 
     if (response.statusCode == 200) {
       return "";
@@ -63,7 +88,8 @@ class SystemDataClient {
   Future<dynamic> import(String path, String fileName, String password) async {
     var url = Uri.http("localhost:${EnvLoader().PORT}", "/system/import");
 
-    String jsonString = convert.jsonEncode({"file_name": fileName, "path": path, "master_password": password});
+    String jsonString = convert.jsonEncode(
+        {"file_name": fileName, "path": path, "master_password": password});
     var response = await http.post(url, body: jsonString);
 
     if (response.statusCode == 200) {

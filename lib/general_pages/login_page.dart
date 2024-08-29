@@ -5,6 +5,7 @@ import 'package:frontend/custom_snack_bar/custom_snackbar.dart';
 import 'package:frontend/custom_snack_bar/status.dart';
 import 'package:frontend/general_pages/home.dart';
 import 'package:frontend/general_pages/import.dart';
+import 'package:frontend/general_pages/password_generator.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -28,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
     SystemDataClient().login(_passwordController.text).then((value) {
       if (value.isNotEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          CustomSnackBar(status: Status.error, content: value).show());
+            CustomSnackBar(status: Status.error, content: value).show());
       } else {
         Navigator.of(context)
             .push(
@@ -81,7 +82,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         validator: (value) {
-                          if(value == null || value.isEmpty) {
+                          if (value == null || value.isEmpty) {
                             return "Password cannot be empty";
                           }
                         },
@@ -92,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        if(_formKey.currentState!.validate()) {
+                        if (_formKey.currentState!.validate()) {
                           login();
                         }
                       },
@@ -100,6 +101,21 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ],
                 ),
+                SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return SimpleDialog(
+                            children: [PasswordGenerator()],
+                          );
+                        },
+                      );
+                    },
+                    child: Text("Password generator"))
               ],
             ),
           ),
