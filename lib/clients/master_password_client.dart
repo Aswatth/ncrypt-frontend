@@ -48,4 +48,19 @@ class MasterPasswordClient {
       return json;
     }
   }
+
+  Future<String> validateMasterPassword(String password) async {
+    var url = Uri.http("localhost:${EnvLoader().PORT}", "/master_password/validate");
+
+    String jsonString = convert.jsonEncode({"master_password": password});
+
+    var response = await http.post(url,body: jsonString, headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
+
+    if (response.statusCode == 200) {
+      return "true";
+    } else {
+      var json = convert.jsonDecode(response.body) as String;
+      return json;
+    }
+  }
 }

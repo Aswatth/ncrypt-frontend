@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/clients/login_data_client.dart';
+import 'package:frontend/clients/master_password_client.dart';
 import 'package:frontend/custom_snack_bar/custom_snackbar.dart';
 import 'package:frontend/custom_snack_bar/status.dart';
 import 'package:frontend/login_data_pages/add_login_data.dart';
@@ -31,7 +32,7 @@ class _LoginDataPageState extends State<LoginDataPage> {
 
   void getAllLoginData() {
     client.getAllLoginData().then((value) {
-      if(value is List<dynamic>) {
+      if (value is List<dynamic>) {
         setState(() {
           _loginDataList = value.map((m) => m as LoginData).toList();
           _filteredDataList = _loginDataList;
@@ -109,6 +110,63 @@ class _LoginDataPageState extends State<LoginDataPage> {
         });
   }
 
+  void copyPasswordToClipboard(LoginData data, String username) {
+    client.getDecryptedPassword(data.name, username).then((value) {
+      if (value is String && value.isNotEmpty) {
+        Clipboard.setData(ClipboardData(text: value)).then((_) {
+          ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(
+                  status: Status.info,
+                  content: "Copied decrypted password to clipboard")
+              .show());
+        });
+      }
+    });
+  }
+
+  void getMasterPassword(LoginData data, String username) {
+    String enteredPassword = "";
+    bool result = false;
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            contentPadding: EdgeInsets.all(12),
+            children: [
+              TextFormField(
+                obscureText: true,
+                onChanged: (value) {
+                  setState(() {
+                    enteredPassword = value;
+                  });
+                },
+                decoration: InputDecoration(
+                    hintText: "Enter master password",
+                    label: Text("Master Password")),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    MasterPasswordClient()
+                        .validateMasterPassword(enteredPassword)
+                        .then((value) {
+                      if (value == "true") {
+                        copyPasswordToClipboard(data, username);
+                        Navigator.of(context).pop();
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            CustomSnackBar(status: Status.error, content: value)
+                                .show());
+                      }
+                    });
+                  },
+                  child: Text("Validate"))
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -152,12 +210,28 @@ class _LoginDataPageState extends State<LoginDataPage> {
                   itemBuilder: (BuildContext context, int index) {
                     LoginData data = _filteredDataList[index];
                     return ExpansionTile(
-                        leading: data.attributes.isFavourite
-                            ? Icon(
-                                Icons.star,
-                                color: Colors.amber,
-                              )
-                            : Icon(Icons.star_border),
+                        leading: SizedBox(
+                          width: 50,
+                          child: Row(
+                            children: [
+                              Flexible(
+                                child: data.attributes.isFavourite
+                                    ? Icon(
+                                        Icons.star,
+                                        color: Colors.amber,
+                                      )
+                                    : Icon(Icons.star_border),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Flexible(
+                                  child: data.attributes.requireMasterPassword
+                                      ? Icon(Icons.lock)
+                                      : Container())
+                            ],
+                          ),
+                        ),
                         title: Text(data.name),
                         subtitle: Text(data.url),
                         children: [
@@ -221,22 +295,14 @@ class _LoginDataPageState extends State<LoginDataPage> {
                                       trailing: IconButton(
                                         icon: Icon(Icons.copy),
                                         onPressed: () async {
-                                          client
-                                              .getDecryptedPassword(
-                                                  data.name, m.username!)
-                                              .then((value) async {
-                                            if (value is String &&
-                                                value.isNotEmpty) {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(CustomSnackBar(
-                                                          status: Status.info,
-                                                          content:
-                                                              "Copied decrypted password to clipboard")
-                                                      .show());
-                                            }
-                                            await Clipboard.setData(
-                                                ClipboardData(text: value));
-                                          });
+                                          if (data.attributes
+                                              .requireMasterPassword) {
+                                            getMasterPassword(
+                                                data, m.username!);
+                                          } else {
+                                            copyPasswordToClipboard(
+                                                data, m.username!);
+                                          }
                                         },
                                       ),
                                     ),
