@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/clients/login_data_client.dart';
 import 'package:frontend/custom_snack_bar/custom_snackbar.dart';
 import 'package:frontend/custom_snack_bar/status.dart';
+import 'package:frontend/general_pages/password_generator.dart';
 import 'package:frontend/models/attributes.dart';
 import 'package:frontend/models/login.dart';
 import 'package:frontend/models/login_account.dart';
@@ -23,8 +24,10 @@ class _AddLoginDataState extends State<AddLoginData> {
   final List<Account> _accountList = [];
 
   void addLoginData() {
-    if(_accountList.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(status: Status.error, content: "Should have at least 1 account").show());
+    if (_accountList.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(
+              status: Status.error, content: "Should have at least 1 account")
+          .show());
       return;
     }
     LoginDataClient client = LoginDataClient();
@@ -133,16 +136,56 @@ class _AddLoginDataState extends State<AddLoginData> {
                   ),
                 ],
               ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {
-                    setState(() {
-                      _accountList.add(Account.empty());
-                    });
-                  },
-                  child: Text("Add account"),
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return SimpleDialog(
+                              children: [PasswordGenerator()],
+                            );
+                          },
+                        );
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStatePropertyAll(
+                            Theme.of(context).scaffoldBackgroundColor),
+                        shape: WidgetStatePropertyAll(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                            // Border radius
+                            side: BorderSide(
+                                color: Theme.of(context).primaryColor,
+                                width: 2.0), // Border color and width
+                          ),
+                        ),
+                      ),
+                      child: Text("Password generator")),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _accountList.add(Account.empty());
+                      });
+                    },
+                    child: Text("Add account"),
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStatePropertyAll(
+                          Theme.of(context).scaffoldBackgroundColor),
+                      shape: WidgetStatePropertyAll(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                          // Border radius
+                          side: BorderSide(
+                              color: Theme.of(context).primaryColor,
+                              width: 2.0), // Border color and width
+                        ),
+                      ),
+                    ),
+                  )
+                ],
               ),
               Flexible(
                 child: ListView.builder(
@@ -213,13 +256,22 @@ class _AddLoginDataState extends State<AddLoginData> {
                       );
                     }),
               ),
-              TextButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      addLoginData();
-                    }
-                  },
-                  child: Text("Add"))
+              SizedBox(
+                width: double.infinity,
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          addLoginData();
+                        }
+                      },
+                      child: Text(
+                        "Add",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      )),
+                ),
+              )
             ],
           ),
         ),
