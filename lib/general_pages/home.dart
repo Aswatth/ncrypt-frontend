@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/clients/system_data_client.dart';
 import 'package:frontend/general_pages/export.dart';
 import 'package:frontend/general_pages/import.dart';
 import 'package:frontend/general_pages/session_timer.dart';
@@ -13,10 +14,35 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<IconData> _optionIconList = [Icons.security, Icons.note, Icons.upload, Icons.download, Icons.settings, Icons.logout];
-  final List<String> _optionText = ["Login", "Notes", "Import", "Export", "Settings", "Logout"];
-  final List<Widget> _optionContent = [LoginDataPage(), Text("Notes"), ImportPage(showBackButton: false, navigateToLogin: false,), ExportPage(), SettingsPage()];
+  final List<IconData> _optionIconList = [
+    Icons.security,
+    Icons.note,
+    Icons.upload,
+    Icons.download,
+    Icons.settings,
+    Icons.logout
+  ];
+  final List<String> _optionText = [
+    "Login",
+    "Notes",
+    "Import",
+    "Export",
+    "Settings",
+    "Logout"
+  ];
+  final List<Widget> _optionContent = [
+    LoginDataPage(),
+    Text("Notes"),
+    ImportPage(
+      showBackButton: false,
+      navigateToLogin: false,
+    ),
+    ExportPage(),
+    SettingsPage()
+  ];
   int _selectedIndex = 0;
+
+  int sessionTime = 0;
 
   late HSLColor primaryHSL;
   late Color activeColor;
@@ -28,11 +54,17 @@ class _HomePageState extends State<HomePage> {
     primaryHSL = HSLColor.fromAHSL(1.0, 177, 0.75, 0.52);
     activeColor = primaryHSL.toColor();
     inactiveColor = Colors.white60;
+
+    SystemDataClient().getSystemData().then((_){
+      setState(() {
+        sessionTime = SystemDataClient().SYSTEM_DATA.sessionTimeInMinutes;
+      });
+    });
+
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -63,11 +95,22 @@ class _HomePageState extends State<HomePage> {
                     itemCount: _optionText.length,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        leading: Icon(_optionIconList[index], color: _selectedIndex == index ? activeColor :inactiveColor,),
-                        title: Text(_optionText[index], style: TextStyle(color: _selectedIndex == index ? activeColor :inactiveColor),),
-                        onTap: (){
+                        leading: Icon(
+                          _optionIconList[index],
+                          color: _selectedIndex == index
+                              ? activeColor
+                              : inactiveColor,
+                        ),
+                        title: Text(
+                          _optionText[index],
+                          style: TextStyle(
+                              color: _selectedIndex == index
+                                  ? activeColor
+                                  : inactiveColor),
+                        ),
+                        onTap: () {
                           setState(() {
-                            if(index == _optionText.length - 1) {
+                            if (index == _optionText.length - 1) {
                               Navigator.of(context).pop();
                             } else {
                               _selectedIndex = index;
@@ -76,7 +119,9 @@ class _HomePageState extends State<HomePage> {
                         },
                       );
                     }),
-                SessionTimer(time_in_seconds: 120)
+                sessionTime != 0
+                    ? SessionTimer(time_in_seconds: sessionTime*60)
+                    : Container()
               ],
             ),
           ),
