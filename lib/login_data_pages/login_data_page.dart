@@ -41,6 +41,16 @@ class _LoginDataPageState extends State<LoginDataPage> {
     });
   }
 
+  void updateFavourite(LoginData data) {
+    LoginDataClient().updateLoginData(data.name, data).then((value) {
+      if (!(value != null && value is String && value.isEmpty)) {
+        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(
+                status: Status.error, content: "Unable to update favourites")
+            .show());
+      }
+    });
+  }
+
   void delete(LoginData data, int index) {
     showDialog(
         context: context,
@@ -74,7 +84,8 @@ class _LoginDataPageState extends State<LoginDataPage> {
                               client.deleteLoginData(data.name).then((value) {
                                 if (value is String && value.isEmpty) {
                                   setState(() {
-                                    _loginDataList.removeAt(index);
+                                    _loginDataList.remove(data);
+                                    _filteredDataList = _loginDataList;
                                   });
                                   Navigator.of(context).pop();
                                   ScaffoldMessenger.of(context).showSnackBar(
@@ -202,7 +213,7 @@ class _LoginDataPageState extends State<LoginDataPage> {
               },
             ),
           ),
-          _loginDataList.length == 0
+          _loginDataList.isEmpty
               ? Center(child: Text("No data"))
               : ListView.builder(
                   shrinkWrap: true,
@@ -211,24 +222,37 @@ class _LoginDataPageState extends State<LoginDataPage> {
                     LoginData data = _filteredDataList[index];
                     return ExpansionTile(
                         leading: SizedBox(
-                          width: 50,
+                          width: 70,
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Flexible(
-                                child: data.attributes.isFavourite
-                                    ? Icon(
+                              data.attributes.isFavourite
+                                  ? IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          data.attributes.isFavourite = false;
+                                        });
+                                        updateFavourite(data);
+                                      },
+                                      icon: Icon(
                                         Icons.star,
                                         color: Colors.amber,
-                                      )
-                                    : Icon(Icons.star_border),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Flexible(
-                                  child: data.attributes.requireMasterPassword
-                                      ? Icon(Icons.lock)
-                                      : Container())
+                                      ),
+                                    )
+                                  : IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          data.attributes.isFavourite = true;
+                                        });
+                                        updateFavourite(data);
+                                      },
+                                      icon: Icon(
+                                        Icons.star_border,
+                                      ),
+                                    ),
+                              data.attributes.requireMasterPassword
+                                  ? Icon(Icons.lock)
+                                  : Container()
                             ],
                           ),
                         ),
@@ -252,22 +276,16 @@ class _LoginDataPageState extends State<LoginDataPage> {
                                 label: Text("Edit"),
                                 iconAlignment: IconAlignment.start,
                                 icon: Icon(Icons.edit),
-                                // style: ElevatedButton.styleFrom(
-                                //   backgroundColor: Colors.green,
-                                //   foregroundColor: Colors.white,
-                                // ),
                               ),
                               ElevatedButton.icon(
                                 onPressed: () {
-                                  delete(data, index);
+                                  setState(() {
+                                    delete(data, index);
+                                  });
                                 },
                                 label: Text("Delete"),
                                 iconAlignment: IconAlignment.start,
                                 icon: Icon(Icons.delete),
-                                // style: ElevatedButton.styleFrom(
-                                //   backgroundColor: Colors.red,
-                                //   foregroundColor: Colors.white,
-                                // ),
                               ),
                             ],
                           ),
