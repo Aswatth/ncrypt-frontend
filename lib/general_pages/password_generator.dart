@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/clients/system_data_client.dart';
+import 'package:frontend/custom_toast/custom_toast.dart';
 
 class PasswordGenerator extends StatefulWidget {
   const PasswordGenerator({super.key});
@@ -44,44 +45,9 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
     final overlay = Overlay.of(context);
 
     Clipboard.setData(ClipboardData(text: generatedPassword!)).then((value) {
-      setState(() {
-        copyPasswordToolTip = OverlayEntry(
-          builder: (context) {
-            return Positioned(
-              width: 150,
-              child: CompositedTransformFollower(
-                offset: Offset(0, -20),
-                link: _layerLink,
-                child: Material(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.green,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Align(
-                          alignment: Alignment.center,
-                          child: Text("Copied to clipboard")),
-                    ),
-                  ),
-                ),
-              ),
-            );
-          },
-        );
-
-        overlay.insert(copyPasswordToolTip!);
-      });
-
-      Future.delayed(Duration(seconds: 2), () {
-        setState(() {
-          if (copyPasswordToolTip != null) {
-            copyPasswordToolTip!.remove();
-            copyPasswordToolTip = null;
-          }
-        });
-      });
+      if(context.mounted) {
+        CustomToast.info(context, "Copied to clipboard");
+      }
     });
   }
 

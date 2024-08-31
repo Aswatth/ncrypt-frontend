@@ -3,6 +3,7 @@ import 'package:frontend/clients/master_password_client.dart';
 import 'package:frontend/clients/system_data_client.dart';
 import 'package:frontend/custom_snack_bar/custom_snackbar.dart';
 import 'package:frontend/custom_snack_bar/status.dart';
+import 'package:frontend/custom_toast/custom_toast.dart';
 import 'package:frontend/general_pages/home.dart';
 import 'package:frontend/general_pages/import.dart';
 import 'package:frontend/general_pages/password_generator.dart';
@@ -27,19 +28,20 @@ class _LoginPageState extends State<LoginPage> {
 
   void login() {
     SystemDataClient().login(_passwordController.text).then((value) {
-      if (value.isNotEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            CustomSnackBar(status: Status.error, content: value).show());
-      } else {
-        Navigator.of(context)
-            .push(
-          MaterialPageRoute(
-            builder: (context) => const HomePage(),
-          ),
-        )
-            .then((value) {
-          _passwordController.clear();
-        });
+      if(context.mounted) {
+        if (value.isNotEmpty) {
+          CustomToast.error(context, value);
+        } else {
+          Navigator.of(context)
+              .push(
+            MaterialPageRoute(
+              builder: (context) => const HomePage(),
+            ),
+          )
+              .then((value) {
+            _passwordController.clear();
+          });
+        }
       }
     });
   }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/clients/system_data_client.dart';
 import 'package:frontend/custom_snack_bar/custom_snackbar.dart';
 import 'package:frontend/custom_snack_bar/status.dart';
+import 'package:frontend/custom_toast/custom_toast.dart';
 
 class ExportPage extends StatefulWidget {
   const ExportPage({super.key});
@@ -12,7 +13,6 @@ class ExportPage extends StatefulWidget {
 }
 
 class _ExportPageState extends State<ExportPage> {
-
   String _selectedLocation = "";
 
   void pickDirectory() {
@@ -29,9 +29,8 @@ class _ExportPageState extends State<ExportPage> {
     FilePicker.platform.saveFile(
         dialogTitle: 'Please select an output file:',
         fileName: 'backup.ncrypt',
-        allowedExtensions: ['ncrypt']
-    ).then((value) {
-      if(value != null) {
+        allowedExtensions: ['ncrypt']).then((value) {
+      if (value != null) {
         List<String> splitString = value.split("\\");
 
         String fileName = splitString.last;
@@ -43,13 +42,12 @@ class _ExportPageState extends State<ExportPage> {
         String path = splitString.join("\\");
 
         SystemDataClient().export(path, fileName).then((response) {
-          if (response != null && response is String && response.isEmpty) {
-            ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(
-                status: Status.success, content: "Export successful").show());
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-                CustomSnackBar(status: Status.error, content: response)
-                    .show());
+          if (context.mounted) {
+            if (response != null && response is String && response.isEmpty) {
+              CustomToast.success(context, "Export successful");
+            } else {
+              CustomToast.error(context, response);
+            }
           }
         });
       }
@@ -62,9 +60,9 @@ class _ExportPageState extends State<ExportPage> {
       children: [
         ListTile(
           leading: Icon(Icons.folder),
-          title: _selectedLocation.isEmpty ? Text(
-              "Choose a directory to save exported data") : Text(
-              _selectedLocation),
+          title: _selectedLocation.isEmpty
+              ? Text("Choose a directory to save exported data")
+              : Text(_selectedLocation),
           trailing: ElevatedButton(
             onPressed: () {
               pickDirectory();

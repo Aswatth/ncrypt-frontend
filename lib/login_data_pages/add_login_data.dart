@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/clients/login_data_client.dart';
 import 'package:frontend/custom_snack_bar/custom_snackbar.dart';
 import 'package:frontend/custom_snack_bar/status.dart';
+import 'package:frontend/custom_toast/custom_toast.dart';
 import 'package:frontend/general_pages/password_generator.dart';
 import 'package:frontend/models/attributes.dart';
 import 'package:frontend/models/login.dart';
@@ -25,9 +26,9 @@ class _AddLoginDataState extends State<AddLoginData> {
 
   void addLoginData() {
     if (_accountList.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(
-              status: Status.error, content: "Should have at least 1 account")
-          .show());
+      if (context.mounted) {
+        CustomToast.error(context, "Should have at least 1 account");
+      }
       return;
     }
     LoginDataClient client = LoginDataClient();
@@ -40,17 +41,13 @@ class _AddLoginDataState extends State<AddLoginData> {
                 requireMasterPassword: _requireMasterPassword),
             accounts: _accountList))
         .then((value) {
-      if (value is String && value.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(
-          status: Status.success,
-          content: "Successfully added!",
-        ).show());
-        Navigator.of(context).pop();
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(
-          status: Status.error,
-          content: value,
-        ).show());
+      if (context.mounted) {
+        if (value is String && value.isEmpty) {
+          Navigator.of(context).pop();
+          CustomToast.success(context, "Successfully added!");
+        } else {
+          CustomToast.error(context, value);
+        }
       }
     });
   }

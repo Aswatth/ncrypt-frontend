@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/custom_snack_bar/custom_snackbar.dart';
 import 'package:frontend/custom_snack_bar/status.dart';
+import 'package:frontend/custom_toast/custom_toast.dart';
 import 'package:frontend/general_pages/import.dart';
 import 'package:frontend/general_pages/login_page.dart';
 
@@ -40,11 +41,13 @@ class _SetPasswordState extends State<SetPassword> {
     MasterPasswordClient()
         .setMasterPassword(_passwordController.text)
         .then((value) {
-      if (value.isEmpty) {
-        Navigator.of(context).push(
-            MaterialPageRoute(builder: (BuildContext context) => LoginPage()));
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(status: Status.error, content: value).show());
+      if (context.mounted) {
+        if (value.isEmpty) {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (BuildContext context) => LoginPage()));
+        } else {
+          CustomToast.error(context, value);
+        }
       }
     });
   }
@@ -240,9 +243,9 @@ class _SetPasswordState extends State<SetPassword> {
                     height: 20,
                   ),
                   Text(
-                      "This will be the only password you need to remember! ;)",
-                      style:
-                          TextStyle(fontSize: 14, fontStyle: FontStyle.italic),),
+                    "This will be the only password you need to remember! ;)",
+                    style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
+                  ),
                   SizedBox(
                     height: 20,
                   ),
@@ -254,7 +257,11 @@ class _SetPasswordState extends State<SetPassword> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ImportPage(showBackButton: true,navigateToLogin: true,)));
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (BuildContext context) => ImportPage(
+                                    showBackButton: true,
+                                    navigateToLogin: true,
+                                  )));
                         },
                         child: MouseRegion(
                           cursor: SystemMouseCursors.click,

@@ -4,6 +4,7 @@ import 'package:frontend/clients/login_data_client.dart';
 import 'package:frontend/clients/master_password_client.dart';
 import 'package:frontend/custom_snack_bar/custom_snackbar.dart';
 import 'package:frontend/custom_snack_bar/status.dart';
+import 'package:frontend/custom_toast/custom_toast.dart';
 import 'package:frontend/login_data_pages/add_login_data.dart';
 import 'package:frontend/login_data_pages/edit_login_data.dart';
 import 'package:frontend/models/login.dart';
@@ -44,9 +45,9 @@ class _LoginDataPageState extends State<LoginDataPage> {
   void updateFavourite(LoginData data) {
     LoginDataClient().updateLoginData(data.name, data).then((value) {
       if (!(value != null && value is String && value.isEmpty)) {
-        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(
-                status: Status.error, content: "Unable to update favourites")
-            .show());
+        if (context.mounted) {
+          CustomToast.error(context, "Unable to update favourites");
+        }
       }
     });
   }
@@ -87,18 +88,16 @@ class _LoginDataPageState extends State<LoginDataPage> {
                                     _loginDataList.remove(data);
                                     _filteredDataList = _loginDataList;
                                   });
-                                  Navigator.of(context).pop();
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      CustomSnackBar(
-                                              status: Status.success,
-                                              content: "Successfully deleted!")
-                                          .show());
+
+                                  if (context.mounted) {
+                                    Navigator.of(context).pop();
+                                    CustomToast.success(
+                                        context, "Successfully deleted!");
+                                  }
                                 } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      CustomSnackBar(
-                                              status: Status.error,
-                                              content: value)
-                                          .show());
+                                  if (context.mounted) {
+                                    CustomToast.error(context, value);
+                                  }
                                 }
                               });
                             },
@@ -125,10 +124,9 @@ class _LoginDataPageState extends State<LoginDataPage> {
     client.getDecryptedPassword(data.name, username).then((value) {
       if (value is String && value.isNotEmpty) {
         Clipboard.setData(ClipboardData(text: value)).then((_) {
-          ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(
-                  status: Status.info,
-                  content: "Copied decrypted password to clipboard")
-              .show());
+          if (context.mounted) {
+            CustomToast.info(context, "Copied password to clipboard");
+          }
         });
       }
     });
@@ -136,7 +134,6 @@ class _LoginDataPageState extends State<LoginDataPage> {
 
   void getMasterPassword(LoginData data, String username) {
     String enteredPassword = "";
-    bool result = false;
     showDialog(
         context: context,
         builder: (context) {
@@ -166,9 +163,9 @@ class _LoginDataPageState extends State<LoginDataPage> {
                         copyPasswordToClipboard(data, username);
                         Navigator.of(context).pop();
                       } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            CustomSnackBar(status: Status.error, content: value)
-                                .show());
+                        if (context.mounted) {
+                          CustomToast.error(context, value);
+                        }
                       }
                     });
                   },
@@ -299,9 +296,15 @@ class _LoginDataPageState extends State<LoginDataPage> {
                                       title: Text(m.username!),
                                       trailing: IconButton(
                                         icon: Icon(Icons.copy),
-                                        onPressed: () async {
-                                          await Clipboard.setData(
-                                              ClipboardData(text: m.username!));
+                                        onPressed: () {
+                                          Clipboard.setData(ClipboardData(
+                                                  text: m.username!))
+                                              .then((_) {
+                                            if (context.mounted) {
+                                              CustomToast.info(context,
+                                                  "Copied username to clipboard");
+                                            }
+                                          });
                                         },
                                       ),
                                     ),

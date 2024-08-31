@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:frontend/custom_snack_bar/custom_snackbar.dart';
 import 'package:frontend/custom_snack_bar/status.dart';
+import 'package:frontend/custom_toast/custom_toast.dart';
 import 'package:frontend/general_pages/login_page.dart';
 
 class SessionTimer extends StatefulWidget {
@@ -30,7 +31,7 @@ class _SessionTimerState extends State<SessionTimer> {
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (current_time_in_seconds == 0) {
         setState(() {
-          ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(status: Status.info, content: "Session expired! Please login again").show());
+          CustomToast.info(context, "Session expired!\nPlease login again");
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => LoginPage()),

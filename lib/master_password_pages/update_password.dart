@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/clients/master_password_client.dart';
 import 'package:frontend/custom_snack_bar/custom_snackbar.dart';
 import 'package:frontend/custom_snack_bar/status.dart';
+import 'package:frontend/custom_toast/custom_toast.dart';
 
 class UpdateMasterPasswordPage extends StatefulWidget {
   const UpdateMasterPasswordPage({super.key});
@@ -20,17 +21,13 @@ class _UpdateMasterPasswordPageState extends State<UpdateMasterPasswordPage> {
     MasterPasswordClient()
         .updateMasterPassword(_passwordController.text)
         .then((value) {
-      if (value.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(
-          status: Status.success,
-          content: "Successfully updated!",
-        ).show());
-        Navigator.of(context).pop();
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(
-          status: Status.error,
-          content: value,
-        ).show());
+      if (context.mounted) {
+        if (value.isEmpty) {
+          Navigator.of(context).pop();
+          CustomToast.success(context, "Successfully updated!");
+        } else {
+          CustomToast.error(context, value);
+        }
       }
     });
   }

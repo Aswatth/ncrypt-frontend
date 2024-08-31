@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/clients/system_data_client.dart';
 import 'package:frontend/custom_snack_bar/custom_snackbar.dart';
 import 'package:frontend/custom_snack_bar/status.dart';
+import 'package:frontend/custom_toast/custom_toast.dart';
 import 'package:frontend/general_pages/login_page.dart';
 
 class ImportPage extends StatefulWidget {
@@ -43,18 +44,18 @@ class _ImportPageState extends State<ImportPage> {
     SystemDataClient()
         .import(path, fileName, _passwordController.text)
         .then((response) {
-      if (response != null && response is String && response.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            CustomSnackBar(status: Status.success, content: "Import successful")
-                .show());
-        if (widget.navigateToLogin) {
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (BuildContext context) => LoginPage()),
-              (route) => false);
+      if (context.mounted) {
+        if (response != null && response is String && response.isEmpty) {
+          CustomToast.success(context, "Import successful");
+          if (widget.navigateToLogin) {
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                    builder: (BuildContext context) => LoginPage()),
+                (route) => false);
+          }
+        } else {
+          CustomToast.error(context, response);
         }
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-            CustomSnackBar(status: Status.error, content: response).show());
       }
     });
   }

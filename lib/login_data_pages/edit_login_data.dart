@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/clients/login_data_client.dart';
 import 'package:frontend/custom_snack_bar/custom_snackbar.dart';
 import 'package:frontend/custom_snack_bar/status.dart';
+import 'package:frontend/custom_toast/custom_toast.dart';
 import 'package:frontend/models/attributes.dart';
 import 'package:frontend/models/login_account.dart';
 
@@ -78,13 +79,9 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                               setState(() {
                                 _existingAccountList[index].password =
                                     _passwordController.text;
+
                                 Navigator.of(context).pop();
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    CustomSnackBar(
-                                            status: Status.success,
-                                            content:
-                                                "${_existingAccountList[index].username!} password updated")
-                                        .show());
+                                CustomToast.success(context, "${_existingAccountList[index].username!} password updated");
                               });
                             },
                             child: Text("Update password"))
@@ -110,12 +107,13 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
             isFavourite: _isFavourite,
             requireMasterPassword: _requireMasterPassword),
         accounts: _accountList + _existingAccountList)).then((value) {
-          if(value is String && value.isEmpty) {
-            Navigator.of(context).pop();
-            ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(status: Status.success, content: "Successfully updated").show());
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(CustomSnackBar(status: Status.error, content: value).show());
-
+          if(context.mounted) {
+            if(value is String && value.isEmpty) {
+              Navigator.of(context).pop();
+              CustomToast.success(context, "Successfully updated");
+            } else {
+              CustomToast.error(context, value);
+            }
           }
     });
   }
