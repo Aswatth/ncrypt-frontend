@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/clients/master_password_client.dart';
 import 'package:frontend/clients/system_data_client.dart';
-import 'package:frontend/custom_snack_bar/custom_snackbar.dart';
-import 'package:frontend/custom_snack_bar/status.dart';
 import 'package:frontend/custom_toast/custom_toast.dart';
 import 'package:frontend/general_pages/home.dart';
-import 'package:frontend/general_pages/import.dart';
 import 'package:frontend/general_pages/password_generator.dart';
 
 class LoginPage extends StatefulWidget {

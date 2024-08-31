@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/clients/master_password_client.dart';
-import 'package:frontend/custom_snack_bar/custom_snackbar.dart';
-import 'package:frontend/custom_snack_bar/status.dart';
 import 'package:frontend/custom_toast/custom_toast.dart';
 
 class UpdateMasterPasswordPage extends StatefulWidget {

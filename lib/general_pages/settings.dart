@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/clients/master_password_client.dart';
-import 'package:frontend/custom_snack_bar/custom_snackbar.dart';
-import 'package:frontend/custom_snack_bar/status.dart';
 import 'package:frontend/master_password_pages/update_password.dart';
 
 class SettingsPage extends StatefulWidget {

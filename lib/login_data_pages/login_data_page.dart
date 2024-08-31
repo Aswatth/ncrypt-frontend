@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/clients/login_data_client.dart';
 import 'package:frontend/clients/master_password_client.dart';
-import 'package:frontend/custom_snack_bar/custom_snackbar.dart';
-import 'package:frontend/custom_snack_bar/status.dart';
 import 'package:frontend/custom_toast/custom_toast.dart';
 import 'package:frontend/login_data_pages/add_login_data.dart';
 import 'package:frontend/login_data_pages/edit_login_data.dart';
