@@ -39,7 +39,7 @@ class MasterPasswordClient {
     var url = Uri.http("localhost:${EnvLoader().PORT}", "/master_password");
 
     String jsonString = convert.jsonEncode({"master_password": password});
-    var response = await http.put(url,body: jsonString);
+    var response = await http.put(url,body: jsonString, headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
 
     if (response.statusCode == 200) {
       return "";
