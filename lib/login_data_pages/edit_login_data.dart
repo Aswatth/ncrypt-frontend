@@ -45,7 +45,7 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
               builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                 if (!snapshot.hasData) {
                   return SimpleDialog(
-                    children: [CircularProgressIndicator()],
+                    children: [Center(child: CircularProgressIndicator())],
                   );
                 } else {
                   if (snapshot.data is String &&
@@ -54,35 +54,50 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                         TextEditingController();
                     return SimpleDialog(
                       title: Text(
-                          "Edit ${_existingAccountList[index].username!} password"),
+                          "Editing ${_existingAccountList[index].username!} password"),
                       children: [
-                        ListTile(
-                          leading: Text("Old password"),
-                          title: Text(snapshot.data),
-                        ),
-                        TextFormField(
-                          obscureText: true,
-                          obscuringCharacter: "#",
-                          controller: _passwordController,
-                          decoration:
-                              InputDecoration(hintText: "Enter new password"),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "New password cannot be empty";
-                            }
-                          },
-                        ),
-                        ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                _existingAccountList[index].password =
-                                    _passwordController.text;
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              ListTile(
+                                leading: Text("Old password"),
+                                title: Text(snapshot.data),
+                              ),
+                              TextFormField(
+                                obscureText: true,
+                                obscuringCharacter: "#",
+                                controller: _passwordController,
+                                decoration: InputDecoration(
+                                    hintText: "Enter new password",
+                                    label: Text("New password")),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "New password cannot be empty";
+                                  }
+                                },
+                              ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _existingAccountList[index].password =
+                                          _passwordController.text;
 
-                                Navigator.of(context).pop();
-                                CustomToast.success(context, "${_existingAccountList[index].username!} password updated");
-                              });
-                            },
-                            child: Text("Update password"))
+                                      Navigator.of(context).pop();
+                                      // CustomToast.success(context, "${_existingAccountList[index].username!} password updated");
+                                    });
+                                  },
+                                  child: Text("Update password"),
+                                ),
+                              )
+                            ],
+                          ),
+                        )
                       ],
                     );
                   } else {
@@ -97,22 +112,25 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
   }
 
   void saveUpdates() {
-
-    LoginDataClient().updateLoginData(widget.dataToEdit.name,LoginData(
-        name: _nameController.text,
-        url: _urlController.text,
-        attributes: Attributes(
-            isFavourite: _isFavourite,
-            requireMasterPassword: _requireMasterPassword),
-        accounts: _accountList + _existingAccountList)).then((value) {
-          if(context.mounted) {
-            if(value is String && value.isEmpty) {
-              Navigator.of(context).pop();
-              CustomToast.success(context, "Successfully updated");
-            } else {
-              CustomToast.error(context, value);
-            }
-          }
+    LoginDataClient()
+        .updateLoginData(
+            widget.dataToEdit.name,
+            LoginData(
+                name: _nameController.text,
+                url: _urlController.text,
+                attributes: Attributes(
+                    isFavourite: _isFavourite,
+                    requireMasterPassword: _requireMasterPassword),
+                accounts: _accountList + _existingAccountList))
+        .then((value) {
+      if (context.mounted) {
+        if (value is String && value.isEmpty) {
+          Navigator.of(context).pop();
+          CustomToast.success(context, "Successfully updated");
+        } else {
+          CustomToast.error(context, value);
+        }
+      }
     });
   }
 
@@ -223,8 +241,8 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                   Expanded(
                                     child: ListTile(
                                       leading: Icon(Icons.person),
-                                      title: Text(
-                                          _existingAccountList[index].username!),
+                                      title: Text(_existingAccountList[index]
+                                          .username!),
                                     ),
                                   ),
                                   Expanded(
@@ -232,7 +250,8 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                       leading: Icon(Icons.password),
                                       title: TextFormField(
                                         initialValue:
-                                            _existingAccountList[index].password!,
+                                            _existingAccountList[index]
+                                                .password!,
                                         obscureText: true,
                                         readOnly: true,
                                       ),
@@ -255,21 +274,38 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                                 children: [
                                                   Column(
                                                     children: [
-                                                      Text.rich(TextSpan(children: [
-                                                        TextSpan(text: "Do you want to delete "),
+                                                      Text.rich(
+                                                          TextSpan(children: [
                                                         TextSpan(
-                                                            text: _existingAccountList[index].username!,
-                                                            style: TextStyle(fontWeight: FontWeight.bold)),
-                                                        TextSpan(text: " account entirely?")
+                                                            text:
+                                                                "Do you want to delete "),
+                                                        TextSpan(
+                                                            text:
+                                                                _existingAccountList[
+                                                                        index]
+                                                                    .username!,
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold)),
+                                                        TextSpan(
+                                                            text:
+                                                                " account entirely?")
                                                       ])),
                                                       Padding(
-                                                        padding: const EdgeInsets.all(8.0),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
                                                         child: Row(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceEvenly,
                                                           children: [
                                                             ElevatedButton.icon(
                                                               onPressed: () {
-                                                                Navigator.of(context).pop();
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
                                                               },
                                                               label: Text("No"),
                                                               // icon: Icon(Icons.close),
@@ -277,19 +313,30 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                                             ElevatedButton.icon(
                                                                 onPressed: () {
                                                                   setState(() {
-                                                                    _existingAccountList.removeAt(index);
+                                                                    _existingAccountList
+                                                                        .removeAt(
+                                                                            index);
                                                                   });
-                                                                  Navigator.of(context).pop();
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
                                                                 },
-                                                                label: Text("Yes"),
+                                                                label:
+                                                                    Text("Yes"),
                                                                 // icon: Icon(Icons.check),
                                                                 style: ElevatedButton.styleFrom(
-                                                                    backgroundColor:
-                                                                    Theme.of(context).colorScheme.primary,
-                                                                    iconColor:
-                                                                    Theme.of(context).colorScheme.surface,
-                                                                    foregroundColor:
-                                                                    Theme.of(context).colorScheme.surface)),
+                                                                    backgroundColor: Theme.of(
+                                                                            context)
+                                                                        .colorScheme
+                                                                        .primary,
+                                                                    iconColor: Theme.of(
+                                                                            context)
+                                                                        .colorScheme
+                                                                        .surface,
+                                                                    foregroundColor: Theme.of(
+                                                                            context)
+                                                                        .colorScheme
+                                                                        .surface)),
                                                           ],
                                                         ),
                                                       )
@@ -311,7 +358,7 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                 ),
                 Flexible(
                   child: ListView.builder(
-                      // shrinkWrap: true,
+                      shrinkWrap: true,
                       itemCount: _accountList.length,
                       itemBuilder: (context, index) {
                         return Padding(
@@ -338,6 +385,7 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                         if (value == null || value.isEmpty) {
                                           return 'Username cannot be empty';
                                         }
+                                        return null;
                                       },
                                     ),
                                   ),
@@ -365,7 +413,9 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                               ),
                               IconButton(
                                   onPressed: () {
-                                    setState(() {});
+                                    setState(() {
+                                      _accountList.removeAt(index);
+                                    });
                                   },
                                   icon: Icon(Icons.delete))
                             ],
@@ -373,13 +423,20 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                         );
                       }),
                 ),
-                TextButton(
+                SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         saveUpdates();
                       }
                     },
-                    child: Text("Save"))
+                    child: Text("Save"),
+                  ),
+                )
               ],
             ),
           ),
