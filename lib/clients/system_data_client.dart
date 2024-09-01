@@ -26,7 +26,7 @@ class SystemDataClient {
       "length": length.toString()
     });
 
-      var response = await http.get(
+    var response = await http.get(
       url,
     );
 
@@ -47,6 +47,27 @@ class SystemDataClient {
       _instance.SYSTEM_DATA =
           SystemData.fromJson(convert.jsonDecode(response.body));
       return SYSTEM_DATA;
+    } else {
+      var json = convert.jsonDecode(response.body) as String;
+      return json;
+    }
+  }
+
+  Future<dynamic> setup(String password, bool automaticBackup,
+      String backupFolderPath, String backupFileName) async {
+    var url = Uri.http("localhost:${EnvLoader().PORT}", "/system/setup");
+
+    String jsonString = convert.jsonEncode({
+      "master_password": password,
+      "automatic_backup": automaticBackup,
+      "backup_folder_path": backupFolderPath,
+      "backup_file_name": backupFileName
+    });
+
+    var response = await http.post(url, body: jsonString);
+
+    if (response.statusCode == 200) {
+      return "";
     } else {
       var json = convert.jsonDecode(response.body) as String;
       return json;

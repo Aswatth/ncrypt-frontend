@@ -43,6 +43,9 @@ class MyApp extends StatelessWidget {
                 secondary: secondaryColor,
                 surface: backgroundColor,
               ),
+              switchTheme: SwitchThemeData(
+                thumbColor: WidgetStatePropertyAll(backgroundColor)
+              ),
               textTheme: TextTheme(
                 bodyLarge: TextStyle(color: textColor, fontSize: largeText),
                 bodyMedium: TextStyle(color: textColor, fontSize: mediumText),
@@ -151,7 +154,7 @@ class _LoadPageState extends State<LoadPage> {
             );
           } else {
             if (snapshot.hasData && snapshot.data is String)  {
-              if (snapshot.data != "invalid password") {
+              if (snapshot.data == "Key not found") {
                 return SetPassword();
               } else {
                 return LoginPage();
