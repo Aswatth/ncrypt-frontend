@@ -1,13 +1,16 @@
+import 'dart:io';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:frontend/clients/env_loader.dart';
 import 'package:frontend/clients/master_password_client.dart';
 import 'package:frontend/clients/system_data_client.dart';
+import 'package:frontend/custom_toast/custom_toast.dart';
 import 'package:frontend/general_pages/login_page.dart';
 import 'package:frontend/master_password_pages/set_password.dart';
-import 'package:frontend/models/system_data.dart';
 
-void main() async {
-  await EnvLoader().load("L:\\MyProjects\\Ncrypt\\backend\\.env");
+void main(List<String> args) async {
+  EnvLoader().PORT = int.parse(args[0]);
   SystemDataClient();
   MasterPasswordClient();
   runApp(const MyApp());
@@ -44,8 +47,7 @@ class MyApp extends StatelessWidget {
                 surface: backgroundColor,
               ),
               switchTheme: SwitchThemeData(
-                thumbColor: WidgetStatePropertyAll(backgroundColor)
-              ),
+                  thumbColor: WidgetStatePropertyAll(backgroundColor)),
               textTheme: TextTheme(
                 bodyLarge: TextStyle(color: textColor, fontSize: largeText),
                 bodyMedium: TextStyle(color: textColor, fontSize: mediumText),
@@ -142,6 +144,79 @@ class LoadPage extends StatefulWidget {
 }
 
 class _LoadPageState extends State<LoadPage> {
+  @override
+  void initState() {
+    super.initState();
+    AppLifecycleListener(onExitRequested: _handleExitRequested);
+  }
+
+  Future<AppExitResponse> _handleExitRequested() async {
+    if (SystemDataClient().SYSTEM_DATA == null ||
+        !SystemDataClient().SYSTEM_DATA!.automaticBackup) {
+      return AppExitResponse.exit;
+    }
+
+    SystemDataClient().backup().then((value) {
+      if (value == null || (value is String && value.isEmpty)) {
+        exit(0);
+      } else {
+        if (context.mounted) {
+          CustomToast.error(context, value);
+          Navigator.of(context).pop();
+          showDialog(
+              context: context,
+              builder: (context) {
+                return SimpleDialog(
+                  title: Text("Force exit?"),
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(20, 0,0,10),
+                      child: Text("Error occured while automatically backing up!"),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text("No"),
+                        ),
+                        SizedBox(width: 20,),
+                        ElevatedButton(
+                          onPressed: () {
+                            exit(0);
+                          },
+                          child: Text("Yes"),
+                        )
+                      ],
+                    )
+                  ],
+                );
+              });
+        }
+      }
+    });
+
+    showDialog(
+        context: context,
+        builder: (context) {
+          return SimpleDialog(
+            children: [
+              Center(
+                child: Text("Backing up data"),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              Center(
+                child: CircularProgressIndicator(),
+              )
+            ],
+          );
+        });
+    return AppExitResponse.cancel;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -153,7 +228,7 @@ class _LoadPageState extends State<LoadPage> {
               child: CircularProgressIndicator(),
             );
           } else {
-            if (snapshot.hasData && snapshot.data is String)  {
+            if (snapshot.hasData && snapshot.data is String) {
               if (snapshot.data == "Key not found") {
                 return SetPassword();
               } else {

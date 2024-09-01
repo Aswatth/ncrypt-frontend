@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
 
     SystemDataClient().getSystemData().then((_){
       setState(() {
-        sessionTime = SystemDataClient().SYSTEM_DATA.sessionTimeInMinutes;
+        sessionTime = SystemDataClient().SYSTEM_DATA!.sessionTimeInMinutes;
       });
     });
 

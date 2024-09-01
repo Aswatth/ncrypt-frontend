@@ -24,7 +24,7 @@ class SystemData {
         lastLoginDateTime: json['last_login'],
         isLoggedIn: json['is_logged_in'],
         currentLoginDateTime: json['current_login_date_time'],
-        automaticBackup: json['automatic_backup'] == "true",
+        automaticBackup: json['automatic_backup'],
         automaticBackupLocation: json['automatic_backup_location'],
         backupFileName: json['backup_file_name'],
         sessionTimeInMinutes: json['session_time_in_minutes']);

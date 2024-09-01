@@ -8,7 +8,7 @@ class SystemDataClient {
 
   SystemDataClient._internal();
 
-  late SystemData SYSTEM_DATA;
+  SystemData? SYSTEM_DATA;
 
   late String jwtToken;
 
@@ -41,7 +41,8 @@ class SystemDataClient {
   Future<dynamic> getSystemData() async {
     var url = Uri.http("localhost:${EnvLoader().PORT}", "/system/login_info");
 
-    var response = await http.get(url);
+    var response = await http.get(url,
+        headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
 
     if (response.statusCode == 200) {
       _instance.SYSTEM_DATA =
@@ -112,6 +113,19 @@ class SystemDataClient {
     String jsonString = convert.jsonEncode(
         {"file_name": fileName, "path": path, "master_password": password});
     var response = await http.post(url, body: jsonString);
+
+    if (response.statusCode == 200) {
+      return "";
+    } else {
+      var json = convert.jsonDecode(response.body) as String;
+      return json;
+    }
+  }
+
+  Future<dynamic> backup() async {
+    var url = Uri.http("localhost:${EnvLoader().PORT}", "/system/backup");
+
+    var response = await http.post(url);
 
     if (response.statusCode == 200) {
       return "";
