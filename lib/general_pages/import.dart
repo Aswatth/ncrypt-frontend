@@ -75,7 +75,7 @@ class _ImportPageState extends State<ImportPage> {
               ListTile(
                 leading: Icon(Icons.folder),
                 title: _selectedLocation.isEmpty
-                    ? Text("Choose a directory to save exported data")
+                    ? Text("Choose import data location")
                     : Text(_selectedLocation),
                 trailing: ElevatedButton(
                   onPressed: () {
