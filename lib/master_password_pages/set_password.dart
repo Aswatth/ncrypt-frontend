@@ -58,6 +58,10 @@ class _SetPasswordState extends State<SetPassword> {
   }
 
   void setup() {
+    if(_automaticBackup && _backupFolderPath.isEmpty) {
+      CustomToast.error(context, "Backup folder location is empty");
+      return;
+    }
     SystemDataClient()
         .setup(_passwordController.text, _automaticBackup, _backupFolderPath,
             _backupFileNameController.text)
