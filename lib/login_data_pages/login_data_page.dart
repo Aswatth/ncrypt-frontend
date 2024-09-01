@@ -20,6 +20,10 @@ class _LoginDataPageState extends State<LoginDataPage> {
   List<LoginData> _loginDataList = [];
   List<LoginData> _filteredDataList = [];
 
+  TextEditingController _searchController = TextEditingController();
+  bool _showFavourites = false;
+  bool _showRequireMasterPasswordData = false;
+
   @override
   void initState() {
     super.initState();
@@ -194,18 +198,118 @@ class _LoginDataPageState extends State<LoginDataPage> {
         children: [
           Padding(
             padding: const EdgeInsets.all(20.0),
-            child: TextFormField(
-              decoration: InputDecoration(
-                hintText: "Search",
-              ),
-              onChanged: (value) {
-                setState(() {
-                  _filteredDataList = _loginDataList
-                      .where((m) =>
-                          m.name.toLowerCase().startsWith(value.toLowerCase()))
-                      .toList();
-                });
-              },
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      hintText: "Search",
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _searchController.clear();
+                            _filteredDataList = _loginDataList;
+
+                            if (_showFavourites) {
+                              _filteredDataList = _filteredDataList
+                                  .where((m) => m.attributes.isFavourite)
+                                  .toList();
+                            }
+
+                            if (_showRequireMasterPasswordData) {
+                              _filteredDataList = _filteredDataList
+                                  .where(
+                                      (m) => m.attributes.requireMasterPassword)
+                                  .toList();
+                            }
+                          });
+                        },
+                        icon: Icon(Icons.close),
+                      ),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        _filteredDataList = _loginDataList
+                            .where((m) => m.name
+                                .toLowerCase()
+                                .startsWith(value.toLowerCase()))
+                            .toList();
+
+                        if (_showFavourites) {
+                          _filteredDataList = _filteredDataList
+                              .where((m) => m.attributes.isFavourite)
+                              .toList();
+                        }
+
+                        if (_showRequireMasterPasswordData) {
+                          _filteredDataList = _filteredDataList
+                              .where(
+                                  (m) => m.attributes.requireMasterPassword)
+                              .toList();
+                        }
+                      });
+                    },
+                  ),
+                ),
+                IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _showFavourites = !_showFavourites;
+                        if (_showFavourites) {
+                          _filteredDataList = _filteredDataList
+                              .where((m) => m.attributes.isFavourite)
+                              .toList();
+                        } else {
+                          _filteredDataList = _loginDataList
+                              .where((m) => m.name.toLowerCase().startsWith(
+                                  _searchController.text.toLowerCase()))
+                              .toList();
+
+                          if (_showRequireMasterPasswordData) {
+                            _filteredDataList = _filteredDataList
+                                .where(
+                                    (m) => m.attributes.requireMasterPassword)
+                                .toList();
+                          }
+                        }
+                      });
+                    },
+                    icon: _showFavourites
+                        ? Icon(
+                            Icons.star,
+                            color: Colors.yellow,
+                          )
+                        : Icon(Icons.star_outline)),
+                Text("Favourites"),
+                IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _showRequireMasterPasswordData =
+                            !_showRequireMasterPasswordData;
+                        if (_showRequireMasterPasswordData) {
+                          _filteredDataList = _filteredDataList
+                              .where((m) => m.attributes.requireMasterPassword)
+                              .toList();
+                        } else {
+                          _filteredDataList = _loginDataList
+                              .where((m) => m.name.toLowerCase().startsWith(
+                                  _searchController.text.toLowerCase()))
+                              .toList();
+
+                          if (_showFavourites) {
+                            _filteredDataList = _filteredDataList
+                                .where((m) => m.attributes.isFavourite)
+                                .toList();
+                          }
+                        }
+                      });
+                    },
+                    icon: _showRequireMasterPasswordData
+                        ? Icon(Icons.lock)
+                        : Icon(Icons.lock_outline)),
+                Text("Require master password"),
+              ],
             ),
           ),
           _loginDataList.isEmpty
