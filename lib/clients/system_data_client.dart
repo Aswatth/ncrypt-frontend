@@ -139,7 +139,30 @@ class SystemDataClient {
   Future<dynamic> backup() async {
     var url = Uri.http("localhost:${EnvLoader().PORT}", "/system/backup");
 
-    var response = await http.post(url,headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
+    var response = await http.post(url,
+        headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
+
+    if (response.statusCode == 200) {
+      return "";
+    } else {
+      var json = convert.jsonDecode(response.body) as String;
+      return json;
+    }
+  }
+
+  Future<dynamic> updateAutomaticBackupData(bool automaticBackup, String backupFolderPath, String backupFileName) async {
+    var url = Uri.http(
+        "localhost:${EnvLoader().PORT}", "/system/automatic_backup_setting");
+
+    String jsonString = convert.jsonEncode({
+      "automatic_backup": automaticBackup,
+      "backup_folder_path": backupFolderPath,
+      "backup_file_name": backupFileName
+    });
+
+    var response = await http.put(url,
+        body: jsonString,
+        headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
 
     if (response.statusCode == 200) {
       return "";
