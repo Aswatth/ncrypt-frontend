@@ -58,11 +58,19 @@ class AutomaticBackupData extends StatefulWidget {
 }
 
 class _AutomaticBackupDataState extends State<AutomaticBackupData> {
-  bool _automaticBackup = SystemDataClient().SYSTEM_DATA!.automaticBackup;
-  String _backupFolderPath =
-      SystemDataClient().SYSTEM_DATA!.automaticBackupLocation;
-  final TextEditingController _backupFileNameController = TextEditingController(
-      text: SystemDataClient().SYSTEM_DATA!.backupFileName);
+  late bool _automaticBackup;
+  late String _backupFolderPath;
+  late final TextEditingController _backupFileNameController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _automaticBackup = SystemDataClient().SYSTEM_DATA!.automaticBackup;
+    _backupFolderPath = SystemDataClient().SYSTEM_DATA!.automaticBackupLocation;
+    _backupFileNameController = TextEditingController(
+        text: SystemDataClient().SYSTEM_DATA!.backupFileName);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,6 +149,11 @@ class _AutomaticBackupDataState extends State<AutomaticBackupData> {
                       setState(() {
                         SystemDataClient().SYSTEM_DATA!.automaticBackup =
                             _automaticBackup;
+                        SystemDataClient()
+                            .SYSTEM_DATA!
+                            .automaticBackupLocation = _backupFolderPath;
+                        SystemDataClient().SYSTEM_DATA!.backupFileName =
+                            _backupFileNameController.text;
                       });
                       Navigator.of(context).pop();
                     } else {
