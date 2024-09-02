@@ -1,4 +1,4 @@
-import 'package:frontend/clients/env_loader.dart';
+import 'package:frontend/utils/system.dart';
 import 'package:frontend/clients/system_data_client.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
@@ -13,7 +13,7 @@ class MasterPasswordClient {
   }
 
   Future<String> setMasterPassword(String password) async {
-    var url = Uri.http("localhost:${EnvLoader().PORT}", "/master_password");
+    var url = Uri.http("localhost:${System().PORT}", "/master_password");
 
     String jsonString = convert.jsonEncode({"master_password": password});
 
@@ -36,7 +36,7 @@ class MasterPasswordClient {
   }
 
   Future<String> updateMasterPassword(String password) async {
-    var url = Uri.http("localhost:${EnvLoader().PORT}", "/master_password");
+    var url = Uri.http("localhost:${System().PORT}", "/master_password");
 
     String jsonString = convert.jsonEncode({"master_password": password});
     var response = await http.put(url,body: jsonString, headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
@@ -50,7 +50,7 @@ class MasterPasswordClient {
   }
 
   Future<String> validateMasterPassword(String password) async {
-    var url = Uri.http("localhost:${EnvLoader().PORT}", "/master_password/validate");
+    var url = Uri.http("localhost:${System().PORT}", "/master_password/validate");
 
     String jsonString = convert.jsonEncode({"master_password": password});
 

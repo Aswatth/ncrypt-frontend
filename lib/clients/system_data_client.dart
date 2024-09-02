@@ -1,4 +1,4 @@
-import 'package:frontend/clients/env_loader.dart';
+import 'package:frontend/utils/system.dart';
 import 'package:frontend/models/system_data.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
@@ -19,7 +19,7 @@ class SystemDataClient {
   Future<dynamic> getGeneratedPassword(bool hasDigits, bool hasUpperCase,
       bool hasSpecialChar, int length) async {
     var url =
-        Uri.http("localhost:${EnvLoader().PORT}", "/system/generate_password", {
+        Uri.http("localhost:${System().PORT}", "/system/generate_password", {
       "hasDigits": hasDigits.toString(),
       "hasUpperCase": hasUpperCase.toString(),
       "hasSpecialChar": hasSpecialChar.toString(),
@@ -39,7 +39,7 @@ class SystemDataClient {
   }
 
   Future<dynamic> getSystemData() async {
-    var url = Uri.http("localhost:${EnvLoader().PORT}", "/system/login_info");
+    var url = Uri.http("localhost:${System().PORT}", "/system/login_info");
 
     var response = await http.get(url,
         headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
@@ -56,7 +56,7 @@ class SystemDataClient {
 
   Future<dynamic> setup(String password, bool automaticBackup,
       String backupFolderPath, String backupFileName) async {
-    var url = Uri.http("localhost:${EnvLoader().PORT}", "/system/setup");
+    var url = Uri.http("localhost:${System().PORT}", "/system/setup");
 
     String jsonString = convert.jsonEncode({
       "master_password": password,
@@ -76,7 +76,7 @@ class SystemDataClient {
   }
 
   Future<String> login(String password) async {
-    var url = Uri.http("localhost:${EnvLoader().PORT}", "/system/login");
+    var url = Uri.http("localhost:${System().PORT}", "/system/login");
 
     String jsonString = convert.jsonEncode({"master_password": password});
     var response = await http.post(url, body: jsonString);
@@ -91,7 +91,7 @@ class SystemDataClient {
   }
 
   Future<String> logout() async {
-    var url = Uri.http("localhost:${EnvLoader().PORT}", "/system/logout");
+    var url = Uri.http("localhost:${System().PORT}", "/system/logout");
 
     var response = await http.post(url,
         headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
@@ -105,7 +105,7 @@ class SystemDataClient {
   }
 
   Future<dynamic> export(String path, String fileName) async {
-    var url = Uri.http("localhost:${EnvLoader().PORT}", "/system/export");
+    var url = Uri.http("localhost:${System().PORT}", "/system/export");
 
     String jsonString =
         convert.jsonEncode({"file_name": fileName, "path": path});
@@ -122,7 +122,7 @@ class SystemDataClient {
   }
 
   Future<dynamic> import(String path, String fileName, String password) async {
-    var url = Uri.http("localhost:${EnvLoader().PORT}", "/system/import");
+    var url = Uri.http("localhost:${System().PORT}", "/system/import");
 
     String jsonString = convert.jsonEncode(
         {"file_name": fileName, "path": path, "master_password": password});
@@ -137,7 +137,7 @@ class SystemDataClient {
   }
 
   Future<dynamic> backup() async {
-    var url = Uri.http("localhost:${EnvLoader().PORT}", "/system/backup");
+    var url = Uri.http("localhost:${System().PORT}", "/system/backup");
 
     var response = await http.post(url,
         headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
@@ -152,7 +152,7 @@ class SystemDataClient {
 
   Future<dynamic> updateAutomaticBackupData(bool automaticBackup, String backupFolderPath, String backupFileName) async {
     var url = Uri.http(
-        "localhost:${EnvLoader().PORT}", "/system/automatic_backup_setting");
+        "localhost:${System().PORT}", "/system/automatic_backup_setting");
 
     String jsonString = convert.jsonEncode({
       "automatic_backup": automaticBackup,

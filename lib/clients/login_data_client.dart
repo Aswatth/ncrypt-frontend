@@ -1,4 +1,4 @@
-import 'package:frontend/clients/env_loader.dart';
+import 'package:frontend/utils/system.dart';
 import 'package:frontend/clients/system_data_client.dart';
 import 'package:frontend/models/login.dart';
 import 'dart:convert' as convert;
@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 
 class LoginDataClient {
   Future<dynamic> addLoginData(LoginData data) async {
-    var url = Uri.http("localhost:${EnvLoader().PORT}", "/login");
+    var url = Uri.http("localhost:${System().PORT}", "/login");
 
     String jsonString = convert.jsonEncode(data.toJson());
 
@@ -21,7 +21,7 @@ class LoginDataClient {
   }
 
   Future<dynamic> getAllLoginData() async {
-    var url = Uri.http("localhost:${EnvLoader().PORT}", "/login");
+    var url = Uri.http("localhost:${System().PORT}", "/login");
 
     var response = await http.get(url,headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
 
@@ -42,7 +42,7 @@ class LoginDataClient {
   }
 
   Future<dynamic> updateLoginData(String name, LoginData data) async {
-    var url = Uri.http("localhost:${EnvLoader().PORT}", "/login/${name}");
+    var url = Uri.http("localhost:${System().PORT}", "/login/${name}");
 
     String jsonString = convert.jsonEncode(data.toJson());
 
@@ -58,7 +58,7 @@ class LoginDataClient {
 
   Future<dynamic> deleteLoginData(String loginDataName) async {
     var url =
-        Uri.http("localhost:${EnvLoader().PORT}", "/login/$loginDataName");
+        Uri.http("localhost:${System().PORT}", "/login/$loginDataName");
 
     var response = await http.delete(url,headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
 
@@ -71,7 +71,7 @@ class LoginDataClient {
   }
 
   Future<dynamic> getDecryptedPassword(String name, String username) async {
-    var url = Uri.http("localhost:${EnvLoader().PORT}", "/login/$name", {"username": username});
+    var url = Uri.http("localhost:${System().PORT}", "/login/$name", {"username": username});
 
     var response = await http.get(url, headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
 
