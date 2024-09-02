@@ -2,17 +2,20 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:frontend/clients/env_loader.dart';
+import 'package:frontend/utils/system.dart';
 import 'package:frontend/clients/master_password_client.dart';
 import 'package:frontend/clients/system_data_client.dart';
-import 'package:frontend/custom_toast/custom_toast.dart';
+import 'package:frontend/utils/custom_toast.dart';
 import 'package:frontend/general_pages/login_page.dart';
 import 'package:frontend/master_password_pages/set_password.dart';
 
 void main(List<String> args) async {
-  EnvLoader().PORT = int.parse(args[0]);
+  System().PORT = int.parse(args[0]);
+  System().IsNewUser = bool.parse(args[1]);
+
   SystemDataClient();
   MasterPasswordClient();
+
   runApp(const MyApp());
 }
 
@@ -220,25 +223,6 @@ class _LoadPageState extends State<LoadPage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<dynamic>(
-        future: SystemDataClient().login(""),
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-          if (!snapshot.hasData) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            if (snapshot.hasData && snapshot.data is String) {
-              if (snapshot.data == "Key not found") {
-                return SetPassword();
-              } else {
-                return LoginPage();
-              }
-            }
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        });
+    return System().IsNewUser ? SetPassword() : LoginPage();
   }
 }
