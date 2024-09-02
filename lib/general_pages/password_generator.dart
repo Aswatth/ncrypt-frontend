@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/clients/system_data_client.dart';
-import 'package:frontend/custom_toast/custom_toast.dart';
+import 'package:frontend/utils/custom_toast.dart';
 
 class PasswordGenerator extends StatefulWidget {
   const PasswordGenerator({super.key});

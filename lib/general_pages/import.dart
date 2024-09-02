@@ -1,7 +1,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/clients/system_data_client.dart';
-import 'package:frontend/custom_toast/custom_toast.dart';
+import 'package:frontend/utils/custom_toast.dart';
 import 'package:frontend/general_pages/login_page.dart';
 
 class ImportPage extends StatefulWidget {

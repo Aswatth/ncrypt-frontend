@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/clients/login_data_client.dart';
-import 'package:frontend/custom_toast/custom_toast.dart';
+import 'package:frontend/utils/custom_toast.dart';
 import 'package:frontend/models/attributes.dart';
 import 'package:frontend/models/login_account.dart';
 
