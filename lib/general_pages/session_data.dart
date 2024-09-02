@@ -78,14 +78,16 @@ class _SessionDataState extends State<SessionData> {
     int year = dateTime.year;
 
     bool isAM = true;
-    if(dateTime.hour >= 12) {
+    int h = dateTime.hour;
+    if(h >= 12) {
       isAM = false;
+      h = h - 12;
     }
 
-    String hour = dateTime.hour.toString().padLeft(2, '0');
+    String hour = h.toString().padLeft(2, '0');
     String minute = dateTime.minute.toString().padLeft(2, '0');
 
-    return "$month, $day $year $hour:$minute ${isAM ? "AM" : "PM"}";
+    return "$month, $day $year\n$hour:$minute ${isAM ? "AM" : "PM"}";
   }
 
   String formatTime(int seconds) {
