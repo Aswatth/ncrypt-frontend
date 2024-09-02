@@ -113,13 +113,13 @@ class _HomePageState extends State<HomePage> {
                             if (index == _optionText.length - 1) {
                               SystemDataClient().logout().then((value) {
                                 if (context.mounted) {
-                                  if (value == null || value.isEmpty) {
+                                  if (value.isEmpty) {
                                     CustomToast.success(
                                         context, "Logged out successfully!");
                                     Navigator.of(context).pop();
                                   } else {
                                     CustomToast.error(context,
-                                        "Error occured while logging out");
+                                        "Error occurred while logging out");
                                   }
                                 }
                               });

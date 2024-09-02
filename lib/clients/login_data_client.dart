@@ -28,6 +28,9 @@ class LoginDataClient {
     if (response.statusCode == 200) {
       var data = convert.jsonDecode(response.body);
 
+      if(data == null) {
+        return null;
+      }
       List<dynamic> loginDataList =
       data.map((json) => LoginData.fromJson(json)).toList();
 

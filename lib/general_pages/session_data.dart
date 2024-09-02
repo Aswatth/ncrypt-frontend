@@ -15,9 +15,8 @@ class SessionData extends StatefulWidget {
 
 class _SessionDataState extends State<SessionData> {
   Timer? _timer;
-  int currentTimeInSeconds = 0;
+  int sessionTimeInSeconds = 0;
   DateTime? lastLogin;
-  bool automaticBackup = false;
 
   @override
   void initState() {
@@ -31,9 +30,8 @@ class _SessionDataState extends State<SessionData> {
     SystemDataClient().getSystemData().then((value) {
       if (value != null && value is SystemData) {
         setState(() {
-          currentTimeInSeconds = value.sessionTimeInMinutes * 60;
+          sessionTimeInSeconds = value.sessionTimeInMinutes * 60;
           lastLogin = DateTime.parse(value.lastLoginDateTime).toLocal();
-          automaticBackup = value.automaticBackup;
         });
       }
     });
@@ -41,7 +39,7 @@ class _SessionDataState extends State<SessionData> {
 
   void startTimer() {
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (currentTimeInSeconds == 0) {
+      if (sessionTimeInSeconds == 0) {
         setState(() {
           CustomToast.info(context, "Session expired!\nPlease login again");
           Navigator.pushAndRemoveUntil(
@@ -53,7 +51,7 @@ class _SessionDataState extends State<SessionData> {
         });
       } else {
         setState(() {
-          currentTimeInSeconds--;
+          sessionTimeInSeconds--;
         });
       }
     });
@@ -111,14 +109,10 @@ class _SessionDataState extends State<SessionData> {
         ListTile(
           title: Text("Session"),
           trailing: Text(
-            formatTime(currentTimeInSeconds),
+            formatTime(sessionTimeInSeconds),
             style: TextStyle(
                 fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
           ),
-        ),
-        ListTile(
-          title: Text("Automatic backup"),
-          trailing: automaticBackup ? Icon(Icons.check, color: Colors.green ,) : Icon(Icons.close, color: Colors.red,),
         ),
         ListTile(
           title: Text("Last login"),
