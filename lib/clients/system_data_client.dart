@@ -139,7 +139,7 @@ class SystemDataClient {
   Future<dynamic> backup() async {
     var url = Uri.http("localhost:${EnvLoader().PORT}", "/system/backup");
 
-    var response = await http.post(url);
+    var response = await http.post(url,headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
 
     if (response.statusCode == 200) {
       return "";
