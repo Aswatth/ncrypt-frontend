@@ -26,6 +26,10 @@ class _ImportPageState extends State<ImportPage> {
       if (value != null) {
         setState(() {
           _selectedLocation = value.files.single.path!;
+          if (!_selectedLocation.endsWith(".ncrypt")) {
+            CustomToast.error(context,
+                "Invalid file\nRequired .ncrypt file");
+          }
         });
       }
     });
@@ -63,14 +67,15 @@ class _ImportPageState extends State<ImportPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: widget.showBackButton,
-        title: Text("Import data"),
+        title: Text("Import data",
+            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Form(
           key: _formKey,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               ListTile(
                 leading: Icon(Icons.folder),
@@ -119,23 +124,26 @@ class _ImportPageState extends State<ImportPage> {
               SizedBox(
                 height: 20,
               ),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    if (_selectedLocation.isEmpty) {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return SimpleDialog(
-                              title: Text("Please choose a file to import"),
-                            );
-                          });
-                    } else {
-                      import();
+              Container(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      if (_selectedLocation.isEmpty) {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return SimpleDialog(
+                                title: Text("Please choose a file to import"),
+                              );
+                            });
+                      } else {
+                        import();
+                      }
                     }
-                  }
-                },
-                child: Text("Import"),
+                  },
+                  child: Text("Import"),
+                ),
               ),
             ],
           ),
