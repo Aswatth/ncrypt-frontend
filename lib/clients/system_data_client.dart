@@ -90,6 +90,20 @@ class SystemDataClient {
     }
   }
 
+  Future<String> logout() async {
+    var url = Uri.http("localhost:${EnvLoader().PORT}", "/system/logout");
+
+    var response = await http.post(url,
+        headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
+
+    if (response.statusCode == 200) {
+      return "";
+    } else {
+      var json = convert.jsonDecode(response.body) as String;
+      return json;
+    }
+  }
+
   Future<dynamic> export(String path, String fileName) async {
     var url = Uri.http("localhost:${EnvLoader().PORT}", "/system/export");
 

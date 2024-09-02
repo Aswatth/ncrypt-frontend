@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/clients/system_data_client.dart';
+import 'package:frontend/custom_toast/custom_toast.dart';
 import 'package:frontend/general_pages/export.dart';
 import 'package:frontend/general_pages/import.dart';
-import 'package:frontend/general_pages/session_timer.dart';
+import 'package:frontend/general_pages/session_data.dart';
 import 'package:frontend/general_pages/settings.dart';
 import 'package:frontend/login_data_pages/login_data_page.dart';
 
@@ -55,12 +56,11 @@ class _HomePageState extends State<HomePage> {
     activeColor = primaryHSL.toColor();
     inactiveColor = Colors.white60;
 
-    SystemDataClient().getSystemData().then((_){
+    SystemDataClient().getSystemData().then((_) {
       setState(() {
         sessionTime = SystemDataClient().SYSTEM_DATA!.sessionTimeInMinutes;
       });
     });
-
   }
 
   @override
@@ -111,7 +111,18 @@ class _HomePageState extends State<HomePage> {
                         onTap: () {
                           setState(() {
                             if (index == _optionText.length - 1) {
-                              Navigator.of(context).pop();
+                              SystemDataClient().logout().then((value) {
+                                if (context.mounted) {
+                                  if (value == null || value.isEmpty) {
+                                    CustomToast.success(
+                                        context, "Logged out successfully!");
+                                    Navigator.of(context).pop();
+                                  } else {
+                                    CustomToast.error(context,
+                                        "Error occured while logging out");
+                                  }
+                                }
+                              });
                             } else {
                               _selectedIndex = index;
                             }
@@ -119,9 +130,8 @@ class _HomePageState extends State<HomePage> {
                         },
                       );
                     }),
-                sessionTime != 0
-                    ? SessionTimer(time_in_seconds: sessionTime*60)
-                    : Container()
+                Divider(),
+                sessionTime != 0 ? SessionData() : Container()
               ],
             ),
           ),
