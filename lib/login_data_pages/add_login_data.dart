@@ -21,6 +21,8 @@ class _AddLoginDataState extends State<AddLoginData> {
   bool _requireMasterPassword = false;
 
   final List<Account> _accountList = [];
+  List<TextEditingController> _usernameControllerList = [];
+  List<TextEditingController> _passwordControllerList = [];
   List<bool> _passwordVisibility = [];
 
   void addLoginData() {
@@ -164,6 +166,10 @@ class _AddLoginDataState extends State<AddLoginData> {
                     onPressed: () {
                       setState(() {
                         _accountList.add(Account.empty());
+                        _usernameControllerList
+                            .add(TextEditingController(text: ""));
+                        _passwordControllerList
+                            .add(TextEditingController(text: ""));
                         _passwordVisibility.add(false);
                       });
                     },
@@ -199,19 +205,18 @@ class _AddLoginDataState extends State<AddLoginData> {
                                 child: ListTile(
                                   leading: Icon(Icons.person),
                                   title: TextFormField(
-                                    initialValue: _accountList[index].username,
+                                    controller: _usernameControllerList[index],
                                     decoration: InputDecoration(
                                       hintText: "Username",
                                     ),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _accountList[index].username = value;
-                                      });
-                                    },
                                     validator: (value) {
-                                      if (value == null || value.isEmpty) {
+                                      if (value == null ||
+                                          _usernameControllerList[index]
+                                              .text
+                                              .isEmpty) {
                                         return 'Username cannot be empty';
                                       }
+                                      return null;
                                     },
                                   ),
                                 ),
@@ -223,7 +228,7 @@ class _AddLoginDataState extends State<AddLoginData> {
                                 child: ListTile(
                                   leading: Icon(Icons.password),
                                   title: TextFormField(
-                                    initialValue: _accountList[index].password,
+                                    controller: _passwordControllerList[index],
                                     obscureText: !_passwordVisibility[index],
                                     decoration: InputDecoration(
                                       hintText: "Password",
@@ -239,15 +244,14 @@ class _AddLoginDataState extends State<AddLoginData> {
                                             : Icon(Icons.visibility_off),
                                       ),
                                     ),
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _accountList[index].password = value;
-                                      });
-                                    },
                                     validator: (value) {
-                                      if (value == null || value.isEmpty) {
+                                      if (value == null ||
+                                          _passwordControllerList[index]
+                                              .text
+                                              .isEmpty) {
                                         return 'Password cannot be empty';
                                       }
+                                      return null;
                                     },
                                   ),
                                 ),
@@ -257,6 +261,8 @@ class _AddLoginDataState extends State<AddLoginData> {
                                 onPressed: () {
                                   setState(() {
                                     _accountList.removeAt(index);
+                                    _usernameControllerList.removeAt(index);
+                                    _passwordControllerList.removeAt(index);
                                     _passwordVisibility.removeAt(index);
                                   });
                                 },
@@ -273,6 +279,12 @@ class _AddLoginDataState extends State<AddLoginData> {
                   child: ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
+                          for (int i = 0; i < _accountList.length; ++i) {
+                            _accountList[i].username =
+                                _usernameControllerList[i].text;
+                            _accountList[i].password =
+                                _passwordControllerList[i].text;
+                          }
                           addLoginData();
                         }
                       },
