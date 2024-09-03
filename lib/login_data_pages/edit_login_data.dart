@@ -23,6 +23,7 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
   bool _requireMasterPassword = false;
   List<Account> _existingAccountList = [];
   List<Account> _accountList = [];
+  List<bool> _passwordVisibility = [];
 
   @override
   void initState() {
@@ -220,6 +221,7 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                     onPressed: () {
                       setState(() {
                         _accountList.add(Account.empty());
+                        _passwordVisibility.add(false);
                       });
                     },
                     child: Text("Add account"),
@@ -399,9 +401,21 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                     title: TextFormField(
                                       initialValue:
                                           _accountList[index].password,
-                                      obscureText: true,
-                                      decoration:
-                                          InputDecoration(hintText: "Password"),
+                                      obscureText: !_passwordVisibility[index],
+                                      decoration: InputDecoration(
+                                        hintText: "Password",
+                                        suffixIcon: IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              _passwordVisibility[index] =
+                                                  !_passwordVisibility[index];
+                                            });
+                                          },
+                                          icon: _passwordVisibility[index]
+                                              ? Icon(Icons.visibility)
+                                              : Icon(Icons.visibility_off),
+                                        ),
+                                      ),
                                       onChanged: (value) {
                                         setState(() {
                                           _accountList[index].password = value;
@@ -415,6 +429,7 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                   onPressed: () {
                                     setState(() {
                                       _accountList.removeAt(index);
+                                      _passwordVisibility.removeAt(index);
                                     });
                                   },
                                   icon: Icon(Icons.delete))
