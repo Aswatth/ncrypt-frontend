@@ -22,6 +22,9 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
   bool _isFavourite = false;
   bool _requireMasterPassword = false;
   List<Account> _existingAccountList = [];
+
+  List<TextEditingController> _usernameController = [];
+  List<TextEditingController> _passwordController = [];
   List<Account> _accountList = [];
   List<bool> _passwordVisibility = [];
 
@@ -221,6 +224,10 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                     onPressed: () {
                       setState(() {
                         _accountList.add(Account.empty());
+                        _usernameController
+                            .add(TextEditingController(text: ""));
+                        _passwordController
+                            .add(TextEditingController(text: ""));
                         _passwordVisibility.add(false);
                       });
                     },
@@ -373,18 +380,12 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                   child: ListTile(
                                     leading: Icon(Icons.person),
                                     title: TextFormField(
-                                      initialValue:
-                                          _accountList[index].username,
                                       decoration: InputDecoration(
                                         hintText: "Username",
                                       ),
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _accountList[index].username = value;
-                                        });
-                                      },
+                                      controller: _usernameController[index],
                                       validator: (value) {
-                                        if (value == null || value.isEmpty) {
+                                        if (value == null || _usernameController[index].text.isEmpty) {
                                           return 'Username cannot be empty';
                                         }
                                         return null;
@@ -399,8 +400,13 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                   child: ListTile(
                                     leading: Icon(Icons.password),
                                     title: TextFormField(
-                                      initialValue:
-                                          _accountList[index].password,
+                                      controller: _passwordController[index],
+                                      validator: (value) {
+                                        if (value == null || _passwordController[index].text.isEmpty) {
+                                          return 'Password cannot be empty';
+                                        }
+                                        return null;
+                                      },
                                       obscureText: !_passwordVisibility[index],
                                       decoration: InputDecoration(
                                         hintText: "Password",
@@ -416,11 +422,6 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                               : Icon(Icons.visibility_off),
                                         ),
                                       ),
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _accountList[index].password = value;
-                                        });
-                                      },
                                     ),
                                   ),
                                 ),
@@ -429,6 +430,8 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                   onPressed: () {
                                     setState(() {
                                       _accountList.removeAt(index);
+                                      _usernameController.removeAt(index);
+                                      _passwordController.removeAt(index);
                                       _passwordVisibility.removeAt(index);
                                     });
                                   },
@@ -446,6 +449,12 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
+                        for (int i = 0; i < _accountList.length; ++i) {
+                          _accountList[i].username =
+                              _usernameController[i].text;
+                          _accountList[i].password =
+                              _passwordController[i].text;
+                        }
                         saveUpdates();
                       }
                     },
