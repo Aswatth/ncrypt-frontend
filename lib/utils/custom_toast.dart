@@ -70,7 +70,7 @@ class _ToastWidgetState extends State<ToastWidget> {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      top: 50.0, // Distance from the top
+      top: 20.0, // Distance from the top
       right: 20.0, // Distance from the right
       child: AnimatedOpacity(
         opacity: visibility ? 1.0 : 0.0,
