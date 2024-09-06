@@ -5,11 +5,8 @@ import 'package:frontend/utils/custom_toast.dart';
 import 'package:frontend/general_pages/login_page.dart';
 
 class ImportPage extends StatefulWidget {
-  final bool showBackButton;
-  final bool navigateToLogin;
 
-  ImportPage(
-      {super.key, required this.showBackButton, required this.navigateToLogin});
+  const ImportPage({super.key});
 
   @override
   State<ImportPage> createState() => _ImportPageState();
@@ -27,8 +24,7 @@ class _ImportPageState extends State<ImportPage> {
         setState(() {
           _selectedLocation = value.files.single.path!;
           if (!_selectedLocation.endsWith(".ncrypt")) {
-            CustomToast.error(context,
-                "Invalid file\nRequired .ncrypt file");
+            CustomToast.error(context, "Invalid file\nRequired .ncrypt file");
           }
         });
       }
@@ -49,12 +45,10 @@ class _ImportPageState extends State<ImportPage> {
       if (context.mounted) {
         if (response != null && response is String && response.isEmpty) {
           CustomToast.success(context, "Import successful");
-          if (widget.navigateToLogin) {
-            Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
-                    builder: (BuildContext context) => LoginPage()),
-                (route) => false);
-          }
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (contex) => LoginPage()),
+                (route) => false,
+          );
         } else {
           CustomToast.error(context, response);
         }
@@ -64,91 +58,89 @@ class _ImportPageState extends State<ImportPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: widget.showBackButton,
-        title: Text("Import data",
-            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              ListTile(
-                leading: Icon(Icons.folder),
-                title: _selectedLocation.isEmpty
-                    ? Text("Choose import data location")
-                    : Text(_selectedLocation),
-                trailing: ElevatedButton(
-                  onPressed: () {
-                    loadFile();
-                  },
-                  child: Text("Choose"),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              TextFormField(
-                controller: _passwordController,
-                obscureText: !_visibility,
-                decoration: InputDecoration(
-                  label: Text(
-                    "Enter master password",
-                  ),
-                  hintMaxLines: 16,
-                  hintStyle: TextStyle(color: Colors.white24, fontSize: 14),
-                  hintText: "master password",
-                  suffixIcon: IconButton(
-                    icon: _visibility
-                        ? Icon(Icons.visibility)
-                        : Icon(
-                            Icons.visibility_off,
-                          ),
+    return SimpleDialog(
+      title: Text("Import"),
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ListTile(
+                  leading: Icon(Icons.folder),
+                  title: _selectedLocation.isEmpty
+                      ? Text("Choose import data location")
+                      : Text(_selectedLocation),
+                  trailing: ElevatedButton(
                     onPressed: () {
-                      setState(() {
-                        _visibility = !_visibility;
-                      });
+                      loadFile();
                     },
+                    child: Text("Choose"),
                   ),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Password cannot be empty";
-                  }
-                },
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Container(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      if (_selectedLocation.isEmpty) {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return SimpleDialog(
-                                title: Text("Please choose a file to import"),
-                              );
-                            });
-                      } else {
-                        import();
-                      }
+                SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  controller: _passwordController,
+                  obscureText: !_visibility,
+                  decoration: InputDecoration(
+                    label: Text(
+                      "Enter master password",
+                    ),
+                    hintMaxLines: 16,
+                    hintStyle: TextStyle(color: Colors.white24, fontSize: 14),
+                    hintText: "master password",
+                    suffixIcon: IconButton(
+                      icon: _visibility
+                          ? Icon(Icons.visibility)
+                          : Icon(
+                        Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _visibility = !_visibility;
+                        });
+                      },
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Password cannot be empty";
                     }
                   },
-                  child: Text("Import"),
                 ),
-              ),
-            ],
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        if (_selectedLocation.isEmpty) {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return SimpleDialog(
+                                  title: Text("Please choose a file to import"),
+                                );
+                              });
+                        } else {
+                          import();
+                        }
+                      }
+                    },
+                    child: Text("Import"),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
 }

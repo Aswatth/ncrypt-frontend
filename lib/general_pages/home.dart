@@ -1,7 +1,8 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/clients/system_data_client.dart';
+import 'package:frontend/utils/colors.dart';
 import 'package:frontend/utils/custom_toast.dart';
-import 'package:frontend/general_pages/export.dart';
 import 'package:frontend/general_pages/import.dart';
 import 'package:frontend/general_pages/session_data.dart';
 import 'package:frontend/general_pages/settings.dart';
@@ -15,129 +16,210 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<IconData> _optionIconList = [
-    Icons.security,
-    Icons.note,
-    Icons.upload,
-    Icons.download,
-    Icons.settings,
-    Icons.logout
-  ];
-  final List<String> _optionText = [
-    "Login",
-    "Notes",
-    "Import",
-    "Export",
-    "Settings",
-    "Logout"
-  ];
-  final List<Widget> _optionContent = [
-    LoginDataPage(),
-    Text("Notes"),
-    ImportPage(
-      showBackButton: false,
-      navigateToLogin: false,
-    ),
-    ExportPage(),
-    SettingsPage()
-  ];
-  int _selectedIndex = 0;
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Container(
+              decoration:
+                  BoxDecoration(color: AppColors().backgroundColor, boxShadow: [
+                BoxShadow(
+                  color: AppColors().accentColor,
+                  offset: Offset(0, -2),
+                  blurRadius: 5.0,
+                  spreadRadius: 1.0,
+                )
+              ]),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "Ncrypt".toUpperCase(),
+                        style: TextStyle(fontSize: 32, letterSpacing: 3),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return ImportPage();
+                                });
+                          },
+                          child: Row(
+                            children: [
+                              Text(
+                                "Import".toUpperCase(),
+                              ),
+                              Icon(
+                                Icons.upload,
+                                color: AppColors().textColor,
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            FilePicker.platform.saveFile(
+                                dialogTitle: 'Please select an output file:',
+                                fileName: 'backup.ncrypt',
+                                allowedExtensions: ['ncrypt']).then((value) {
+                              if (value != null) {
+                                List<String> splitString = value.split("\\");
 
-  int sessionTime = 0;
+                                String fileName = splitString.last;
+                                if (!fileName.contains(".ncrypt")) {
+                                  fileName += ".ncrypt";
+                                }
 
-  late HSLColor primaryHSL;
-  late Color activeColor;
-  late Color inactiveColor;
+                                splitString.removeAt(splitString.length - 1);
+                                String path = splitString.join("\\");
+
+                                SystemDataClient().export(path, fileName).then((response) {
+                                  if (context.mounted) {
+                                    if (response != null && response is String && response.isEmpty) {
+                                      CustomToast.success(context, "Export successful");
+                                    } else {
+                                      CustomToast.error(context, response);
+                                    }
+                                  }
+                                });
+                              }
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              Text(
+                                "Export".toUpperCase(),
+                              ),
+                              Icon(
+                                Icons.download,
+                                color: AppColors().textColor,
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            SystemDataClient().logout().then((value) {
+                              if (context.mounted) {
+                                if (value == null || value.isEmpty) {
+                                  Navigator.of(context).pop();
+                                } else {
+                                  CustomToast.error(context, value);
+                                }
+                              }
+                            });
+                          },
+                          icon: Icon(Icons.logout),
+                          label: Text(
+                            "Logout".toUpperCase(),
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 8,
+            child: HomeContent(),
+          ),
+          Expanded(
+            flex: 1,
+            child: Container(
+              decoration:
+                  BoxDecoration(color: AppColors().backgroundColor, boxShadow: [
+                BoxShadow(
+                  color: AppColors().accentColor,
+                  offset: Offset(0, 2),
+                  blurRadius: 5.0,
+                  spreadRadius: 1.0,
+                )
+              ]),
+              child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
+                  child: SessionData()),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class HomeContent extends StatefulWidget {
+  const HomeContent({super.key});
 
   @override
-  void initState() {
-    super.initState();
-    primaryHSL = HSLColor.fromAHSL(1.0, 177, 0.75, 0.52);
-    activeColor = primaryHSL.toColor();
-    inactiveColor = Colors.white60;
+  State<HomeContent> createState() => _HomeContentState();
+}
 
-    SystemDataClient().getSystemData().then((_) {
-      setState(() {
-        sessionTime = SystemDataClient().SYSTEM_DATA!.sessionTimeInMinutes;
-      });
-    });
+class _HomeContentState extends State<HomeContent> {
+  bool isHovering = false;
+
+  List<Widget> mouseExitWidget() {
+    return [
+      Icon(Icons.person_2_outlined),
+      SizedBox(
+        height: 20,
+      ),
+      Icon(Icons.note_outlined),
+      SizedBox(
+        height: 20,
+      ),
+      Icon(Icons.settings),
+    ];
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+          body: Column(
         children: [
-          SizedBox(
-            // color: Colors.deepPurple,
-            width: MediaQuery.sizeOf(context).width * 0.25 > 400
-                ? MediaQuery.sizeOf(context).width * 0.25
-                : 400,
-            // color: Colors.deepPurple,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Container(
-                    width: double.infinity,
-                    color: Colors.black,
-                    child: Padding(
-                      padding: EdgeInsets.all(50.0),
-                      child: Center(
-                          child: Text(
-                        "Ncrypt",
-                        style:
-                            TextStyle(color: Colors.greenAccent, fontSize: 50),
-                      )),
-                    )),
-                ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: _optionText.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        leading: Icon(
-                          _optionIconList[index],
-                          color: _selectedIndex == index
-                              ? activeColor
-                              : inactiveColor,
-                        ),
-                        title: Text(
-                          _optionText[index],
-                          style: TextStyle(
-                              color: _selectedIndex == index
-                                  ? activeColor
-                                  : inactiveColor),
-                        ),
-                        onTap: () {
-                          setState(() {
-                            if (index == _optionText.length - 1) {
-                              SystemDataClient().logout().then((value) {
-                                if (context.mounted) {
-                                  if (value.isEmpty) {
-                                    CustomToast.success(
-                                        context, "Logged out successfully!");
-                                    Navigator.of(context).pop();
-                                  } else {
-                                    CustomToast.error(context,
-                                        "Error occurred while logging out");
-                                  }
-                                }
-                              });
-                            } else {
-                              _selectedIndex = index;
-                            }
-                          });
-                        },
-                      );
-                    }),
-                Divider(),
-                sessionTime != 0 ? SessionData() : Container()
-              ],
+          TabBar(automaticIndicatorColorAdjustment: true, tabs: [
+            Tab(
+              icon: Icon(
+                Icons.person_2_outlined,
+              ),
+              text: "Login profiles".toUpperCase(),
+            ),
+            Tab(
+              icon: Icon(Icons.note_outlined),
+              text: "Notes".toUpperCase(),
+            ),
+            Tab(
+              icon: Icon(Icons.settings),
+              text: "Settings".toUpperCase(),
+            )
+          ]),
+          Expanded(
+            child: TabBarView(
+              children: [LoginDataPage(), Text("Note page"), SettingsPage()],
             ),
           ),
-          Expanded(child: _optionContent[_selectedIndex])
         ],
-      ),
+      )),
     );
   }
 }

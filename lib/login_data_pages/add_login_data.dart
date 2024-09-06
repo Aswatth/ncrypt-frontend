@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/clients/login_data_client.dart';
+import 'package:frontend/utils/colors.dart';
 import 'package:frontend/utils/custom_toast.dart';
 import 'package:frontend/general_pages/password_generator.dart';
 import 'package:frontend/models/attributes.dart';
@@ -18,12 +19,11 @@ class _AddLoginDataState extends State<AddLoginData> {
   final _nameController = TextEditingController();
   final _urlController = TextEditingController();
   bool _isFavourite = false;
-  bool _requireMasterPassword = false;
-
+  bool _isLocked = false;
   final List<Account> _accountList = [];
-  List<TextEditingController> _usernameControllerList = [];
-  List<TextEditingController> _passwordControllerList = [];
-  List<bool> _passwordVisibility = [];
+  final List<TextEditingController> _usernameControllerList = [];
+  final List<TextEditingController> _passwordControllerList = [];
+  final List<bool> _passwordVisibility = [];
 
   void addLoginData() {
     if (_accountList.isEmpty) {
@@ -32,14 +32,18 @@ class _AddLoginDataState extends State<AddLoginData> {
       }
       return;
     }
+    for(int i = 0; i < _accountList.length; ++i) {
+      _accountList[i].username = _usernameControllerList[i].text;
+      _accountList[i].password = _passwordControllerList[i].text;
+    }
+
     LoginDataClient client = LoginDataClient();
     client
         .addLoginData(LoginData(
             name: _nameController.text,
             url: _urlController.text,
             attributes: Attributes(
-                isFavourite: _isFavourite,
-                requireMasterPassword: _requireMasterPassword),
+                isFavourite: _isFavourite, requireMasterPassword: _isLocked),
             accounts: _accountList))
         .then((value) {
       if (context.mounted) {
@@ -57,138 +61,119 @@ class _AddLoginDataState extends State<AddLoginData> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: BackButton(),
         title: Text("Add login data"),
+        elevation: 1.5,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12.0),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
-              TextFormField(
-                controller: _nameController,
-                decoration:
-                    InputDecoration(hintText: "Name", icon: Icon(Icons.person)),
-                maxLength: 16,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Name cannot be empty';
-                  }
-                },
+              SizedBox(
+                width: double.infinity,
+                child: TextFormField(
+                  controller: _nameController,
+                  maxLength: 16,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Name cannot be empty";
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.account_box_outlined),
+                    filled: true,
+                    label: RichText(
+                        text: TextSpan(children: [
+                      TextSpan(
+                        text: "Name ",
+                        style: TextStyle(
+                            color: AppColors().textColor, fontSize: 16),
+                      ),
+                      TextSpan(
+                          text: "*",
+                          style: TextStyle(
+                              color: Colors.red, fontWeight: FontWeight.bold))
+                    ])),
+                    hintText: "Enter a name for the login data",
+                  ),
+                ),
               ),
-              TextFormField(
-                controller: _urlController,
-                decoration:
-                    InputDecoration(hintText: "URL", icon: Icon(Icons.link)),
+              SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                width: double.infinity,
+                child: TextFormField(
+                  controller: _urlController,
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.link),
+                    label: Text("URL"),
+                    hintText: "Enter a url for the login data",
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 20,
               ),
               Row(
                 children: [
                   Expanded(
                     child: ListTile(
-                      leading: _isFavourite
-                          ? IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  _isFavourite = !_isFavourite;
-                                });
-                              },
-                              icon: Icon(
-                                Icons.favorite,
-                                color: Colors.red,
-                              ))
-                          : IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  _isFavourite = !_isFavourite;
-                                });
-                              },
-                              icon: Icon(Icons.heart_broken_outlined)),
-                      title: Text("Favourite"),
+                      leading: Checkbox(
+                          value: _isFavourite,
+                          onChanged: (_) {
+                            setState(() {
+                              _isFavourite = !_isFavourite;
+                            });
+                          }),
+                      title: Text("Add to favourites"),
                     ),
                   ),
                   Expanded(
                     child: ListTile(
-                      leading: _requireMasterPassword
-                          ? IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  _requireMasterPassword =
-                                      !_requireMasterPassword;
-                                });
-                              },
-                              icon: Icon(
-                                Icons.lock_rounded,
-                                color: Colors.red,
-                              ))
-                          : IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  _requireMasterPassword =
-                                      !_requireMasterPassword;
-                                });
-                              },
-                              icon: Icon(Icons.key_off)),
-                      title: Text("Require master password"),
+                      leading: Checkbox(
+                          value: _isLocked,
+                          onChanged: (_) {
+                            setState(() {
+                              _isLocked = !_isLocked;
+                            });
+                          }),
+                      title: Text("Require master password to view password"),
                     ),
                   ),
                 ],
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
+              SizedBox(
+                width: double.infinity,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                        onPressed: () {
+                          showDialog(context: context, builder: (context){
+                            return PasswordGenerator();
+                          });
+                        }, child: Text("Password generator")),
+                    ElevatedButton.icon(
                       onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return SimpleDialog(
-                              children: [PasswordGenerator()],
-                            );
-                          },
-                        );
+                        setState(() {
+                          _accountList.add(Account.empty());
+                          _usernameControllerList.add(TextEditingController());
+                          _passwordControllerList.add(TextEditingController());
+                          _passwordVisibility.add(false);
+                        });
                       },
-                      style: ButtonStyle(
-                        backgroundColor: WidgetStatePropertyAll(
-                            Theme.of(context).scaffoldBackgroundColor),
-                        shape: WidgetStatePropertyAll(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                            // Border radius
-                            side: BorderSide(
-                                color: Theme.of(context).primaryColor,
-                                width: 2.0), // Border color and width
-                          ),
-                        ),
-                      ),
-                      child: Text("Password generator")),
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        _accountList.add(Account.empty());
-                        _usernameControllerList
-                            .add(TextEditingController(text: ""));
-                        _passwordControllerList
-                            .add(TextEditingController(text: ""));
-                        _passwordVisibility.add(false);
-                      });
-                    },
-                    child: Text("Add account"),
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStatePropertyAll(
-                          Theme.of(context).scaffoldBackgroundColor),
-                      shape: WidgetStatePropertyAll(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                          // Border radius
-                          side: BorderSide(
-                              color: Theme.of(context).primaryColor,
-                              width: 2.0), // Border color and width
-                        ),
-                      ),
+                      label: Text("Add account"),
+                      icon: Icon(Icons.add),
+                      iconAlignment: IconAlignment.start,
                     ),
-                  )
-                ],
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 20,
               ),
               Flexible(
                 child: ListView.builder(
@@ -196,64 +181,70 @@ class _AddLoginDataState extends State<AddLoginData> {
                     itemCount: _accountList.length,
                     itemBuilder: (context, index) {
                       return Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(12.0),
                         child: Row(
                           children: [
                             Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ListTile(
-                                  leading: Icon(Icons.person),
-                                  title: TextFormField(
-                                    controller: _usernameControllerList[index],
-                                    decoration: InputDecoration(
-                                      hintText: "Username",
-                                    ),
-                                    validator: (value) {
-                                      if (value == null ||
-                                          _usernameControllerList[index]
-                                              .text
-                                              .isEmpty) {
-                                        return 'Username cannot be empty';
-                                      }
-                                      return null;
-                                    },
+                              child: TextFormField(
+                                controller: _usernameControllerList[index],
+                                maxLength: 16,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "Username cannot be empty";
+                                  }
+                                  return null;
+                                },
+                                decoration: InputDecoration(
+                                  prefixIcon: Icon(
+                                    Icons.person,
                                   ),
+                                  label: RichText(
+                                      text: TextSpan(children: [
+                                    TextSpan(
+                                        text: "Username ",
+                                        style: TextStyle(
+                                            color: AppColors().textColor)),
+                                    TextSpan(
+                                        text: "*",
+                                        style: TextStyle(
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.bold))
+                                  ])),
+                                  hintText: "Username for the account",
                                 ),
                               ),
                             ),
+                            SizedBox(
+                              width: 20,
+                            ),
                             Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ListTile(
-                                  leading: Icon(Icons.password),
-                                  title: TextFormField(
-                                    controller: _passwordControllerList[index],
-                                    obscureText: !_passwordVisibility[index],
-                                    decoration: InputDecoration(
-                                      hintText: "Password",
-                                      suffixIcon: IconButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            _passwordVisibility[index] =
-                                                !_passwordVisibility[index];
-                                          });
-                                        },
-                                        icon: _passwordVisibility[index]
-                                            ? Icon(Icons.visibility)
-                                            : Icon(Icons.visibility_off),
-                                      ),
-                                    ),
-                                    validator: (value) {
-                                      if (value == null ||
-                                          _passwordControllerList[index]
-                                              .text
-                                              .isEmpty) {
-                                        return 'Password cannot be empty';
-                                      }
-                                      return null;
-                                    },
+                              child: TextFormField(
+                                controller: _passwordControllerList[index],
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return "Password cannot be empty";
+                                  }
+                                  return null;
+                                },
+                                obscureText: !_passwordVisibility[index],
+                                decoration: InputDecoration(
+                                  prefixIcon: Icon(
+                                    Icons.lock,
                                   ),
+                                  label: RichText(
+                                      text: TextSpan(children: [
+                                    TextSpan(
+                                        text: "Password ",
+                                        style: TextStyle(
+                                            color: AppColors().textColor)),
+                                    TextSpan(
+                                        text: "*",
+                                        style: TextStyle(
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.bold))
+                                  ])),
+                                  hintText: "Password for the account",
+                                  hintStyle: TextStyle(color: Colors.grey),
                                 ),
                               ),
                             ),
@@ -261,39 +252,30 @@ class _AddLoginDataState extends State<AddLoginData> {
                                 onPressed: () {
                                   setState(() {
                                     _accountList.removeAt(index);
-                                    _usernameControllerList.removeAt(index);
-                                    _passwordControllerList.removeAt(index);
-                                    _passwordVisibility.removeAt(index);
                                   });
                                 },
-                                icon: Icon(Icons.delete))
+                                icon: Icon(
+                                  Icons.delete,
+                                ))
                           ],
                         ),
                       );
                     }),
               ),
               SizedBox(
+                height: 20,
+              ),
+              SizedBox(
                 width: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          for (int i = 0; i < _accountList.length; ++i) {
-                            _accountList[i].username =
-                                _usernameControllerList[i].text;
-                            _accountList[i].password =
-                                _passwordControllerList[i].text;
-                          }
-                          addLoginData();
-                        }
-                      },
-                      child: Text(
-                        "Add",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      )),
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      addLoginData();
+                    }
+                  },
+                  child: Text("Save"),
                 ),
-              )
+              ),
             ],
           ),
         ),

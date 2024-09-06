@@ -53,14 +53,16 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        generatedPassword == null
-            ? Text(
+    return SimpleDialog(
+        children: [
+          Column(
+            children: [
+              generatedPassword == null
+                  ? Text(
                 "Generated password",
                 style: TextStyle(fontStyle: FontStyle.italic),
               )
-            : Row(
+                  : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(generatedPassword!,
@@ -77,80 +79,82 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
                   )
                 ],
               ),
-        ListTile(
-          title: Text("Should have digits?"),
-          trailing: Switch(
-            value: hasDigits,
-            onChanged: (_) {
-              setState(() {
-                hasDigits = !hasDigits;
-              });
-            },
-          ),
-        ),
-        ListTile(
-          title: Text("Should have uppercase letters?"),
-          trailing: Switch(
-            value: hasUpperCase,
-            onChanged: (_) {
-              setState(() {
-                hasUpperCase = !hasUpperCase;
-              });
-            },
-          ),
-        ),
-        ListTile(
-          title: Text("Should have special characters !, @, #, \$, %, ^, &, *"),
-          trailing: Switch(
-            value: hasSpecialChar,
-            onChanged: (_) {
-              setState(() {
-                hasSpecialChar = !hasSpecialChar;
-              });
-            },
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-          child: Row(
-            children: [
-              Expanded(child: Text("Password length")),
-              IconButton(
-                onPressed: () {
-                  setState(() {
-                    if (length > MIN_LENGTH) {
-                      length -= 1;
-                    }
-                  });
-                },
-                icon: Icon(Icons.remove),
+              ListTile(
+                title: Text("Should have digits?"),
+                trailing: Switch(
+                  value: hasDigits,
+                  onChanged: (_) {
+                    setState(() {
+                      hasDigits = !hasDigits;
+                    });
+                  },
+                ),
               ),
-              Text(length.toString().padLeft(2, '0')),
-              IconButton(
-                onPressed: () {
-                  setState(() {
-                    if (length < MAX_LENGTH) {
-                      length += 1;
-                    }
-                  });
-                },
-                icon: Icon(Icons.add),
+              ListTile(
+                title: Text("Should have uppercase letters?"),
+                trailing: Switch(
+                  value: hasUpperCase,
+                  onChanged: (_) {
+                    setState(() {
+                      hasUpperCase = !hasUpperCase;
+                    });
+                  },
+                ),
+              ),
+              ListTile(
+                title: Text("Should have special characters !, @, #, \$, %, ^, &, *"),
+                trailing: Switch(
+                  value: hasSpecialChar,
+                  onChanged: (_) {
+                    setState(() {
+                      hasSpecialChar = !hasSpecialChar;
+                    });
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: Row(
+                  children: [
+                    Expanded(child: Text("Password length")),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          if (length > MIN_LENGTH) {
+                            length -= 1;
+                          }
+                        });
+                      },
+                      icon: Icon(Icons.remove),
+                    ),
+                    Text(length.toString().padLeft(2, '0')),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          if (length < MAX_LENGTH) {
+                            length += 1;
+                          }
+                        });
+                      },
+                      icon: Icon(Icons.add),
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                width: double.infinity,
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: ElevatedButton(
+                      onPressed: () {
+                        generatePassword();
+                      },
+                      child: Text("GENERATE")),
+                ),
               )
             ],
-          ),
-        ),
-        Container(
-          width: double.infinity,
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: ElevatedButton(
-                onPressed: () {
-                  generatePassword();
-                },
-                child: Text("GENERATE")),
-          ),
-        )
-      ],
+          )
+        ],
     );
   }
 }

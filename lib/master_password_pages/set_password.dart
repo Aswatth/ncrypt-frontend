@@ -58,7 +58,7 @@ class _SetPasswordState extends State<SetPassword> {
   }
 
   void setup() {
-    if(_automaticBackup && _backupFolderPath.isEmpty) {
+    if (_automaticBackup && _backupFolderPath.isEmpty) {
       CustomToast.error(context, "Backup folder location is empty");
       return;
     }
@@ -66,17 +66,16 @@ class _SetPasswordState extends State<SetPassword> {
         .setup(_passwordController.text, _automaticBackup, _backupFolderPath,
             _backupFileNameController.text)
         .then((value) {
-          if(context.mounted) {
-            if (value == null || (value is String && value.isEmpty)) {
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => LoginPage()),
-                    (route) => false,
-              );
-            }
-            else {
-              CustomToast.error(context, value as String);
-            }
-          }
+      if (context.mounted) {
+        if (value == null || (value is String && value.isEmpty)) {
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => LoginPage()),
+            (route) => false,
+          );
+        } else {
+          CustomToast.error(context, value as String);
+        }
+      }
     });
   }
 
@@ -115,9 +114,6 @@ class _SetPasswordState extends State<SetPassword> {
                             ),
                             Text(
                               m.key,
-                              style: TextStyle(
-                                  color: Colors.white60,
-                                  fontStyle: FontStyle.italic),
                             )
                           ],
                         );
@@ -325,9 +321,9 @@ class _SetPasswordState extends State<SetPassword> {
                     child: Text(
                       "This will be the only password you need to remember! ;)",
                       style: TextStyle(
-                          fontSize: 14,
-                          fontStyle: FontStyle.italic,
-                          color: Colors.white60),
+                        fontSize: 14,
+                        fontStyle: FontStyle.italic,
+                      ),
                     ),
                   ),
                   SizedBox(
@@ -338,15 +334,22 @@ class _SetPasswordState extends State<SetPassword> {
                     children: [
                       Text(
                         "Want to import existing information?",
-                        style: TextStyle(color: Colors.white60),
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (BuildContext context) => ImportPage(
-                                    showBackButton: true,
-                                    navigateToLogin: true,
-                                  )));
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return ImportPage();
+                              }).then((_) {
+                            if (context.mounted) {
+                              Navigator.of(context).pushAndRemoveUntil(
+                                MaterialPageRoute(
+                                    builder: (context) => LoginPage()),
+                                (route) => false,
+                              );
+                            }
+                          });
                         },
                         child: MouseRegion(
                           cursor: SystemMouseCursors.click,

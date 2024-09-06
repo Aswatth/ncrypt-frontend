@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:frontend/utils/colors.dart';
 import 'package:frontend/utils/system.dart';
 import 'package:frontend/clients/master_password_client.dart';
 import 'package:frontend/clients/system_data_client.dart';
@@ -24,18 +25,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    HSLColor backgroundHSL = HSLColor.fromAHSL(1.0, 177.0, 0.51, 0.07);
-    HSLColor textHSL = HSLColor.fromAHSL(1.0, 177.0, 0.45, 0.91);
-    HSLColor primaryHSL = HSLColor.fromAHSL(1.0, 177.0, 0.6, 0.75);
-    HSLColor secondaryHSL = HSLColor.fromAHSL(1.0, 177, 0.68, 0.30);
-    HSLColor accentHSL = HSLColor.fromAHSL(1.0, 177, 0.75, 0.52);
-
-    Color backgroundColor = backgroundHSL.toColor();
-    Color textColor = textHSL.toColor();
-    Color primaryColor = primaryHSL.toColor();
-    Color secondaryColor = secondaryHSL.toColor();
-    Color accentColor = accentHSL.toColor();
-
     double largeText = 18.0;
     double mediumText = 14.0;
     double smallText = 12.0;
@@ -43,97 +32,117 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Ncrypt',
       theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(
-                seedColor: primaryColor,
-                primary: primaryColor,
-                secondary: secondaryColor,
-                surface: backgroundColor,
-              ),
-              switchTheme: SwitchThemeData(
-                  thumbColor: WidgetStatePropertyAll(backgroundColor)),
-              textTheme: TextTheme(
-                bodyLarge: TextStyle(color: textColor, fontSize: largeText),
-                bodyMedium: TextStyle(color: textColor, fontSize: mediumText),
-                bodySmall: TextStyle(color: textColor, fontSize: smallText),
-                titleLarge: TextStyle(color: textColor, fontSize: largeText),
-                titleMedium: TextStyle(color: textColor, fontSize: mediumText),
-                titleSmall: TextStyle(color: textColor, fontSize: smallText),
-              ),
-              cardTheme: CardTheme(color: backgroundColor),
-              elevatedButtonTheme: ElevatedButtonThemeData(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: secondaryColor,
-                      foregroundColor: textColor,
-                      textStyle: TextStyle(
-                        fontSize: mediumText,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      // foregroundColor: textColor,
-                      iconColor: textColor)),
-              expansionTileTheme: ExpansionTileThemeData(
-                  backgroundColor: backgroundColor,
-                  iconColor: accentColor,
-                  textColor: accentColor,
-                  collapsedTextColor: textColor,
-                  collapsedIconColor: textColor,
-                  collapsedBackgroundColor: backgroundColor),
-              inputDecorationTheme:
-                  InputDecorationTheme(hintStyle: TextStyle(color: textColor)),
-              scaffoldBackgroundColor: backgroundColor,
-              appBarTheme: AppBarTheme(
-                  titleTextStyle: TextStyle(color: textColor),
-                  backgroundColor: backgroundColor,
-                  foregroundColor: textColor,
-                  iconTheme: IconThemeData(color: primaryColor)),
-              listTileTheme: ListTileThemeData(
-                  titleTextStyle: TextStyle(color: textColor),
-                  iconColor: primaryColor,
-                  visualDensity: VisualDensity.comfortable),
-              iconTheme: IconThemeData(
-                color: primaryColor,
-              ),
-              dialogBackgroundColor: backgroundColor,
-              dialogTheme: DialogTheme(
-                titleTextStyle: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: largeText,
-                    color: textColor),
-                contentTextStyle: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: mediumText,
-                    color: textColor),
-                alignment: Alignment.center,
-              ),
-              snackBarTheme: SnackBarThemeData(
-                  showCloseIcon: true,
-                  elevation: 20.0,
-                  closeIconColor: Colors.white))
-          .copyWith(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: AppColors().primaryColor,
+          primary: AppColors().primaryColor,
+          secondary: AppColors().secondaryColor,
+          surface: AppColors().backgroundColor,
+        ),
+        cardTheme: CardTheme(
+            shadowColor: AppColors().primaryColor,
+            color: AppColors().backgroundColor),
+        checkboxTheme: CheckboxThemeData(
+            // fillColor: WidgetStatePropertyAll(AppColors().backgroundColor),
+            ),
+        tabBarTheme: TabBarTheme(
+          labelColor: AppColors().primaryColor,
+          indicatorColor: AppColors().primaryColor,
+        ),
+        textTheme: TextTheme(
+          bodyLarge:
+              TextStyle(color: AppColors().textColor, fontSize: largeText),
+          bodyMedium:
+              TextStyle(color: AppColors().textColor, fontSize: mediumText),
+          bodySmall:
+              TextStyle(color: AppColors().textColor, fontSize: smallText),
+          titleLarge:
+              TextStyle(color: AppColors().textColor, fontSize: largeText),
+          titleMedium:
+              TextStyle(color: AppColors().textColor, fontSize: mediumText),
+          titleSmall:
+              TextStyle(color: AppColors().textColor, fontSize: smallText),
+          labelLarge:
+              TextStyle(color: AppColors().textColor, fontSize: largeText),
+          labelMedium:
+              TextStyle(color: AppColors().textColor, fontSize: mediumText),
+          labelSmall:
+              TextStyle(color: AppColors().textColor, fontSize: smallText),
+          displayLarge:
+              TextStyle(color: AppColors().textColor, fontSize: largeText),
+          displayMedium:
+              TextStyle(color: AppColors().textColor, fontSize: mediumText),
+          displaySmall:
+              TextStyle(color: AppColors().textColor, fontSize: smallText),
+        ),
+        textButtonTheme: TextButtonThemeData(
+            style: TextButton.styleFrom(
+                foregroundColor: AppColors().textColor,
+                textStyle:
+                    TextStyle(letterSpacing: 2, color: AppColors().textColor))),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors().secondaryColor,
+              foregroundColor: AppColors().textColor,
+              textStyle:
+                  TextStyle(fontWeight: FontWeight.bold, letterSpacing: 2),
+              // foregroundColor: AppColors().textColor,
+              iconColor: AppColors().textColor),
+        ),
         inputDecorationTheme: InputDecorationTheme(
+          hintStyle: TextStyle(color: Colors.grey),
           filled: true,
-          fillColor: backgroundColor,
-          labelStyle: TextStyle(color: textColor, fontSize: 16),
+          fillColor: AppColors().backgroundColor,
+          labelStyle: TextStyle(color: AppColors().textColor, fontSize: 16),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.0),
-            borderSide: BorderSide(color: secondaryColor, width: 1.0),
+            borderSide:
+                BorderSide(color: AppColors().secondaryColor, width: 1.0),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.0),
-            borderSide: BorderSide(color: secondaryColor, width: 1.0),
+            borderSide:
+                BorderSide(color: AppColors().secondaryColor, width: 1.0),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.0),
-            borderSide: BorderSide(color: secondaryColor, width: 1.0),
+            borderSide:
+                BorderSide(color: AppColors().secondaryColor, width: 1.0),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.0),
-            borderSide: BorderSide(color: textColor, width: 1.0),
+            borderSide: BorderSide(color: AppColors().textColor, width: 1.0),
           ),
           errorStyle: TextStyle(fontWeight: FontWeight.bold),
-          hintStyle: TextStyle(color: Colors.white24, fontSize: 14),
-          suffixIconColor: textColor,
+          suffixIconColor: AppColors().textColor,
+        ),
+        scaffoldBackgroundColor: AppColors().backgroundColor,
+        appBarTheme: AppBarTheme(
+          titleTextStyle: TextStyle(color: AppColors().textColor),
+          backgroundColor: AppColors().backgroundColor,
+          foregroundColor: AppColors().textColor,
+          iconTheme: IconThemeData(color: AppColors().primaryColor),
+        ),
+        listTileTheme: ListTileThemeData(
+            titleTextStyle: TextStyle(color: AppColors().textColor),
+            iconColor: AppColors().primaryColor,
+            visualDensity: VisualDensity.comfortable),
+        iconTheme: IconThemeData(
+          color: AppColors().primaryColor,
+        ),
+        dialogBackgroundColor: AppColors().backgroundColor,
+        dialogTheme: DialogTheme(
+          titleTextStyle: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: largeText,
+              color: AppColors().textColor),
+          contentTextStyle: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: mediumText,
+              color: AppColors().textColor),
+          alignment: Alignment.center,
         ),
       ),
+      themeMode: ThemeMode.dark,
       home: LoadPage(),
     );
   }
@@ -173,8 +182,9 @@ class _LoadPageState extends State<LoadPage> {
                   title: Text("Force exit?"),
                   children: [
                     Padding(
-                      padding: EdgeInsets.fromLTRB(20, 0,0,10),
-                      child: Text("Error occured while automatically backing up!"),
+                      padding: EdgeInsets.fromLTRB(20, 0, 0, 10),
+                      child:
+                          Text("Error occured while automatically backing up!"),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -185,7 +195,9 @@ class _LoadPageState extends State<LoadPage> {
                           },
                           child: Text("No"),
                         ),
-                        SizedBox(width: 20,),
+                        SizedBox(
+                          width: 20,
+                        ),
                         ElevatedButton(
                           onPressed: () {
                             exit(0);

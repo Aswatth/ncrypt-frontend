@@ -15,7 +15,6 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _passwordController = TextEditingController();
   bool _visibility = false;
-  bool _onMouseOverImport = false;
 
   @override
   void initState() {
@@ -24,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void login() {
     SystemDataClient().login(_passwordController.text).then((value) {
-      if(context.mounted) {
+      if (context.mounted) {
         if (value.isNotEmpty) {
           CustomToast.error(context, value);
         } else {
@@ -46,79 +45,82 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: FittedBox(
-          child: Form(
-            key: _formKey,
+          child: SizedBox(
+        width: 400,
+        height: 200,
+        child: Card(
+          elevation: 20,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 250,
-                      child: TextFormField(
-                        controller: _passwordController,
-                        obscureText: !_visibility,
-                        decoration: InputDecoration(
-                          label: Text(
-                            "Enter master password",
-                          ),
-                          hintMaxLines: 16,
-                          hintStyle:
-                              TextStyle(color: Colors.white24, fontSize: 14),
-                          hintText: "master password",
-                          suffixIcon: IconButton(
-                            icon: _visibility
-                                ? Icon(Icons.visibility)
-                                : Icon(
-                                    Icons.visibility_off,
-                                  ),
-                            onPressed: () {
-                              setState(() {
-                                _visibility = !_visibility;
-                              });
-                            },
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Password cannot be empty";
-                          }
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          login();
-                        }
-                      },
-                      child: Text("LOG IN"),
-                    ),
-                  ],
+                Text(
+                  "Login".toUpperCase(),
+                  style: TextStyle(fontSize: 32),
                 ),
                 SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
-                ElevatedButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return SimpleDialog(
-                            children: [PasswordGenerator()],
-                          );
-                        },
-                      );
+                Form(
+                  key: _formKey,
+                  child: TextFormField(
+                    controller: _passwordController,
+                    obscureText: !_visibility,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Password cannot be empty";
+                      }
+                      return null;
                     },
-                    child: Text("Password generator"))
+                    decoration: InputDecoration(
+                      label: Text(
+                        "Enter master password",
+                      ),
+                      suffixIcon: _visibility
+                          ? IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _visibility = !_visibility;
+                                });
+                              },
+                              icon: Icon(
+                                Icons.visibility,
+                              ),
+                            )
+                          : IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _visibility = !_visibility;
+                                });
+                              },
+                              icon: Icon(
+                                Icons.visibility_off,
+                              ),
+                            ),
+                      labelStyle: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if(_formKey.currentState!.validate()) {
+                        login();
+                      }
+                    },
+                    child: Text("Login".toUpperCase()),
+                  ),
+                )
               ],
             ),
           ),
         ),
-      ),
+      )),
     );
   }
 }

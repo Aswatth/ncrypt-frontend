@@ -15,13 +15,6 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Text(
-          "Settings",
-          style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-        ),
-      ),
       body: Column(
         children: [
           ListTile(

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:frontend/clients/system_data_client.dart';
+import 'package:frontend/utils/colors.dart';
 import 'package:frontend/utils/custom_toast.dart';
 import 'package:frontend/general_pages/login_page.dart';
 import 'package:frontend/models/system_data.dart';
@@ -22,19 +23,21 @@ class _SessionDataState extends State<SessionData> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getSystemData();
-    startTimer();
-  }
-
-  void getSystemData() {
-    SystemDataClient().getSystemData().then((value) {
+    getSystemData().then((value){
       if (value != null && value is SystemData) {
         setState(() {
           sessionTimeInSeconds = value.sessionTimeInMinutes * 60;
-          lastLogin = DateTime.parse(value.lastLoginDateTime).toLocal();
+          if(value.lastLoginDateTime.isNotEmpty) {
+            lastLogin = DateTime.parse(value.lastLoginDateTime).toLocal();
+          }
         });
+        startTimer();
       }
     });
+  }
+
+  Future<dynamic> getSystemData() async {
+    return await SystemDataClient().getSystemData();
   }
 
   void startTimer() {
@@ -79,7 +82,7 @@ class _SessionDataState extends State<SessionData> {
 
     bool isAM = true;
     int h = dateTime.hour;
-    if(h >= 12) {
+    if (h >= 12) {
       isAM = false;
       h = h - 12;
     }
@@ -87,7 +90,7 @@ class _SessionDataState extends State<SessionData> {
     String hour = h.toString().padLeft(2, '0');
     String minute = dateTime.minute.toString().padLeft(2, '0');
 
-    return "$month, $day $year\n$hour:$minute ${isAM ? "AM" : "PM"}";
+    return "$month, $day $year\t$hour:$minute ${isAM ? "AM" : "PM"}";
   }
 
   String formatTime(int seconds) {
@@ -105,22 +108,39 @@ class _SessionDataState extends State<SessionData> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
+    return Row(
       children: [
-        ListTile(
-          title: Text("Session"),
-          trailing: Text(
-            formatTime(sessionTimeInSeconds),
-            style: TextStyle(
-                fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
+        Expanded(
+          child: Row(
+            children: [
+              Text(
+                "Last login:\t",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(lastLogin != null ? formatLastLogin(lastLogin!) : ""),
+            ],
           ),
         ),
-        ListTile(
-          title: Text("Last login"),
-          trailing:
-              lastLogin == null ? Text("-") : Text(formatLastLogin(lastLogin!),style: TextStyle(
-                  fontSize: 14 ,color: Colors.white),),
+        Text(
+          "Time left in session:\t",
+          style: TextStyle(
+              fontWeight: FontWeight.bold, color: AppColors().textColor),
+        ),
+        SizedBox(
+          width: 40,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(sessionTimeInSeconds == 0
+                  ? "00:00"
+                  : formatTime(sessionTimeInSeconds))
+              // LinearProgressIndicator(
+              //     color: primaryColor, value: 0.8 //(18*60+32)/1200,
+              //     )
+            ],
+          ),
         )
       ],
     );
