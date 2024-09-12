@@ -24,7 +24,7 @@ class _LoginDataPageState extends State<LoginDataPage> {
 
   TextEditingController _searchController = TextEditingController();
   bool _showFavourites = false;
-  bool _showRequireMasterPasswordData = false;
+  bool _showRequireMasterPassword = false;
   LoginData? selectedData;
 
   @override
@@ -110,20 +110,11 @@ class _LoginDataPageState extends State<LoginDataPage> {
                             // icon: Icon(Icons.check),
                             style: ElevatedButton.styleFrom(
                                 backgroundColor:
-                                Theme
-                                    .of(context)
-                                    .colorScheme
-                                    .primary,
+                                    Theme.of(context).colorScheme.primary,
                                 iconColor:
-                                Theme
-                                    .of(context)
-                                    .colorScheme
-                                    .surface,
+                                    Theme.of(context).colorScheme.surface,
                                 foregroundColor:
-                                Theme
-                                    .of(context)
-                                    .colorScheme
-                                    .surface)),
+                                    Theme.of(context).colorScheme.surface)),
                       ],
                     ),
                   )
@@ -201,6 +192,29 @@ class _LoginDataPageState extends State<LoginDataPage> {
         });
   }
 
+  void _filterLoginData() {
+    setState(() {
+      _filteredDataList = _loginDataList;
+
+      if (_searchController.text.isNotEmpty) {
+        _filteredDataList = _filteredDataList
+            .where((m) => m.name.startsWith(_searchController.text))
+            .toList();
+      }
+
+      if (_showFavourites) {
+        _filteredDataList =
+            _filteredDataList.where((m) => m.attributes.isFavourite).toList();
+      }
+
+      if (_showRequireMasterPassword) {
+        _filteredDataList = _filteredDataList
+            .where((m) => m.attributes.requireMasterPassword)
+            .toList();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -208,267 +222,293 @@ class _LoginDataPageState extends State<LoginDataPage> {
       child: Row(
         children: [
           Flexible(
-            flex: 4,
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        controller: _searchController,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.search),
-                          filled: true,
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            _filteredDataList = _loginDataList.where((m) =>
-                                m.name.startsWith(_searchController.text))
-                                .toList();
-                          });
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(
-                            builder: (context) => AddLoginData()))
-                            .then((_) {
-                          setState(() {
-                            selectedData = null;
-                            getAllLoginData();
-                          });
-                        });
-                      },
-                      icon: Icon(Icons.add),
-                      label: Text("Add"),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: DataTable(
-                          showCheckboxColumn: false,
-                          columns: [
-                            DataColumn(label: Text("Favourite")),
-                            DataColumn(label: Text("Name")),
-                            DataColumn(label: Text("URL")),
-                            DataColumn(label: Text("Lock status")),
-                            DataColumn(label: Text("Actions"))
-                          ],
-                          rows: _filteredDataList.map((m) {
-                            return DataRow(
-                                selected: selectedData != null && selectedData == m
-                                    ? true
-                                    : false,
-                                onSelectChanged: (value) {
-                                  setState(() {
-                                    selectedData = m;
-                                  });
-                                },
-                                cells: [
-                                  DataCell(IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        m.attributes.isFavourite =
-                                        !m.attributes.isFavourite;
-                                        updateFavourite(m);
-                                      });
-                                    },
-                                    icon: m.attributes.isFavourite
-                                        ? Icon(
-                                      Icons.favorite,
-                                    )
-                                        : Icon(Icons.favorite_border),
-                                  )),
-                                  DataCell(Text(m.name)),
-                                  DataCell(Text(m.url)),
-                                  DataCell(m.attributes.requireMasterPassword
-                                      ? Row(
-                                    children: [
-                                      Icon(
-                                        Icons.lock,
-                                      ),
-                                      Text(
-                                        "LOCKED",
-                                        style: TextStyle(
-                                          letterSpacing: 2,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      )
-                                    ],
-                                  )
-                                      : Container()),
-                                  DataCell(Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      IconButton(
-                                        onPressed: () {
-                                          Navigator.of(context)
-                                              .push(MaterialPageRoute(
-                                              builder: (context) =>
-                                                  EditLoginDataPage(
-                                                    dataToEdit: m,
-                                                  )))
-                                              .then((_) {
-                                            setState(() {
-                                              selectedData = null;
-                                              getAllLoginData();
-                                            });
-                                          });
-                                        },
-                                        icon: Icon(Icons.edit),
-                                      ),
-                                      IconButton(
-                                        onPressed: () {
-                                          delete(m);
-                                        },
-                                        icon: Icon(Icons.delete),
-                                      )
-                                    ],
-                                  ))
-                                ]);
-                          }).toList()),
-                    ),
-                  ),
-                )
-              ],
-            )
-          ),
-          selectedData != null
-              ? Flexible(
-            flex: 2,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 20.0, vertical: 8),
+              flex: 4,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
                       Expanded(
-                        child: Text(
-                          "${selectedData!.name} accounts",
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                        child: TextFormField(
+                          controller: _searchController,
+                          decoration: InputDecoration(
+                              prefixIcon: Icon(Icons.search),
+                              filled: true,
+                              suffixIcon: SizedBox(
+                                width: 80,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _showFavourites = !_showFavourites;
+                                          _filterLoginData();
+                                        });
+                                      },
+                                      icon: _showFavourites
+                                          ? Icon(Icons.favorite)
+                                          : Icon(Icons.favorite_border),
+                                    ),
+                                    IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _showRequireMasterPassword =
+                                              !_showRequireMasterPassword;
+                                          _filterLoginData();
+                                        });
+                                      },
+                                      icon: _showRequireMasterPassword
+                                          ? Icon(Icons.lock)
+                                          : Icon(Icons.lock_outline),
+                                    )
+                                  ],
+                                ),
+                              )),
+                          onChanged: (value) {
+                            _filterLoginData();
+                          },
                         ),
                       ),
-                      IconButton(
+                      SizedBox(
+                        width: 10,
+                      ),
+                      ElevatedButton.icon(
                         onPressed: () {
-                          setState(() {
-                            selectedData = null;
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(
+                                  builder: (context) => AddLoginData()))
+                              .then((_) {
+                            setState(() {
+                              selectedData = null;
+                              getAllLoginData();
+                            });
                           });
                         },
-                        icon: Icon(Icons.close),
-                      )
+                        icon: Icon(Icons.add),
+                        label: Text("Add"),
+                      ),
                     ],
                   ),
-                  Divider(),
+                  SizedBox(
+                    height: 10,
+                  ),
                   Expanded(
-                    child: ListView.builder(
-                        itemCount: selectedData!.accounts.length,
-                        itemBuilder: (context, index) {
-                          Account account = selectedData!.accounts[index];
-                          return Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(children: [
-                                Expanded(
-                                  child: RichText(
-                                    text: TextSpan(children: [
-                                      TextSpan(
-                                          text: "Username: ",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color:
-                                              AppColors().textColor)),
-                                      TextSpan(
-                                          text: account.username!,
-                                          style: TextStyle(
-                                              color:
-                                              AppColors().textColor))
-                                    ]),
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    Clipboard.setData(ClipboardData(
-                                        text: account.username!))
-                                        .then((_) {
-                                      if (context.mounted) {
-                                        CustomToast.info(context,
-                                            "Copied username to clipboard");
-                                      }
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: DataTable(
+                            showCheckboxColumn: false,
+                            columns: [
+                              DataColumn(label: Text("Favourite")),
+                              DataColumn(label: Text("Name")),
+                              DataColumn(label: Text("URL")),
+                              DataColumn(label: Text("Lock status")),
+                              DataColumn(label: Text("Actions"))
+                            ],
+                            rows: _filteredDataList.map((m) {
+                              return DataRow(
+                                  selected:
+                                      selectedData != null && selectedData == m
+                                          ? true
+                                          : false,
+                                  onSelectChanged: (value) {
+                                    setState(() {
+                                      selectedData = m;
                                     });
                                   },
-                                  icon: Icon(
-                                    Icons.copy,
-                                    color: AppColors().textColor,
-                                  ),
-                                ),
-                              ]),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: RichText(
-                                      text: TextSpan(children: [
-                                        TextSpan(
-                                            text: "Password: ",
-                                            style: TextStyle(
-                                                fontWeight:
-                                                FontWeight.bold,
-                                                color: AppColors()
-                                                    .textColor)),
-                                        TextSpan(
-                                            text: "*****",
-                                            style: TextStyle(
-                                                color: AppColors()
-                                                    .textColor))
-                                      ]),
-                                    ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {
-                                      if (selectedData!.attributes
-                                          .requireMasterPassword) {
-                                        getMasterPassword(selectedData!,
-                                            account.username!);
-                                      } else {
-                                        copyPasswordToClipboard(
-                                            selectedData!,
-                                            account.username!);
-                                      }
-                                    },
-                                    icon: Icon(
-                                      Icons.copy,
-                                      color: AppColors().textColor,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Divider(
-                                color: AppColors().primaryColor,
-                                thickness: 0.5,
-                              )
-                            ],
-                          );
-                        }),
+                                  cells: [
+                                    DataCell(IconButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          m.attributes.isFavourite =
+                                              !m.attributes.isFavourite;
+                                          updateFavourite(m);
+                                        });
+                                      },
+                                      icon: m.attributes.isFavourite
+                                          ? Icon(
+                                              Icons.favorite,
+                                            )
+                                          : Icon(Icons.favorite_border),
+                                    )),
+                                    DataCell(Text(m.name)),
+                                    DataCell(Text(m.url)),
+                                    DataCell(m.attributes.requireMasterPassword
+                                        ? Row(
+                                            children: [
+                                              Icon(
+                                                Icons.lock,
+                                              ),
+                                              Text(
+                                                "LOCKED",
+                                                style: TextStyle(
+                                                  letterSpacing: 2,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              )
+                                            ],
+                                          )
+                                        : Container()),
+                                    DataCell(Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        IconButton(
+                                          onPressed: () {
+                                            Navigator.of(context)
+                                                .push(MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        EditLoginDataPage(
+                                                          dataToEdit: m,
+                                                        )))
+                                                .then((_) {
+                                              setState(() {
+                                                selectedData = null;
+                                                getAllLoginData();
+                                              });
+                                            });
+                                          },
+                                          icon: Icon(Icons.edit),
+                                        ),
+                                        IconButton(
+                                          onPressed: () {
+                                            delete(m);
+                                          },
+                                          icon: Icon(Icons.delete),
+                                        )
+                                      ],
+                                    ))
+                                  ]);
+                            }).toList()),
+                      ),
+                    ),
                   )
                 ],
-              ),
-            ),
-          )
+              )),
+          selectedData != null
+              ? Flexible(
+                  flex: 2,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                "${selectedData!.name} accounts",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  selectedData = null;
+                                });
+                              },
+                              icon: Icon(Icons.close),
+                            )
+                          ],
+                        ),
+                        Divider(),
+                        Expanded(
+                          child: ListView.builder(
+                              itemCount: selectedData!.accounts.length,
+                              itemBuilder: (context, index) {
+                                Account account = selectedData!.accounts[index];
+                                return Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(children: [
+                                      Expanded(
+                                        child: RichText(
+                                          text: TextSpan(children: [
+                                            TextSpan(
+                                                text: "Username: ",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color:
+                                                        AppColors().textColor)),
+                                            TextSpan(
+                                                text: account.username!,
+                                                style: TextStyle(
+                                                    color:
+                                                        AppColors().textColor))
+                                          ]),
+                                        ),
+                                      ),
+                                      IconButton(
+                                        onPressed: () {
+                                          Clipboard.setData(ClipboardData(
+                                                  text: account.username!))
+                                              .then((_) {
+                                            if (context.mounted) {
+                                              CustomToast.info(context,
+                                                  "Copied username to clipboard");
+                                            }
+                                          });
+                                        },
+                                        icon: Icon(
+                                          Icons.copy,
+                                          color: AppColors().textColor,
+                                        ),
+                                      ),
+                                    ]),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: RichText(
+                                            text: TextSpan(children: [
+                                              TextSpan(
+                                                  text: "Password: ",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: AppColors()
+                                                          .textColor)),
+                                              TextSpan(
+                                                  text: "*****",
+                                                  style: TextStyle(
+                                                      color: AppColors()
+                                                          .textColor))
+                                            ]),
+                                          ),
+                                        ),
+                                        IconButton(
+                                          onPressed: () {
+                                            if (selectedData!.attributes
+                                                .requireMasterPassword) {
+                                              getMasterPassword(selectedData!,
+                                                  account.username!);
+                                            } else {
+                                              copyPasswordToClipboard(
+                                                  selectedData!,
+                                                  account.username!);
+                                            }
+                                          },
+                                          icon: Icon(
+                                            Icons.copy,
+                                            color: AppColors().textColor,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Divider(
+                                      color: AppColors().primaryColor,
+                                      thickness: 0.5,
+                                    )
+                                  ],
+                                );
+                              }),
+                        )
+                      ],
+                    ),
+                  ),
+                )
               : Container()
         ],
       ),
