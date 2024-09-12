@@ -125,73 +125,6 @@ class _LoginDataPageState extends State<LoginDataPage> {
         });
   }
 
-  void copyPasswordToClipboard(LoginData data, String username) {
-    client.getDecryptedPassword(data.name, username).then((value) {
-      if (value is String && value.isNotEmpty) {
-        Clipboard.setData(ClipboardData(text: value)).then((_) {
-          if (context.mounted) {
-            CustomToast.info(context, "Copied password to clipboard");
-          }
-        });
-      }
-    });
-  }
-
-  void getMasterPassword(LoginData data, String username) {
-    String enteredPassword = "";
-    bool visibility = false;
-    showDialog(
-        context: context,
-        builder: (context) {
-          return StatefulBuilder(builder: (context, setState) {
-            return SimpleDialog(
-              contentPadding: EdgeInsets.all(12),
-              children: [
-                TextFormField(
-                  obscureText: !visibility,
-                  onChanged: (value) {
-                    setState(() {
-                      enteredPassword = value;
-                    });
-                  },
-                  decoration: InputDecoration(
-                      hintText: "Enter master password",
-                      label: Text("Master Password"),
-                      suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              visibility = !visibility;
-                            });
-                          },
-                          icon: visibility
-                              ? Icon(Icons.visibility)
-                              : Icon(Icons.visibility_off))),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                ElevatedButton(
-                    onPressed: () {
-                      MasterPasswordClient()
-                          .validateMasterPassword(enteredPassword)
-                          .then((value) {
-                        if (value == "true") {
-                          copyPasswordToClipboard(data, username);
-                          Navigator.of(context).pop();
-                        } else {
-                          if (context.mounted) {
-                            CustomToast.error(context, value);
-                          }
-                        }
-                      });
-                    },
-                    child: Text("Validate".toUpperCase()))
-              ],
-            );
-          });
-        });
-  }
-
   void _filterLoginData() {
     setState(() {
       _filteredDataList = _loginDataList;
@@ -386,132 +319,211 @@ class _LoginDataPageState extends State<LoginDataPage> {
                   )
                 ],
               )),
-          selectedData != null
-              ? Flexible(
-                  flex: 2,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20.0, vertical: 8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                "${selectedData!.name} accounts",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  selectedData = null;
-                                });
-                              },
-                              icon: Icon(Icons.close),
-                            )
-                          ],
-                        ),
-                        Divider(),
-                        Expanded(
-                          child: ListView.builder(
-                              itemCount: selectedData!.accounts.length,
-                              itemBuilder: (context, index) {
-                                Account account = selectedData!.accounts[index];
-                                return Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(children: [
-                                      Expanded(
-                                        child: RichText(
-                                          text: TextSpan(children: [
-                                            TextSpan(
-                                                text: "Username: ",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color:
-                                                        AppColors().textColor)),
-                                            TextSpan(
-                                                text: account.username!,
-                                                style: TextStyle(
-                                                    color:
-                                                        AppColors().textColor))
-                                          ]),
-                                        ),
-                                      ),
-                                      IconButton(
-                                        onPressed: () {
-                                          Clipboard.setData(ClipboardData(
-                                                  text: account.username!))
-                                              .then((_) {
-                                            if (context.mounted) {
-                                              CustomToast.info(context,
-                                                  "Copied username to clipboard");
-                                            }
-                                          });
-                                        },
-                                        icon: Icon(
-                                          Icons.copy,
-                                          color: AppColors().textColor,
-                                        ),
-                                      ),
-                                    ]),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: RichText(
-                                            text: TextSpan(children: [
-                                              TextSpan(
-                                                  text: "Password: ",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: AppColors()
-                                                          .textColor)),
-                                              TextSpan(
-                                                  text: "*****",
-                                                  style: TextStyle(
-                                                      color: AppColors()
-                                                          .textColor))
-                                            ]),
-                                          ),
-                                        ),
-                                        IconButton(
-                                          onPressed: () {
-                                            if (selectedData!.attributes
-                                                .requireMasterPassword) {
-                                              getMasterPassword(selectedData!,
-                                                  account.username!);
-                                            } else {
-                                              copyPasswordToClipboard(
-                                                  selectedData!,
-                                                  account.username!);
-                                            }
-                                          },
-                                          icon: Icon(
-                                            Icons.copy,
-                                            color: AppColors().textColor,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Divider(
-                                      color: AppColors().primaryColor,
-                                      thickness: 0.5,
-                                    )
-                                  ],
-                                );
-                              }),
-                        )
-                      ],
-                    ),
-                  ),
-                )
-              : Container()
+          LoginAccountData(selectedData: selectedData)
         ],
       ),
     );
+  }
+}
+
+class LoginAccountData extends StatefulWidget {
+  LoginData? selectedData;
+
+  LoginAccountData({super.key, required this.selectedData});
+
+  @override
+  State<LoginAccountData> createState() => _LoginAccountDataState();
+}
+
+class _LoginAccountDataState extends State<LoginAccountData> {
+  void copyPasswordToClipboard(String username) {
+    LoginDataClient()
+        .getDecryptedPassword(widget.selectedData!.name, username)
+        .then((value) {
+      if (value is String && value.isNotEmpty) {
+        Clipboard.setData(ClipboardData(text: value)).then((_) {
+          if (context.mounted) {
+            CustomToast.info(context, "Copied password to clipboard");
+          }
+        });
+      }
+    });
+  }
+
+  void getMasterPassword(String username) {
+    String enteredPassword = "";
+    bool visibility = false;
+    showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, setState) {
+            return SimpleDialog(
+              contentPadding: EdgeInsets.all(12),
+              children: [
+                TextFormField(
+                  obscureText: !visibility,
+                  onChanged: (value) {
+                    setState(() {
+                      enteredPassword = value;
+                    });
+                  },
+                  decoration: InputDecoration(
+                      hintText: "Enter master password",
+                      label: Text("Master Password"),
+                      suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              visibility = !visibility;
+                            });
+                          },
+                          icon: visibility
+                              ? Icon(Icons.visibility)
+                              : Icon(Icons.visibility_off))),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton(
+                    onPressed: () {
+                      MasterPasswordClient()
+                          .validateMasterPassword(enteredPassword)
+                          .then((value) {
+                        if (value == "true") {
+                          copyPasswordToClipboard(username);
+                          Navigator.of(context).pop();
+                        } else {
+                          if (context.mounted) {
+                            CustomToast.error(context, value);
+                          }
+                        }
+                      });
+                    },
+                    child: Text("Validate".toUpperCase()))
+              ],
+            );
+          });
+        });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.selectedData != null
+        ? Flexible(
+            flex: 2,
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          "${widget.selectedData!.name} accounts",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            widget.selectedData = null;
+                          });
+                        },
+                        icon: Icon(Icons.close),
+                      )
+                    ],
+                  ),
+                  Divider(),
+                  Expanded(
+                    child: ListView.builder(
+                        itemCount: widget.selectedData!.accounts.length,
+                        itemBuilder: (context, index) {
+                          Account account =
+                              widget.selectedData!.accounts[index];
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(children: [
+                                Expanded(
+                                  child: RichText(
+                                    text: TextSpan(children: [
+                                      TextSpan(
+                                          text: "Username: ",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: AppColors().textColor)),
+                                      TextSpan(
+                                          text: account.username!,
+                                          style: TextStyle(
+                                              color: AppColors().textColor))
+                                    ]),
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    Clipboard.setData(ClipboardData(
+                                            text: account.username!))
+                                        .then((_) {
+                                      if (context.mounted) {
+                                        CustomToast.info(context,
+                                            "Copied username to clipboard");
+                                      }
+                                    });
+                                  },
+                                  icon: Icon(
+                                    Icons.copy,
+                                    color: AppColors().textColor,
+                                  ),
+                                ),
+                              ]),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: RichText(
+                                      text: TextSpan(children: [
+                                        TextSpan(
+                                            text: "Password: ",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: AppColors().textColor)),
+                                        TextSpan(
+                                            text: "*****",
+                                            style: TextStyle(
+                                                color: AppColors().textColor))
+                                      ]),
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      if (widget.selectedData!.attributes
+                                          .requireMasterPassword) {
+                                        getMasterPassword(account.username!);
+                                      } else {
+                                        copyPasswordToClipboard(
+                                            account.username!);
+                                      }
+                                    },
+                                    icon: Icon(
+                                      Icons.copy,
+                                      color: AppColors().textColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Divider(
+                                color: AppColors().primaryColor,
+                                thickness: 0.5,
+                              )
+                            ],
+                          );
+                        }),
+                  )
+                ],
+              ),
+            ),
+          )
+        : Container();
   }
 }
