@@ -1,6 +1,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/clients/system_data_client.dart';
+import 'package:frontend/general_pages/password_generator.dart';
 import 'package:frontend/utils/colors.dart';
 import 'package:frontend/utils/custom_toast.dart';
 import 'package:frontend/general_pages/import.dart';
@@ -16,6 +17,36 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  void exportData() {
+    FilePicker.platform.saveFile(
+        dialogTitle: 'Please select an output file:',
+        fileName: 'backup.ncrypt',
+        allowedExtensions: ['ncrypt']).then((value) {
+      if (value != null) {
+        List<String> splitString = value.split("\\");
+
+        String fileName = splitString.last;
+        if (!fileName.contains(".ncrypt")) {
+          fileName += ".ncrypt";
+        }
+
+        splitString.removeAt(splitString.length - 1);
+        String path = splitString.join("\\");
+
+        SystemDataClient().export(path, fileName).then((response) {
+          if (context.mounted) {
+            if (response != null && response is String && response.isEmpty) {
+              CustomToast.success(context, "Export successful");
+            } else {
+              CustomToast.error(context, response);
+            }
+          }
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,17 +84,39 @@ class _HomePageState extends State<HomePage> {
                             showDialog(
                                 context: context,
                                 builder: (context) {
+                                  return PasswordGenerator();
+                                });
+                          },
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.password,
+                                color: AppColors().textColor,
+                              ),
+                              SizedBox(width: 2,),
+                              Text(
+                                "Password generator".toUpperCase(),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 10,),
+                        TextButton(
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
                                   return ImportPage();
                                 });
                           },
                           child: Row(
                             children: [
-                              Text(
-                                "Import".toUpperCase(),
-                              ),
                               Icon(
                                 Icons.upload,
                                 color: AppColors().textColor,
+                              ),
+                              Text(
+                                "Import".toUpperCase(),
                               ),
                             ],
                           ),
@@ -73,41 +126,16 @@ class _HomePageState extends State<HomePage> {
                         ),
                         TextButton(
                           onPressed: () {
-                            FilePicker.platform.saveFile(
-                                dialogTitle: 'Please select an output file:',
-                                fileName: 'backup.ncrypt',
-                                allowedExtensions: ['ncrypt']).then((value) {
-                              if (value != null) {
-                                List<String> splitString = value.split("\\");
-
-                                String fileName = splitString.last;
-                                if (!fileName.contains(".ncrypt")) {
-                                  fileName += ".ncrypt";
-                                }
-
-                                splitString.removeAt(splitString.length - 1);
-                                String path = splitString.join("\\");
-
-                                SystemDataClient().export(path, fileName).then((response) {
-                                  if (context.mounted) {
-                                    if (response != null && response is String && response.isEmpty) {
-                                      CustomToast.success(context, "Export successful");
-                                    } else {
-                                      CustomToast.error(context, response);
-                                    }
-                                  }
-                                });
-                              }
-                            });
+                            exportData();
                           },
                           child: Row(
                             children: [
-                              Text(
-                                "Export".toUpperCase(),
-                              ),
                               Icon(
                                 Icons.download,
                                 color: AppColors().textColor,
+                              ),
+                              Text(
+                                "Export".toUpperCase(),
                               ),
                             ],
                           ),
