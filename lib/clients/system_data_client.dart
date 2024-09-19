@@ -39,7 +39,7 @@ class SystemDataClient {
   }
 
   Future<dynamic> getSystemData() async {
-    var url = Uri.http("localhost:${System().PORT}", "/system/login_info");
+    var url = Uri.http("localhost:${System().PORT}", "/system/data");
 
     var response = await http.get(url,
         headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
@@ -75,8 +75,8 @@ class SystemDataClient {
     }
   }
 
-  Future<String> login(String password) async {
-    var url = Uri.http("localhost:${System().PORT}", "/system/login");
+  Future<String> signin(String password) async {
+    var url = Uri.http("localhost:${System().PORT}", "/system/signin");
 
     String jsonString = convert.jsonEncode({"master_password": password});
     var response = await http.post(url, body: jsonString);

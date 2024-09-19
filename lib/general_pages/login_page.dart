@@ -22,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void login() {
-    SystemDataClient().login(_passwordController.text).then((value) {
+    SystemDataClient().signin(_passwordController.text).then((value) {
       if (context.mounted) {
         if (value.isNotEmpty) {
           CustomToast.error(context, value);
