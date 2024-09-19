@@ -23,9 +23,6 @@ class MasterPasswordClient {
       return "";
     } else {
       if(response.statusCode == 401) {
-        //regenerate temporary token if older token is expired.
-        await SystemDataClient().login("");
-        print("regenerating token");
         return setMasterPassword(password);
       } else {
         var json = convert.jsonDecode(response.body) as String;
