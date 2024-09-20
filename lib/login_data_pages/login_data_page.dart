@@ -336,17 +336,43 @@ class LoginAccountData extends StatefulWidget {
 }
 
 class _LoginAccountDataState extends State<LoginAccountData> {
+  List<String> passwordList = [];
+  final String hiddenPasswordString = "*****";
+
+  void buildPasswordViewer() {
+    if (widget.selectedData != null) {
+      setState(() {
+        int accountLength = widget.selectedData!.accounts.length;
+        passwordList =
+            List.generate(accountLength, (int index) => hiddenPasswordString);
+      });
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant LoginAccountData oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    buildPasswordViewer();
+  }
+
+  Future<String> decryptPassword(String username) async {
+    dynamic value = await LoginDataClient()
+        .getDecryptedPassword(widget.selectedData!.name, username);
+
+    if (value != null && value is String && value.isNotEmpty) {
+      return value;
+    }
+    return "";
+  }
+
   void copyPasswordToClipboard(String username) {
-    LoginDataClient()
-        .getDecryptedPassword(widget.selectedData!.name, username)
-        .then((value) {
-      if (value is String && value.isNotEmpty) {
-        Clipboard.setData(ClipboardData(text: value)).then((_) {
-          if (context.mounted) {
-            CustomToast.info(context, "Copied password to clipboard");
-          }
-        });
-      }
+    decryptPassword(username).then((value) {
+      Clipboard.setData(ClipboardData(text: value)).then((_) {
+        if (context.mounted) {
+          CustomToast.info(context, "Copied password to clipboard");
+        }
+      });
     });
   }
 
@@ -430,7 +456,7 @@ class _LoginAccountDataState extends State<LoginAccountData> {
                             widget.selectedData = null;
                           });
                         },
-                        icon: Icon(Icons.close),
+                        icon: Icon(Icons.close, color: AppColors().textColor,),
                       )
                     ],
                   ),
@@ -489,12 +515,31 @@ class _LoginAccountDataState extends State<LoginAccountData> {
                                                 fontWeight: FontWeight.bold,
                                                 color: AppColors().textColor)),
                                         TextSpan(
-                                            text: "*****",
+                                            text: passwordList[index],
                                             style: TextStyle(
                                                 color: AppColors().textColor))
                                       ]),
                                     ),
                                   ),
+                                  passwordList[index] == hiddenPasswordString ? IconButton(
+                                    onPressed: () {
+                                      decryptPassword(account.username!)
+                                          .then((value) {
+                                        if (value.isNotEmpty) {
+                                          setState(() {
+                                            passwordList[index] = value;
+                                          });
+                                        }
+                                      });
+                                      Future.delayed(Duration(seconds: 5), () {
+                                        setState(() {
+                                          passwordList[index] =
+                                              hiddenPasswordString;
+                                        });
+                                      });
+                                    },
+                                    icon: Icon(Icons.visibility),
+                                  ) : Container(),
                                   IconButton(
                                     onPressed: () {
                                       if (widget.selectedData!.attributes
