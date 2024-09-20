@@ -23,7 +23,7 @@ class _SessionDataState extends State<SessionData> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getSystemData().then((value){
+    SystemDataClient().getSystemData().then((value){
       if (value != null && value is SystemData) {
         setState(() {
           sessionTimeInSeconds = value.sessionTimeInMinutes * 60;
@@ -34,10 +34,6 @@ class _SessionDataState extends State<SessionData> {
         startTimer();
       }
     });
-  }
-
-  Future<dynamic> getSystemData() async {
-    return await SystemDataClient().getSystemData();
   }
 
   void startTimer() {
