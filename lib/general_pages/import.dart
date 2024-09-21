@@ -71,7 +71,7 @@ class _ImportPageState extends State<ImportPage> {
                 ListTile(
                   leading: Icon(Icons.folder),
                   title: _selectedLocation.isEmpty
-                      ? Text("Choose import data location")
+                      ? Text("Select a file to import")
                       : Text(_selectedLocation),
                   trailing: ElevatedButton(
                     onPressed: () {
@@ -121,13 +121,7 @@ class _ImportPageState extends State<ImportPage> {
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         if (_selectedLocation.isEmpty) {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return SimpleDialog(
-                                  title: Text("Please choose a file to import"),
-                                );
-                              });
+                          CustomToast.error(context, "No file selected");
                         } else {
                           import();
                         }
