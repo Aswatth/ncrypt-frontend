@@ -60,53 +60,68 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                       snapshot.data != "account username not found") {
                     TextEditingController _passwordController =
                         TextEditingController();
-                    return SimpleDialog(
-                      title: Text(
-                          "Editing ${_existingAccountList[index].username!} password"),
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: [
-                              ListTile(
-                                leading: Text("Old password"),
-                                title: Text(snapshot.data),
-                              ),
-                              TextFormField(
-                                obscureText: true,
-                                obscuringCharacter: "#",
-                                controller: _passwordController,
-                                decoration: InputDecoration(
-                                    hintText: "Enter new password",
-                                    label: Text("New password")),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "New password cannot be empty";
-                                  }
-                                },
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      _existingAccountList[index].password =
-                                          _passwordController.text;
+                    bool passwordVisibility = false;
+                    return StatefulBuilder(
+                      builder: (context, setState) {
+                        return SimpleDialog(
+                          title: Text(
+                              "Editing ${_existingAccountList[index].username!} password"),
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  ListTile(
+                                    leading: Text("Old password"),
+                                    title: Text(snapshot.data),
+                                  ),
+                                  TextFormField(
+                                    enableInteractiveSelection: false,
+                                    obscureText: !passwordVisibility,
+                                    controller: _passwordController,
+                                    decoration: InputDecoration(
+                                        hintText: "Enter new password",
+                                        label: Text("New password"),
+                                        suffixIcon: IconButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                passwordVisibility =
+                                                    !passwordVisibility;
+                                              });
+                                            },
+                                            icon: passwordVisibility
+                                                ? Icon(Icons.visibility)
+                                                : Icon(Icons.visibility_off))),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return "New password cannot be empty";
+                                      }
+                                    },
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          _existingAccountList[index].password =
+                                              _passwordController.text;
 
-                                      Navigator.of(context).pop();
-                                      // CustomToast.success(context, "${_existingAccountList[index].username!} password updated");
-                                    });
-                                  },
-                                  child: Text("Update password"),
-                                ),
-                              )
-                            ],
-                          ),
-                        )
-                      ],
+                                          Navigator.of(context).pop();
+                                          // CustomToast.success(context, "${_existingAccountList[index].username!} password updated");
+                                        });
+                                      },
+                                      child: Text("Update password"),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        );
+                      },
                     );
                   } else {
                     return SimpleDialog(
@@ -166,7 +181,7 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
   }
 
   void saveUpdates() {
-    if(_accountList.isEmpty && _existingAccountList.isEmpty) {
+    if (_accountList.isEmpty && _existingAccountList.isEmpty) {
       CustomToast.error(context, "Should have at least 1 account");
       return;
     }
@@ -276,40 +291,55 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                               _isLocked = !_isLocked;
                             });
                           }),
-                      title: Text("Require master password to view password"),
+                      title: RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                                text: "Locked",
+                                style: TextStyle(color: AppColors().textColor)),
+                            TextSpan(
+                              text:
+                                  "\nWill require master password to view account password",
+                              style: TextStyle(
+                                  color: AppColors().textColor.withAlpha(180),
+                                  fontStyle: FontStyle.italic),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ],
               ),
               SizedBox(
-                width: double.infinity,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return PasswordGenerator();
-                              });
-                        },
-                        child: Text("Password generator")),
-                    ElevatedButton.icon(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
                       onPressed: () {
-                        setState(() {
-                          _accountList.add(Account.empty());
-                          _usernameControllerList.add(TextEditingController());
-                          _passwordControllerList.add(TextEditingController());
-                          _passwordVisibility.add(false);
-                        });
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return PasswordGenerator();
+                            });
                       },
-                      label: Text("Add account"),
-                      icon: Icon(Icons.add),
-                      iconAlignment: IconAlignment.start,
-                    ),
-                  ],
-                ),
+                      child: Text("Password generator")),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      setState(() {
+                        _accountList.add(Account.empty());
+                        _usernameControllerList.add(TextEditingController());
+                        _passwordControllerList.add(TextEditingController());
+                        _passwordVisibility.add(false);
+                      });
+                    },
+                    label: Text("Add account"),
+                    icon: Icon(Icons.add),
+                    iconAlignment: IconAlignment.start,
+                  ),
+                ],
               ),
               SizedBox(
                 height: 20,
