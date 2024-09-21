@@ -146,6 +146,8 @@ class _LoginDataPageState extends State<LoginDataPage> {
             .where((m) => m.attributes.requireMasterPassword)
             .toList();
       }
+
+      selectedData = null;
     });
   }
 
