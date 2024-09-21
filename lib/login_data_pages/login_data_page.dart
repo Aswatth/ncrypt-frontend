@@ -387,6 +387,7 @@ class _LoginAccountDataState extends State<LoginAccountData> {
               contentPadding: EdgeInsets.all(12),
               children: [
                 TextFormField(
+                  enableInteractiveSelection: false,
                   obscureText: !visibility,
                   onChanged: (value) {
                     setState(() {

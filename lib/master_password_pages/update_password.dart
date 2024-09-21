@@ -80,6 +80,7 @@ class _UpdateMasterPasswordPageState extends State<UpdateMasterPasswordPage> {
                 SizedBox(
                   width: 300,
                   child: TextFormField(
+                    enableInteractiveSelection: false,
                     controller: _passwordController,
                     obscureText: !_passwordVisibility,
                     decoration: InputDecoration(
@@ -166,6 +167,7 @@ class _UpdateMasterPasswordPageState extends State<UpdateMasterPasswordPage> {
                 SizedBox(
                   width: 300,
                   child: TextFormField(
+                    enableInteractiveSelection: false,
                     controller: _confirmPasswordController,
                     obscureText: !_confirmPasswordVisibility,
                     decoration: InputDecoration(

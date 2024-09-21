@@ -65,6 +65,7 @@ class _LoginPageState extends State<LoginPage> {
                 Form(
                   key: _formKey,
                   child: TextFormField(
+                    enableInteractiveSelection: false,
                     controller: _passwordController,
                     obscureText: !_visibility,
                     validator: (value) {

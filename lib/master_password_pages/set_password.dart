@@ -122,6 +122,7 @@ class _SetPasswordState extends State<SetPassword> {
                     height: 20,
                   ),
                   TextFormField(
+                    enableInteractiveSelection: false,
                     controller: _passwordController,
                     obscureText: !_passwordVisibility,
                     decoration: InputDecoration(
@@ -204,6 +205,7 @@ class _SetPasswordState extends State<SetPassword> {
                     height: 20,
                   ),
                   TextFormField(
+                    enableInteractiveSelection: false,
                     controller: _confirmPasswordController,
                     obscureText: !_confirmPasswordVisibility,
                     decoration: InputDecoration(
