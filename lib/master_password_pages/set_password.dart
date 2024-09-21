@@ -341,15 +341,7 @@ class _SetPasswordState extends State<SetPassword> {
                               context: context,
                               builder: (context) {
                                 return ImportPage();
-                              }).then((_) {
-                            if (context.mounted) {
-                              Navigator.of(context).pushAndRemoveUntil(
-                                MaterialPageRoute(
-                                    builder: (context) => LoginPage()),
-                                (route) => false,
-                              );
-                            }
-                          });
+                              });
                         },
                         child: MouseRegion(
                           cursor: SystemMouseCursors.click,
