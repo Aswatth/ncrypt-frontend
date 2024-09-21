@@ -236,7 +236,6 @@ class _LoginDataPageState extends State<LoginDataPage> {
                         child: DataTable(
                             showCheckboxColumn: false,
                             columns: [
-                              DataColumn(label: Text("Favourite")),
                               DataColumn(label: Text("Name")),
                               DataColumn(label: Text("URL")),
                               DataColumn(label: Text("Lock status")),
@@ -254,21 +253,25 @@ class _LoginDataPageState extends State<LoginDataPage> {
                                     });
                                   },
                                   cells: [
-                                    DataCell(IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          m.attributes.isFavourite =
-                                              !m.attributes.isFavourite;
-                                          updateFavourite(m);
-                                        });
-                                      },
-                                      icon: m.attributes.isFavourite
-                                          ? Icon(
-                                              Icons.favorite,
-                                            )
-                                          : Icon(Icons.favorite_border),
+                                    DataCell(Row(
+                                      children: [
+                                        IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              m.attributes.isFavourite =
+                                                  !m.attributes.isFavourite;
+                                              updateFavourite(m);
+                                            });
+                                          },
+                                          icon: m.attributes.isFavourite
+                                              ? Icon(
+                                                  Icons.favorite,
+                                                )
+                                              : Icon(Icons.favorite_border),
+                                        ),
+                                        Text(m.name)
+                                      ],
                                     )),
-                                    DataCell(Text(m.name)),
                                     DataCell(Text(m.url)),
                                     DataCell(m.attributes.requireMasterPassword
                                         ? Row(
@@ -460,7 +463,10 @@ class _LoginAccountDataState extends State<LoginAccountData> {
                             widget.selectedData = null;
                           });
                         },
-                        icon: Icon(Icons.close, color: AppColors().textColor,),
+                        icon: Icon(
+                          Icons.close,
+                          color: AppColors().textColor,
+                        ),
                       )
                     ],
                   ),
@@ -525,25 +531,28 @@ class _LoginAccountDataState extends State<LoginAccountData> {
                                       ]),
                                     ),
                                   ),
-                                  passwordList[index] == hiddenPasswordString ? IconButton(
-                                    onPressed: () {
-                                      decryptPassword(account.username!)
-                                          .then((value) {
-                                        if (value.isNotEmpty) {
-                                          setState(() {
-                                            passwordList[index] = value;
-                                          });
-                                        }
-                                      });
-                                      Future.delayed(Duration(seconds: 5), () {
-                                        setState(() {
-                                          passwordList[index] =
-                                              hiddenPasswordString;
-                                        });
-                                      });
-                                    },
-                                    icon: Icon(Icons.visibility),
-                                  ) : Container(),
+                                  passwordList[index] == hiddenPasswordString
+                                      ? IconButton(
+                                          onPressed: () {
+                                            decryptPassword(account.username!)
+                                                .then((value) {
+                                              if (value.isNotEmpty) {
+                                                setState(() {
+                                                  passwordList[index] = value;
+                                                });
+                                              }
+                                            });
+                                            Future.delayed(Duration(seconds: 5),
+                                                () {
+                                              setState(() {
+                                                passwordList[index] =
+                                                    hiddenPasswordString;
+                                              });
+                                            });
+                                          },
+                                          icon: Icon(Icons.visibility),
+                                        )
+                                      : Container(),
                                   IconButton(
                                     onPressed: () {
                                       if (widget.selectedData!.attributes
