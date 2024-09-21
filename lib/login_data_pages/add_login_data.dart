@@ -32,7 +32,7 @@ class _AddLoginDataState extends State<AddLoginData> {
       }
       return;
     }
-    for(int i = 0; i < _accountList.length; ++i) {
+    for (int i = 0; i < _accountList.length; ++i) {
       _accountList[i].username = _usernameControllerList[i].text;
       _accountList[i].password = _passwordControllerList[i].text;
     }
@@ -119,7 +119,7 @@ class _AddLoginDataState extends State<AddLoginData> {
               ),
               Row(
                 children: [
-                  Expanded(
+                  Flexible(
                     child: ListTile(
                       leading: Checkbox(
                           value: _isFavourite,
@@ -131,7 +131,7 @@ class _AddLoginDataState extends State<AddLoginData> {
                       title: Text("Add to favourites"),
                     ),
                   ),
-                  Expanded(
+                  Flexible(
                     child: ListTile(
                       leading: Checkbox(
                           value: _isLocked,
@@ -140,37 +140,51 @@ class _AddLoginDataState extends State<AddLoginData> {
                               _isLocked = !_isLocked;
                             });
                           }),
-                      title: Text("Require master password to view password"),
+                      title: RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                                text: "Locked",
+                                style: TextStyle(color: AppColors().textColor)),
+                            TextSpan(
+                              text:
+                                  "\nWill require master password to view account password",
+                              style: TextStyle(color: AppColors().textColor.withAlpha(180), fontStyle: FontStyle.italic),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ],
               ),
-              SizedBox(
-                width: double.infinity,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
-                        onPressed: () {
-                          showDialog(context: context, builder: (context){
-                            return PasswordGenerator();
-                          });
-                        }, child: Text("Password generator")),
-                    ElevatedButton.icon(
+              SizedBox(height: 20,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
                       onPressed: () {
-                        setState(() {
-                          _accountList.add(Account.empty());
-                          _usernameControllerList.add(TextEditingController());
-                          _passwordControllerList.add(TextEditingController());
-                          _passwordVisibility.add(false);
-                        });
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return PasswordGenerator();
+                            });
                       },
-                      label: Text("Add account"),
-                      icon: Icon(Icons.add),
-                      iconAlignment: IconAlignment.start,
-                    ),
-                  ],
-                ),
+                      child: Text("Password generator".toUpperCase())),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      setState(() {
+                        _accountList.add(Account.empty());
+                        _usernameControllerList.add(TextEditingController());
+                        _passwordControllerList.add(TextEditingController());
+                        _passwordVisibility.add(false);
+                      });
+                    },
+                    label: Text("Add account".toUpperCase()),
+                    icon: Icon(Icons.add),
+                    iconAlignment: IconAlignment.start,
+                  ),
+                ],
               ),
               SizedBox(
                 height: 20,
@@ -183,11 +197,13 @@ class _AddLoginDataState extends State<AddLoginData> {
                       return Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
                               child: TextFormField(
+                                enableInteractiveSelection: false,
                                 controller: _usernameControllerList[index],
-                                maxLength: 16,
+                                maxLength: 25,
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return "Username cannot be empty";
@@ -219,6 +235,8 @@ class _AddLoginDataState extends State<AddLoginData> {
                             ),
                             Expanded(
                               child: TextFormField(
+                                enableInteractiveSelection: false,
+                                maxLength: 25,
                                 controller: _passwordControllerList[index],
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -245,18 +263,38 @@ class _AddLoginDataState extends State<AddLoginData> {
                                   ])),
                                   hintText: "Password for the account",
                                   hintStyle: TextStyle(color: Colors.grey),
+                                  suffixIcon: IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        _passwordVisibility[index] =
+                                            !_passwordVisibility[index];
+                                      });
+                                    },
+                                    icon: _passwordVisibility[index]
+                                        ? Icon(Icons.visibility)
+                                        : Icon(Icons.visibility_off),
+                                  ),
                                 ),
                               ),
                             ),
-                            IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    _accountList.removeAt(index);
-                                  });
-                                },
-                                icon: Icon(
-                                  Icons.delete,
-                                ))
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Align(
+                              alignment: Alignment.center,
+                              child: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _accountList.removeAt(index);
+                                      _usernameControllerList.removeAt(index);
+                                      _passwordControllerList.removeAt(index);
+                                      _passwordVisibility.removeAt(index);
+                                    });
+                                  },
+                                  icon: Icon(
+                                    Icons.delete,
+                                  )),
+                            )
                           ],
                         ),
                       );
@@ -265,16 +303,13 @@ class _AddLoginDataState extends State<AddLoginData> {
               SizedBox(
                 height: 20,
               ),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      addLoginData();
-                    }
-                  },
-                  child: Text("Save"),
-                ),
+              ElevatedButton(
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    addLoginData();
+                  }
+                },
+                child: Text("Save".toUpperCase()),
               ),
             ],
           ),
