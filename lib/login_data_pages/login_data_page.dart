@@ -92,6 +92,7 @@ class _LoginDataPageState extends State<LoginDataPage> {
                                   setState(() {
                                     _loginDataList.remove(data);
                                     _filteredDataList = _loginDataList;
+                                    selectedData = null;
                                   });
 
                                   if (context.mounted) {
