@@ -1,3 +1,4 @@
+import 'package:frontend/models/password_generator_preference.dart';
 import 'package:frontend/utils/system.dart';
 import 'package:frontend/models/system_data.dart';
 import 'dart:convert' as convert;
@@ -16,15 +17,9 @@ class SystemDataClient {
     return _instance;
   }
 
-  Future<dynamic> getGeneratedPassword(bool hasDigits, bool hasUpperCase,
-      bool hasSpecialChar, int length) async {
+  Future<dynamic> getGeneratedPassword() async {
     var url =
-        Uri.http("localhost:${System().PORT}", "/system/generate_password", {
-      "hasDigits": hasDigits.toString(),
-      "hasUpperCase": hasUpperCase.toString(),
-      "hasSpecialChar": hasSpecialChar.toString(),
-      "length": length.toString()
-    });
+        Uri.http("localhost:${System().PORT}", "/system/generate_password");
 
     var response = await http.get(
       url,
@@ -150,7 +145,8 @@ class SystemDataClient {
     }
   }
 
-  Future<dynamic> updateAutomaticBackupData(bool automaticBackup, String backupFolderPath, String backupFileName) async {
+  Future<dynamic> updateAutomaticBackupData(bool automaticBackup,
+      String backupFolderPath, String backupFileName) async {
     var url = Uri.http(
         "localhost:${System().PORT}", "/system/automatic_backup_setting");
 
@@ -162,6 +158,41 @@ class SystemDataClient {
 
     var response = await http.put(url,
         body: jsonString,
+        headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
+
+    if (response.statusCode == 200) {
+      return "";
+    } else {
+      var json = convert.jsonDecode(response.body) as String;
+      return json;
+    }
+  }
+
+  Future<dynamic> getPasswordGeneratorPreference() async {
+    var url = Uri.http(
+        "localhost:${System().PORT}", "/system/password_generator_preference");
+
+    var response = await http.get(url,
+        headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
+
+    if (response.statusCode == 200) {
+      return PasswordGeneratorPreference.fromJson(
+          convert.jsonDecode(response.body));
+    } else {
+      var json = response.body;
+      return json;
+    }
+  }
+
+  Future<dynamic> updatePasswordGeneratorPreference(
+      PasswordGeneratorPreference passwordGeneratorPreference) async {
+    var url = Uri.http(
+        "localhost:${System().PORT}", "/system/password_generator_preference");
+
+    String requestBody =
+        convert.jsonEncode(passwordGeneratorPreference.toJson());
+    var response = await http.put(url,
+        body: requestBody,
         headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
 
     if (response.statusCode == 200) {
