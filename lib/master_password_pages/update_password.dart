@@ -12,13 +12,17 @@ class UpdateMasterPasswordPage extends StatefulWidget {
 
 class _UpdateMasterPasswordPageState extends State<UpdateMasterPasswordPage> {
   final _formKey = GlobalKey<FormState>();
-  final _passwordController = TextEditingController();
-  bool _passwordVisibility = false;
 
-  bool _confirmPasswordVisibility = false;
-  final _confirmPasswordController = TextEditingController();
+  final _oldMasterPasswordController = TextEditingController();
+  bool _oldMasterPasswordVisibility = false;
 
-  final Map<String, bool> _passwordValidation = Map<String, bool>.from({
+  final _newMasterPasswordController = TextEditingController();
+  bool _newMasterPasswordVisibility = false;
+
+  bool _confirmMasterPasswordVisibility = false;
+  final _confirmMasterPasswordController = TextEditingController();
+
+  final Map<String, bool> _newMasterPasswordValidation = Map<String, bool>.from({
     "Should have at least one digit": false,
     "Should have at least one uppercase character": false,
     "Should have at least one special character !, @, #, \$, %, ^, &, *": false,
@@ -27,7 +31,7 @@ class _UpdateMasterPasswordPageState extends State<UpdateMasterPasswordPage> {
 
   void updateMasterPassword() {
     MasterPasswordClient()
-        .updateMasterPassword(_passwordController.text)
+        .updateMasterPassword(_oldMasterPasswordController.text, _newMasterPasswordController.text)
         .then((value) {
       if (context.mounted) {
         if (value.isEmpty) {
@@ -54,7 +58,7 @@ class _UpdateMasterPasswordPageState extends State<UpdateMasterPasswordPage> {
               children: [
                 Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: _passwordValidation.entries.map((m) {
+                    children: _newMasterPasswordValidation.entries.map((m) {
                       return Row(
                         children: [
                           m.value
@@ -81,8 +85,48 @@ class _UpdateMasterPasswordPageState extends State<UpdateMasterPasswordPage> {
                   width: 300,
                   child: TextFormField(
                     enableInteractiveSelection: false,
-                    controller: _passwordController,
-                    obscureText: !_passwordVisibility,
+                    controller: _oldMasterPasswordController,
+                    obscureText: !_oldMasterPasswordVisibility,
+                    decoration: InputDecoration(
+                      label: Text(
+                        "Enter old master password",
+                      ),
+                      hintMaxLines: 16,
+                      enabled: true,
+                      hintStyle:
+                      TextStyle(color: Colors.white24, fontSize: 14),
+                      hintText: "Old master password",
+                      suffixIcon: IconButton(
+                        icon: _oldMasterPasswordVisibility
+                            ? Icon(
+                          Icons.visibility,
+                          // color: TEXT_COLOR,
+                        )
+                            : Icon(Icons.visibility_off),
+                        onPressed: () {
+                          setState(() {
+                            _oldMasterPasswordVisibility = !_oldMasterPasswordVisibility;
+                          });
+                        },
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Cannot be empty";
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  width: 300,
+                  child: TextFormField(
+                    enableInteractiveSelection: false,
+                    controller: _newMasterPasswordController,
+                    obscureText: !_newMasterPasswordVisibility,
                     decoration: InputDecoration(
                       label: Text(
                         "Enter master password",
@@ -93,7 +137,7 @@ class _UpdateMasterPasswordPageState extends State<UpdateMasterPasswordPage> {
                       TextStyle(color: Colors.white24, fontSize: 14),
                       hintText: "master password",
                       suffixIcon: IconButton(
-                        icon: _passwordVisibility
+                        icon: _newMasterPasswordVisibility
                             ? Icon(
                           Icons.visibility,
                           // color: TEXT_COLOR,
@@ -101,7 +145,7 @@ class _UpdateMasterPasswordPageState extends State<UpdateMasterPasswordPage> {
                             : Icon(Icons.visibility_off),
                         onPressed: () {
                           setState(() {
-                            _passwordVisibility = !_passwordVisibility;
+                            _newMasterPasswordVisibility = !_newMasterPasswordVisibility;
                           });
                         },
                       ),
@@ -109,35 +153,35 @@ class _UpdateMasterPasswordPageState extends State<UpdateMasterPasswordPage> {
                     onChanged: (value) {
                       setState(() {
                         if (RegExp(r'[A-Z]').hasMatch(value)) {
-                          _passwordValidation[
+                          _newMasterPasswordValidation[
                           "Should have at least one uppercase character"] =
                           true;
                         } else {
-                          _passwordValidation[
+                          _newMasterPasswordValidation[
                           "Should have at least one uppercase character"] =
                           false;
                         }
                         if (RegExp(r'[0-9]').hasMatch(value)) {
-                          _passwordValidation[
+                          _newMasterPasswordValidation[
                           "Should have at least one digit"] = true;
                         } else {
-                          _passwordValidation[
+                          _newMasterPasswordValidation[
                           "Should have at least one digit"] = false;
                         }
                         if (RegExp(r'[!@#$%^&*]').hasMatch(value)) {
-                          _passwordValidation[
+                          _newMasterPasswordValidation[
                           "Should have at least one special character !, @, #, \$, %, ^, &, *"] =
                           true;
                         } else {
-                          _passwordValidation[
+                          _newMasterPasswordValidation[
                           "Should have at least one special character !, @, #, \$, %, ^, &, *"] =
                           false;
                         }
                         if ((value.length >= 8 && value.length <= 16)) {
-                          _passwordValidation[
+                          _newMasterPasswordValidation[
                           "Should be of length between 8 - 16"] = true;
                         } else {
-                          _passwordValidation[
+                          _newMasterPasswordValidation[
                           "Should be of length between 8 - 16"] = false;
                         }
                       });
@@ -158,6 +202,7 @@ class _UpdateMasterPasswordPageState extends State<UpdateMasterPasswordPage> {
                       if (!(value.length >= 8 && value.length <= 16)) {
                         return "Must be of length between 8-16";
                       }
+                      return null;
                     },
                   ),
                 ),
@@ -168,8 +213,8 @@ class _UpdateMasterPasswordPageState extends State<UpdateMasterPasswordPage> {
                   width: 300,
                   child: TextFormField(
                     enableInteractiveSelection: false,
-                    controller: _confirmPasswordController,
-                    obscureText: !_confirmPasswordVisibility,
+                    controller: _confirmMasterPasswordController,
+                    obscureText: !_confirmMasterPasswordVisibility,
                     decoration: InputDecoration(
                       label: Text(
                         "Confirm master password",
@@ -179,24 +224,25 @@ class _UpdateMasterPasswordPageState extends State<UpdateMasterPasswordPage> {
                       TextStyle(color: Colors.white24, fontSize: 14),
                       hintText: "master password",
                       suffixIcon: IconButton(
-                        icon: _confirmPasswordVisibility
+                        icon: _confirmMasterPasswordVisibility
                             ? Icon(
                           Icons.visibility,
                         )
                             : Icon(Icons.visibility_off),
                         onPressed: () {
                           setState(() {
-                            _confirmPasswordVisibility =
-                            !_confirmPasswordVisibility;
+                            _confirmMasterPasswordVisibility =
+                            !_confirmMasterPasswordVisibility;
                           });
                         },
                       ),
                     ),
                     validator: (value) {
                       if (value == null ||
-                          (value != _passwordController.text)) {
+                          (value != _newMasterPasswordController.text)) {
                         return "Password does not match";
                       }
+                      return null;
                     },
                   ),
                 ),

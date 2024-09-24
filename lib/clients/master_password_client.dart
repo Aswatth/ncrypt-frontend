@@ -32,10 +32,10 @@ class MasterPasswordClient {
     }
   }
 
-  Future<String> updateMasterPassword(String password) async {
+  Future<String> updateMasterPassword(String oldMasterPassword, String newMasterPassword) async {
     var url = Uri.http("localhost:${System().PORT}", "/master_password");
 
-    String jsonString = convert.jsonEncode({"master_password": password});
+    String jsonString = convert.jsonEncode({"old_master_password": oldMasterPassword, "new_master_password": newMasterPassword});
     var response = await http.put(url,body: jsonString, headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
 
     if (response.statusCode == 200) {
