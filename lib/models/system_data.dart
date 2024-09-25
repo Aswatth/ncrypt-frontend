@@ -6,7 +6,7 @@ class SystemData {
   late bool automaticBackup;
   late String automaticBackupLocation;
   late String backupFileName;
-  late int sessionTimeInMinutes;
+  late int sessionDurationInMinutes;
 
   SystemData(
       {required this.loginCount,
@@ -16,7 +16,7 @@ class SystemData {
       required this.automaticBackup,
       required this.automaticBackupLocation,
       required this.backupFileName,
-      required this.sessionTimeInMinutes});
+      required this.sessionDurationInMinutes});
 
   factory SystemData.fromJson(Map<String, dynamic> json) {
     return SystemData(
@@ -27,11 +27,11 @@ class SystemData {
         automaticBackup: json['automatic_backup'],
         automaticBackupLocation: json['automatic_backup_location'],
         backupFileName: json['backup_file_name'],
-        sessionTimeInMinutes: json['session_time_in_minutes']);
+        sessionDurationInMinutes: json['session_duration_in_minutes']);
   }
 
   @override
   String toString() {
-    return 'SystemData{loginCount: $loginCount, lastLoginDateTime: $lastLoginDateTime, isLoggedIn: $isLoggedIn, currentLoginDateTime: $currentLoginDateTime, automaticBackup: $automaticBackup, automaticBackupLocation: $automaticBackupLocation, backupFileName: $backupFileName, sessionTimeInMinutes: $sessionTimeInMinutes}';
+    return 'SystemData{loginCount: $loginCount, lastLoginDateTime: $lastLoginDateTime, isLoggedIn: $isLoggedIn, currentLoginDateTime: $currentLoginDateTime, automaticBackup: $automaticBackup, automaticBackupLocation: $automaticBackupLocation, backupFileName: $backupFileName, sessionDurationInMinutes: $sessionDurationInMinutes}';
   }
 }

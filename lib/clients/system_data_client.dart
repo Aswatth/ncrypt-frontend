@@ -202,4 +202,23 @@ class SystemDataClient {
       return json;
     }
   }
+
+  Future<dynamic> updateSessionTimeout(int sessionTimeoutInMinutes) async {
+    var url = Uri.http("localhost:${System().PORT}", "/system/session_timeout");
+
+    String requestBody = convert
+        .jsonEncode({"session_timeout_in_minutes": sessionTimeoutInMinutes});
+
+    var response = await http.put(url,
+        body: requestBody,
+        headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
+
+    if (response.statusCode == 200) {
+      _instance.jwtToken = convert.jsonDecode(response.body) as String;
+      return null;
+    } else {
+      var json = convert.jsonDecode(response.body) as String;
+      return json;
+    }
+  }
 }

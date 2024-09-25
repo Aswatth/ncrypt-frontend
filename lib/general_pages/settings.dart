@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/clients/system_data_client.dart';
+import 'package:frontend/models/session_timer.dart';
 import 'package:frontend/utils/custom_toast.dart';
 import 'package:frontend/master_password_pages/update_password.dart';
 import 'package:frontend/utils/file_loader.dart';
@@ -36,7 +37,10 @@ class _SettingsPageState extends State<SettingsPage> {
                     return AutomaticBackupData();
                   });
             },
-          )
+          ),
+          ListTile(
+              title: Text("Session duration"),
+              trailing: SessionTimeout())
         ],
       ),
     );
@@ -158,6 +162,64 @@ class _AutomaticBackupDataState extends State<AutomaticBackupData> {
               child: Text("Save")),
         )
       ],
+    );
+  }
+}
+
+class SessionTimeout extends StatefulWidget {
+  const SessionTimeout({super.key});
+
+  @override
+  State<SessionTimeout> createState() => _SessionTimeoutState();
+}
+
+class _SessionTimeoutState extends State<SessionTimeout> {
+  final List<String> _timeoutList = [
+    '10 minutes',
+    '15 minutes',
+    '20 minutes',
+    '30 minutes'
+  ];
+  int selectedTimeout = 0;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    selectedTimeout = _timeoutList.indexOf(
+        "${SystemDataClient().SYSTEM_DATA?.sessionDurationInMinutes} minutes");
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 20.0),
+      child: DropdownButton<String>(
+        value: _timeoutList[selectedTimeout],
+        items: _timeoutList.map((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+        onChanged: (selectedValue) {
+          int timeInMinutes = int.parse(selectedValue!.split(" ")[0]);
+          setState(() {
+            selectedTimeout = _timeoutList.indexOf(selectedValue);
+          });
+          SystemDataClient().updateSessionTimeout(timeInMinutes).then((value) {
+            if (value != null) {
+              if (context.mounted) {
+                CustomToast.error(context, value);
+              }
+            } else {
+              SessionTimer().reset();
+              SessionTimer().setSessionTimeInMinutes(timeInMinutes);
+              SessionTimer().start();
+            }
+          });
+        },
+      ),
     );
   }
 }

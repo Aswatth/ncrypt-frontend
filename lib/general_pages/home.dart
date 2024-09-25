@@ -2,6 +2,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/clients/system_data_client.dart';
 import 'package:frontend/general_pages/password_generator.dart';
+import 'package:frontend/models/session_timer.dart';
 import 'package:frontend/utils/colors.dart';
 import 'package:frontend/utils/custom_toast.dart';
 import 'package:frontend/general_pages/import.dart';
@@ -147,7 +148,8 @@ class _HomePageState extends State<HomePage> {
                           onPressed: () {
                             SystemDataClient().logout().then((value) {
                               if (context.mounted) {
-                                if (value == null || value.isEmpty) {
+                                if (value.isEmpty) {
+                                  SessionTimer().reset();
                                   Navigator.of(context).pop();
                                 } else {
                                   CustomToast.error(context, value);
