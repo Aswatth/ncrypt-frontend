@@ -204,10 +204,10 @@ class SystemDataClient {
   }
 
   Future<dynamic> updateSessionTimeout(int sessionTimeoutInMinutes) async {
-    var url = Uri.http("localhost:${System().PORT}", "/system/session_timeout");
+    var url = Uri.http("localhost:${System().PORT}", "/system/session_duration");
 
     String requestBody = convert
-        .jsonEncode({"session_timeout_in_minutes": sessionTimeoutInMinutes});
+        .jsonEncode({"session_duration_in_minutes": sessionTimeoutInMinutes});
 
     var response = await http.put(url,
         body: requestBody,
