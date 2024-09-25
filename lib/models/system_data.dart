@@ -1,11 +1,11 @@
+import 'package:frontend/models/auto_backup_setting.dart';
+
 class SystemData {
   late int loginCount;
   late String lastLoginDateTime;
   late bool isLoggedIn;
   late String currentLoginDateTime;
-  late bool automaticBackup;
-  late String automaticBackupLocation;
-  late String backupFileName;
+  late AutoBackupSetting autoBackupSetting;
   late int sessionDurationInMinutes;
 
   SystemData(
@@ -13,9 +13,7 @@ class SystemData {
       required this.lastLoginDateTime,
       required this.isLoggedIn,
       required this.currentLoginDateTime,
-      required this.automaticBackup,
-      required this.automaticBackupLocation,
-      required this.backupFileName,
+      required this.autoBackupSetting,
       required this.sessionDurationInMinutes});
 
   factory SystemData.fromJson(Map<String, dynamic> json) {
@@ -24,14 +22,13 @@ class SystemData {
         lastLoginDateTime: json['last_login'],
         isLoggedIn: json['is_logged_in'],
         currentLoginDateTime: json['current_login_date_time'],
-        automaticBackup: json['automatic_backup'],
-        automaticBackupLocation: json['automatic_backup_location'],
-        backupFileName: json['backup_file_name'],
+        autoBackupSetting:
+            AutoBackupSetting.fromJson(json['auto_backup_setting']),
         sessionDurationInMinutes: json['session_duration_in_minutes']);
   }
 
   @override
   String toString() {
-    return 'SystemData{loginCount: $loginCount, lastLoginDateTime: $lastLoginDateTime, isLoggedIn: $isLoggedIn, currentLoginDateTime: $currentLoginDateTime, automaticBackup: $automaticBackup, automaticBackupLocation: $automaticBackupLocation, backupFileName: $backupFileName, sessionDurationInMinutes: $sessionDurationInMinutes}';
+    return 'SystemData{loginCount: $loginCount, lastLoginDateTime: $lastLoginDateTime, isLoggedIn: $isLoggedIn, currentLoginDateTime: $currentLoginDateTime, autoBackupSetting: $autoBackupSetting, sessionDurationInMinutes: $sessionDurationInMinutes}';
   }
 }

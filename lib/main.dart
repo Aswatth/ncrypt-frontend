@@ -2,6 +2,8 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:frontend/general_pages/setup.dart';
+import 'package:frontend/models/session_timer.dart';
 import 'package:frontend/utils/colors.dart';
 import 'package:frontend/utils/system.dart';
 import 'package:frontend/clients/master_password_client.dart';
@@ -16,6 +18,7 @@ void main(List<String> args) async {
 
   SystemDataClient();
   MasterPasswordClient();
+  SessionTimer();
 
   runApp(const MyApp());
 }
@@ -164,7 +167,7 @@ class _LoadPageState extends State<LoadPage> {
 
   Future<AppExitResponse> _handleExitRequested() async {
     if (SystemDataClient().SYSTEM_DATA == null ||
-        !SystemDataClient().SYSTEM_DATA!.automaticBackup) {
+        !SystemDataClient().SYSTEM_DATA!.autoBackupSetting.isEnabled) {
       return AppExitResponse.exit;
     }
 
@@ -235,6 +238,6 @@ class _LoadPageState extends State<LoadPage> {
 
   @override
   Widget build(BuildContext context) {
-    return System().IsNewUser ? SetPassword() : LoginPage();
+    return System().IsNewUser ? Setup() : LoginPage();
   }
 }

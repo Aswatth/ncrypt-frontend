@@ -1,3 +1,4 @@
+import 'package:frontend/models/auto_backup_setting.dart';
 import 'package:frontend/models/password_generator_preference.dart';
 import 'package:frontend/utils/system.dart';
 import 'package:frontend/models/system_data.dart';
@@ -49,15 +50,13 @@ class SystemDataClient {
     }
   }
 
-  Future<dynamic> setup(String password, bool automaticBackup,
-      String backupFolderPath, String backupFileName) async {
+  Future<dynamic> setup(
+      String masterPassword, AutoBackupSetting autoBackupSetting) async {
     var url = Uri.http("localhost:${System().PORT}", "/system/setup");
 
     String jsonString = convert.jsonEncode({
-      "master_password": password,
-      "automatic_backup": automaticBackup,
-      "backup_folder_path": backupFolderPath,
-      "backup_file_name": backupFileName
+      "master_password": masterPassword,
+      "auto_backup_setting": autoBackupSetting
     });
 
     var response = await http.post(url, body: jsonString);
@@ -145,16 +144,11 @@ class SystemDataClient {
     }
   }
 
-  Future<dynamic> updateAutomaticBackupData(bool automaticBackup,
-      String backupFolderPath, String backupFileName) async {
+  Future<dynamic> updateAutomaticBackupData(AutoBackupSetting autoBackupSetting) async {
     var url = Uri.http(
         "localhost:${System().PORT}", "/system/automatic_backup_setting");
 
-    String jsonString = convert.jsonEncode({
-      "automatic_backup": automaticBackup,
-      "backup_folder_path": backupFolderPath,
-      "backup_file_name": backupFileName
-    });
+    String jsonString = convert.jsonEncode(autoBackupSetting.toJson());
 
     var response = await http.put(url,
         body: jsonString,
@@ -204,7 +198,8 @@ class SystemDataClient {
   }
 
   Future<dynamic> updateSessionTimeout(int sessionTimeoutInMinutes) async {
-    var url = Uri.http("localhost:${System().PORT}", "/system/session_duration");
+    var url =
+        Uri.http("localhost:${System().PORT}", "/system/session_duration");
 
     String requestBody = convert
         .jsonEncode({"session_duration_in_minutes": sessionTimeoutInMinutes});
