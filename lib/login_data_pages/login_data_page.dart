@@ -221,7 +221,7 @@ class _LoginDataPageState extends State<LoginDataPage> {
                           });
                         },
                         icon: Icon(Icons.add),
-                        label: Text("Add"),
+                        label: Text("Add".toUpperCase()),
                       ),
                     ],
                   ),

@@ -566,7 +566,7 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                       saveUpdates();
                     }
                   },
-                  child: Text("Save"),
+                  child: Text("Save".toUpperCase()),
                 ),
               ),
             ],

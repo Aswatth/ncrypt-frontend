@@ -100,7 +100,7 @@ class _UpdateAutoBackupState extends State<UpdateAutoBackup> {
                             }
                           });
                         },
-                        child: Text("Choose"),
+                        child: Text("Choose".toUpperCase()),
                       ),
                     ),
                     ListTile(
@@ -151,7 +151,7 @@ class _UpdateAutoBackupState extends State<UpdateAutoBackup> {
                     }
                   }
                 },
-                child: Text("Save")),
+                child: Text("Save".toUpperCase())),
           )
         ],
       ),

@@ -77,7 +77,7 @@ class _ImportPageState extends State<ImportPage> {
                     onPressed: () {
                       loadFile();
                     },
-                    child: Text("Choose"),
+                    child: Text("Choose".toUpperCase()),
                   ),
                 ),
                 SizedBox(
@@ -127,7 +127,7 @@ class _ImportPageState extends State<ImportPage> {
                         }
                       }
                     },
-                    child: Text("Import"),
+                    child: Text("Import".toUpperCase()),
                   ),
                 ),
               ],
