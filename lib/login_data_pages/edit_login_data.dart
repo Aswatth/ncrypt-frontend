@@ -43,6 +43,7 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
   }
 
   void editExistingPassword(int index) {
+    final key = GlobalKey<FormState>();
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -65,58 +66,79 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                       builder: (context, setState) {
                         return SimpleDialog(
                           title: Text(
-                              "Editing ${_existingAccountList[index].username!} password"),
+                              "Editing ${_existingAccountList[index].username!} account password"),
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                children: [
-                                  ListTile(
-                                    leading: Text("Old password"),
-                                    title: Text(snapshot.data),
-                                  ),
-                                  TextFormField(
-                                    enableInteractiveSelection: false,
-                                    obscureText: !passwordVisibility,
-                                    controller: _passwordController,
-                                    decoration: InputDecoration(
-                                        hintText: "Enter new password",
-                                        label: Text("New password"),
-                                        suffixIcon: IconButton(
-                                            onPressed: () {
-                                              setState(() {
-                                                passwordVisibility =
-                                                    !passwordVisibility;
-                                              });
-                                            },
-                                            icon: passwordVisibility
-                                                ? Icon(Icons.visibility)
-                                                : Icon(Icons.visibility_off))),
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return "New password cannot be empty";
-                                      }
-                                    },
-                                  ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  SizedBox(
-                                    width: double.infinity,
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          _existingAccountList[index].password =
-                                              _passwordController.text;
-
-                                          Navigator.of(context).pop();
-                                          // CustomToast.success(context, "${_existingAccountList[index].username!} password updated");
-                                        });
-                                      },
-                                      child: Text("Update password"),
+                            SizedBox(
+                              width: 300,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 0),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Old password:",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(snapshot.data)
+                                      ],
                                     ),
-                                  )
-                                ],
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    Form(
+                                      key: key,
+                                      child: TextFormField(
+                                        enableInteractiveSelection: false,
+                                        obscureText: !passwordVisibility,
+                                        controller: _passwordController,
+                                        decoration: InputDecoration(
+                                            hintText: "Enter new password",
+                                            label: Text("New password"),
+                                            suffixIcon: IconButton(
+                                                onPressed: () {
+                                                  setState(() {
+                                                    passwordVisibility =
+                                                        !passwordVisibility;
+                                                  });
+                                                },
+                                                icon: passwordVisibility
+                                                    ? Icon(Icons.visibility)
+                                                    : Icon(
+                                                        Icons.visibility_off))),
+                                        validator: (value) {
+                                          if (value == null || value.isEmpty) {
+                                            return "New password cannot be empty";
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            _existingAccountList[index]
+                                                    .password =
+                                                _passwordController.text;
+                                            if (key.currentState!
+                                                .validate()) {
+                                              saveUpdates();
+                                            }
+
+                                            // Navigator.of(context).pop();
+                                          });
+                                        },
+                                        child: Text("Update password"),
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                             )
                           ],
