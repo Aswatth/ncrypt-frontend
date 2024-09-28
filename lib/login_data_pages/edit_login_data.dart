@@ -347,7 +347,7 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                               return PasswordGenerator();
                             });
                       },
-                      child: Text("Password generator")),
+                      child: Text("Password generator".toUpperCase())),
                   ElevatedButton.icon(
                     onPressed: () {
                       setState(() {
@@ -357,7 +357,7 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                         _passwordVisibility.add(false);
                       });
                     },
-                    label: Text("Add account"),
+                    label: Text("Add account".toUpperCase()),
                     icon: Icon(Icons.add),
                     iconAlignment: IconAlignment.start,
                   ),
