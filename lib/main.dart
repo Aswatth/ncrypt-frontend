@@ -9,8 +9,7 @@ import 'package:frontend/utils/system.dart';
 import 'package:frontend/clients/master_password_client.dart';
 import 'package:frontend/clients/system_data_client.dart';
 import 'package:frontend/utils/custom_toast.dart';
-import 'package:frontend/general_pages/login_page.dart';
-import 'package:frontend/master_password_pages/set_password.dart';
+import 'package:frontend/general_pages/signin_page.dart';
 
 void main(List<String> args) async {
   System().PORT = int.parse(args[0]);

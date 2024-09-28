@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/clients/system_data_client.dart';
 import 'package:frontend/utils/colors.dart';
 import 'package:frontend/utils/custom_toast.dart';
-import 'package:frontend/general_pages/login_page.dart';
+import 'package:frontend/general_pages/signin_page.dart';
 import 'package:frontend/models/system_data.dart';
 
 import '../models/session_timer.dart';

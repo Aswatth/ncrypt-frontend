@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/clients/system_data_client.dart';
-import 'package:frontend/general_pages/login_page.dart';
+import 'package:frontend/general_pages/signin_page.dart';
 import 'package:frontend/general_pages/update_auto_backup.dart';
 import 'package:frontend/master_password_pages/set_password.dart';
 import 'package:frontend/models/auto_backup_setting.dart';
