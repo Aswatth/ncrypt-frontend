@@ -99,10 +99,10 @@ class _UpdateMasterPasswordPageState extends State<UpdateMasterPasswordPage> {
                       suffixIcon: IconButton(
                         icon: _oldMasterPasswordVisibility
                             ? Icon(
-                          Icons.visibility,
+                          Icons.visibility_off,
                           // color: TEXT_COLOR,
                         )
-                            : Icon(Icons.visibility_off),
+                            : Icon(Icons.visibility),
                         onPressed: () {
                           setState(() {
                             _oldMasterPasswordVisibility = !_oldMasterPasswordVisibility;
@@ -139,10 +139,10 @@ class _UpdateMasterPasswordPageState extends State<UpdateMasterPasswordPage> {
                       suffixIcon: IconButton(
                         icon: _newMasterPasswordVisibility
                             ? Icon(
-                          Icons.visibility,
+                          Icons.visibility_off,
                           // color: TEXT_COLOR,
                         )
-                            : Icon(Icons.visibility_off),
+                            : Icon(Icons.visibility),
                         onPressed: () {
                           setState(() {
                             _newMasterPasswordVisibility = !_newMasterPasswordVisibility;
@@ -226,9 +226,9 @@ class _UpdateMasterPasswordPageState extends State<UpdateMasterPasswordPage> {
                       suffixIcon: IconButton(
                         icon: _confirmMasterPasswordVisibility
                             ? Icon(
-                          Icons.visibility,
+                          Icons.visibility_off,
                         )
-                            : Icon(Icons.visibility_off),
+                            : Icon(Icons.visibility),
                         onPressed: () {
                           setState(() {
                             _confirmMasterPasswordVisibility =

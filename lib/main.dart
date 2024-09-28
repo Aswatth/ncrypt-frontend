@@ -12,8 +12,8 @@ import 'package:frontend/utils/custom_toast.dart';
 import 'package:frontend/general_pages/signin_page.dart';
 
 void main(List<String> args) async {
-  System().PORT = int.parse(args[0]);
-  System().IsNewUser = bool.parse(args[1]);
+  System().PORT = 12345;//int.parse(args[0]);
+  System().IsNewUser = false;//bool.parse(args[1]);
 
   SystemDataClient();
   MasterPasswordClient();

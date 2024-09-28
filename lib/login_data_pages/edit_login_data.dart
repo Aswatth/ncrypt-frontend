@@ -95,19 +95,20 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                         obscureText: !passwordVisibility,
                                         controller: _passwordController,
                                         decoration: InputDecoration(
-                                            hintText: "Enter new password",
-                                            label: Text("New password"),
-                                            suffixIcon: IconButton(
-                                                onPressed: () {
-                                                  setState(() {
-                                                    passwordVisibility =
-                                                        !passwordVisibility;
-                                                  });
-                                                },
-                                                icon: passwordVisibility
-                                                    ? Icon(Icons.visibility)
-                                                    : Icon(
-                                                        Icons.visibility_off))),
+                                          hintText: "Enter new password",
+                                          label: Text("New password"),
+                                          suffixIcon: IconButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                passwordVisibility =
+                                                    !passwordVisibility;
+                                              });
+                                            },
+                                            icon: passwordVisibility
+                                                ? Icon(Icons.visibility_off)
+                                                : Icon(Icons.visibility),
+                                          ),
+                                        ),
                                         validator: (value) {
                                           if (value == null || value.isEmpty) {
                                             return "New password cannot be empty";
@@ -126,8 +127,7 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                             _existingAccountList[index]
                                                     .password =
                                                 _passwordController.text;
-                                            if (key.currentState!
-                                                .validate()) {
+                                            if (key.currentState!.validate()) {
                                               saveUpdates();
                                             }
 
@@ -528,9 +528,9 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                                 });
                                               },
                                               icon: _passwordVisibility[index]
-                                                  ? Icon(Icons.visibility)
+                                                  ? Icon(Icons.visibility_off)
                                                   : Icon(
-                                                      Icons.visibility_off))),
+                                                      Icons.visibility))),
                                     ),
                                   ),
                                   IconButton(

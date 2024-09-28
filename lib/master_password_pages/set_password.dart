@@ -95,10 +95,10 @@ class _SetPasswordState extends State<SetPassword> {
                     suffixIcon: IconButton(
                       icon: _passwordVisibility
                           ? Icon(
-                              Icons.visibility,
+                              Icons.visibility_off,
                               // color: TEXT_COLOR,
                             )
-                          : Icon(Icons.visibility_off),
+                          : Icon(Icons.visibility),
                       onPressed: () {
                         setState(() {
                           _passwordVisibility = !_passwordVisibility;
@@ -177,9 +177,9 @@ class _SetPasswordState extends State<SetPassword> {
                     suffixIcon: IconButton(
                       icon: _confirmPasswordVisibility
                           ? Icon(
-                              Icons.visibility,
+                              Icons.visibility_off,
                             )
-                          : Icon(Icons.visibility_off),
+                          : Icon(Icons.visibility),
                       onPressed: () {
                         setState(() {
                           _confirmPasswordVisibility =

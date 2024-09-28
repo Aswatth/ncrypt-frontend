@@ -86,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                                 });
                               },
                               icon: Icon(
-                                Icons.visibility,
+                                Icons.visibility_off,
                               ),
                             )
                           : IconButton(
@@ -96,7 +96,7 @@ class _LoginPageState extends State<LoginPage> {
                                 });
                               },
                               icon: Icon(
-                                Icons.visibility_off,
+                                Icons.visibility,
                               ),
                             ),
                       labelStyle: TextStyle(fontWeight: FontWeight.bold),

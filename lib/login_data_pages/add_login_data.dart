@@ -271,8 +271,8 @@ class _AddLoginDataState extends State<AddLoginData> {
                                       });
                                     },
                                     icon: _passwordVisibility[index]
-                                        ? Icon(Icons.visibility)
-                                        : Icon(Icons.visibility_off),
+                                        ? Icon(Icons.visibility_off)
+                                        : Icon(Icons.visibility),
                                   ),
                                 ),
                               ),
