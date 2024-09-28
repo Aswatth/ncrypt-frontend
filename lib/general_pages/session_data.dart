@@ -28,6 +28,69 @@ class _SessionDataState extends State<SessionData> {
         setState(() {
           SessionTimer().tickCallback = () {
             setState(() {
+              if (SessionTimer().getCurrentTimeInSeconds() == 60) {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return SimpleDialog(
+                      title: Text("Warning"),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20.0, vertical: 12),
+                          child: Text(
+                              "Session will expire in 1 minute.\nDo you want to extend it?"),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                                SystemDataClient().backup().then((value) {
+                                  if (value != null &&
+                                      (value is String && value.isNotEmpty)) {
+                                    if (context.mounted) {
+                                      CustomToast.error(context, value);
+                                    }
+                                  }
+                                });
+                                Navigator.of(context).pop();
+                              },
+                              child: Text("No"),
+                            ),
+                            ElevatedButton(
+                                onPressed: () {
+                                  SystemDataClient().extendSession().then((value) {
+                                    if (value == null) {
+                                      setState(() {
+                                        SessionTimer().reset();
+                                        SessionTimer().start();
+                                        Navigator.of(context).pop();
+                                        CustomToast.info(
+                                            context, "Session extended");
+                                      });
+                                    } else {
+                                      if (context.mounted) {
+                                        CustomToast.error(context, value);
+                                      }
+                                    }
+                                  });
+                                },
+                                child: Text("Yes"),
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor:
+                                    Theme.of(context).colorScheme.primary,
+                                    iconColor:
+                                    Theme.of(context).colorScheme.surface,
+                                    foregroundColor:
+                                    Theme.of(context).colorScheme.surface))
+                          ],
+                        )
+                      ],
+                    );
+                  },
+                );
+              }
             });
           };
 
@@ -36,18 +99,18 @@ class _SessionDataState extends State<SessionData> {
             Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => SignInPage()),
-                  (route) => false, // Remove all previous routes
+              (route) => false, // Remove all previous routes
             );
           };
 
-          SessionTimer().setSessionTimeInMinutes(value.sessionDurationInMinutes);
+          SessionTimer()
+              .setSessionTimeInMinutes(value.sessionDurationInMinutes);
 
           if (value.lastLoginDateTime.isNotEmpty) {
             lastLogin = DateTime.parse(value.lastLoginDateTime).toLocal();
           }
 
           SessionTimer().start();
-
         });
       }
     });

@@ -216,4 +216,20 @@ class SystemDataClient {
       return json;
     }
   }
+
+  Future<dynamic> extendSession() async {
+    var url =
+    Uri.http("localhost:${System().PORT}", "/system/session_duration");
+
+    var response = await http.get(url,
+        headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
+
+    if (response.statusCode == 200) {
+      _instance.jwtToken = convert.jsonDecode(response.body) as String;
+      return null;
+    } else {
+      var json = convert.jsonDecode(response.body) as String;
+      return json;
+    }
+  }
 }
