@@ -31,6 +31,7 @@ class _SessionDataState extends State<SessionData> {
               if (SessionTimer().getCurrentTimeInSeconds() == 60) {
                 showDialog(
                   context: context,
+                  barrierDismissible: false,
                   builder: (context) {
                     return SimpleDialog(
                       title: Text("Warning"),
