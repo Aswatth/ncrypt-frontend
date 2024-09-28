@@ -2,6 +2,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/clients/system_data_client.dart';
 import 'package:frontend/general_pages/password_generator.dart';
+import 'package:frontend/general_pages/signin_page.dart';
 import 'package:frontend/models/session_timer.dart';
 import 'package:frontend/utils/colors.dart';
 import 'package:frontend/utils/custom_toast.dart';
@@ -18,7 +19,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   void exportData() {
     FilePicker.platform.saveFile(
         dialogTitle: 'Please select an output file:',
@@ -94,14 +94,18 @@ class _HomePageState extends State<HomePage> {
                                 Icons.password,
                                 color: AppColors().textColor,
                               ),
-                              SizedBox(width: 2,),
+                              SizedBox(
+                                width: 2,
+                              ),
                               Text(
                                 "Password generator".toUpperCase(),
                               ),
                             ],
                           ),
                         ),
-                        SizedBox(width: 10,),
+                        SizedBox(
+                          width: 10,
+                        ),
                         TextButton(
                           onPressed: () {
                             showDialog(
@@ -150,7 +154,12 @@ class _HomePageState extends State<HomePage> {
                               if (context.mounted) {
                                 if (value.isEmpty) {
                                   SessionTimer().reset();
-                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                      builder: (context) => SignInPage(),
+                                    ),
+                                    (route) => false,
+                                  );
                                 } else {
                                   CustomToast.error(context, value);
                                 }

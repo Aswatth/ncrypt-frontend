@@ -237,6 +237,6 @@ class _LoadPageState extends State<LoadPage> {
 
   @override
   Widget build(BuildContext context) {
-    return System().IsNewUser ? Setup() : LoginPage();
+    return System().IsNewUser ? Setup() : SignInPage();
   }
 }

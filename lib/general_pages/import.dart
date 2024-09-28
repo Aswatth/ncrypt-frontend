@@ -46,7 +46,7 @@ class _ImportPageState extends State<ImportPage> {
         if (response != null && response is String && response.isEmpty) {
           CustomToast.success(context, "Import successful");
           Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (contex) => LoginPage()),
+            MaterialPageRoute(builder: (contex) => SignInPage()),
                 (route) => false,
           );
         } else {

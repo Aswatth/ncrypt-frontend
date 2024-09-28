@@ -35,7 +35,7 @@ class _SessionDataState extends State<SessionData> {
             CustomToast.info(context, "Session expired!\nPlease login again");
             Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (context) => LoginPage()),
+              MaterialPageRoute(builder: (context) => SignInPage()),
                   (route) => false, // Remove all previous routes
             );
           };

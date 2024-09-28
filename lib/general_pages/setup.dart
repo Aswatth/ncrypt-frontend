@@ -24,7 +24,7 @@ class _SetupState extends State<Setup> {
       if (context.mounted) {
         if (value == null || (value is String && value.isEmpty)) {
           Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => LoginPage()),
+            MaterialPageRoute(builder: (context) => SignInPage()),
             (route) => false,
           );
         } else {

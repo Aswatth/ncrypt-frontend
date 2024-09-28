@@ -4,14 +4,14 @@ import 'package:frontend/utils/custom_toast.dart';
 import 'package:frontend/general_pages/home.dart';
 import 'package:frontend/general_pages/password_generator.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class SignInPage extends StatefulWidget {
+  const SignInPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<SignInPage> createState() => _SignInPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignInPageState extends State<SignInPage> {
   final _formKey = GlobalKey<FormState>();
   final _passwordController = TextEditingController();
   bool _visibility = false;
@@ -28,10 +28,11 @@ class _LoginPageState extends State<LoginPage> {
           CustomToast.error(context, value);
         } else {
           Navigator.of(context)
-              .push(
+              .pushAndRemoveUntil(
             MaterialPageRoute(
               builder: (context) => const HomePage(),
             ),
+            (route) => false,
           )
               .then((value) {
             _passwordController.clear();
