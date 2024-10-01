@@ -5,9 +5,8 @@ import '../clients/master_password_client.dart';
 import '../utils/custom_toast.dart';
 
 class ValidateMasterPassword extends StatefulWidget {
-  final Function callback;
 
-  ValidateMasterPassword({super.key, required this.callback});
+  const ValidateMasterPassword({super.key});
 
   @override
   State<ValidateMasterPassword> createState() => _ValidateMasterPasswordState();
@@ -54,8 +53,9 @@ class _ValidateMasterPasswordState extends State<ValidateMasterPassword> {
                     .validateMasterPassword(enteredPassword)
                     .then((value) {
                   if (value == "true") {
-                    widget.callback(true);
-                    Navigator.of(context).pop();
+                    if(context.mounted) {
+                      Navigator.of(context).pop(true);
+                    }
                   } else {
                     if (context.mounted) {
                       CustomToast.error(context, value);

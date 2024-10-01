@@ -479,25 +479,34 @@ class _LoginAccountDataState extends State<LoginAccountData> {
                                   passwordList[index] == hiddenPasswordString
                                       ? IconButton(
                                           onPressed: () {
-                                            if(widget.selectedData!.attributes.requireMasterPassword) {
+                                            if (widget.selectedData!.attributes
+                                                .requireMasterPassword) {
                                               showDialog(
                                                 context: context,
                                                 builder: (context) {
-                                                  return ValidateMasterPassword(
-                                                      callback: (result) {
-                                                        if (result) {
-                                                          decryptPassword(account.username!)
-                                                              .then((value) {
-                                                            if (value.isNotEmpty) {
-                                                              setState(() {
-                                                                passwordList[index] = value;
-                                                              });
-                                                            }
-                                                          });
-                                                        }
-                                                      });
+                                                  return ValidateMasterPassword();
                                                 },
-                                              );
+                                              ).then((value) {
+                                                if (value == true) {
+                                                  decryptPassword(
+                                                          account.username!)
+                                                      .then((value) {
+                                                    if (value.isNotEmpty) {
+                                                      setState(() {
+                                                        passwordList[index] =
+                                                            value;
+                                                      });
+                                                    }
+                                                  });
+                                                  Future.delayed(
+                                                      Duration(seconds: 5), () {
+                                                    setState(() {
+                                                      passwordList[index] =
+                                                          hiddenPasswordString;
+                                                    });
+                                                  });
+                                                }
+                                              });
                                             } else {
                                               decryptPassword(account.username!)
                                                   .then((value) {
@@ -508,13 +517,6 @@ class _LoginAccountDataState extends State<LoginAccountData> {
                                                 }
                                               });
                                             }
-                                            Future.delayed(Duration(seconds: 5),
-                                                () {
-                                              setState(() {
-                                                passwordList[index] =
-                                                    hiddenPasswordString;
-                                              });
-                                            });
                                           },
                                           icon: Icon(Icons.visibility),
                                         )
@@ -526,15 +528,14 @@ class _LoginAccountDataState extends State<LoginAccountData> {
                                         showDialog(
                                           context: context,
                                           builder: (context) {
-                                            return ValidateMasterPassword(
-                                                callback: (result) {
-                                              if (result) {
-                                                copyPasswordToClipboard(
-                                                    account.username!);
-                                              }
-                                            });
+                                            return ValidateMasterPassword();
                                           },
-                                        );
+                                        ).then((value) {
+                                          if (value == true) {
+                                            copyPasswordToClipboard(
+                                                account.username!);
+                                          }
+                                        });
                                       } else {
                                         copyPasswordToClipboard(
                                             account.username!);
