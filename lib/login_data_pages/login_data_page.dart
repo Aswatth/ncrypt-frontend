@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/clients/login_data_client.dart';
 import 'package:frontend/clients/master_password_client.dart';
+import 'package:frontend/general_pages/validate_master_password.dart';
 import 'package:frontend/models/login_account.dart';
 import 'package:frontend/utils/colors.dart';
 import 'package:frontend/utils/custom_toast.dart';
@@ -382,62 +383,6 @@ class _LoginAccountDataState extends State<LoginAccountData> {
     });
   }
 
-  void getMasterPassword(String username) {
-    String enteredPassword = "";
-    bool visibility = false;
-    showDialog(
-        context: context,
-        builder: (context) {
-          return StatefulBuilder(builder: (context, setState) {
-            return SimpleDialog(
-              contentPadding: EdgeInsets.all(12),
-              children: [
-                TextFormField(
-                  enableInteractiveSelection: false,
-                  obscureText: !visibility,
-                  onChanged: (value) {
-                    setState(() {
-                      enteredPassword = value;
-                    });
-                  },
-                  decoration: InputDecoration(
-                      hintText: "Enter master password",
-                      label: Text("Master Password"),
-                      suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              visibility = !visibility;
-                            });
-                          },
-                          icon: visibility
-                              ? Icon(Icons.visibility)
-                              : Icon(Icons.visibility_off))),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                ElevatedButton(
-                    onPressed: () {
-                      MasterPasswordClient()
-                          .validateMasterPassword(enteredPassword)
-                          .then((value) {
-                        if (value == "true") {
-                          copyPasswordToClipboard(username);
-                          Navigator.of(context).pop();
-                        } else {
-                          if (context.mounted) {
-                            CustomToast.error(context, value);
-                          }
-                        }
-                      });
-                    },
-                    child: Text("Validate".toUpperCase()))
-              ],
-            );
-          });
-        });
-  }
-
   @override
   Widget build(BuildContext context) {
     return widget.selectedData != null
@@ -534,14 +479,35 @@ class _LoginAccountDataState extends State<LoginAccountData> {
                                   passwordList[index] == hiddenPasswordString
                                       ? IconButton(
                                           onPressed: () {
-                                            decryptPassword(account.username!)
-                                                .then((value) {
-                                              if (value.isNotEmpty) {
-                                                setState(() {
-                                                  passwordList[index] = value;
-                                                });
-                                              }
-                                            });
+                                            if(widget.selectedData!.attributes.requireMasterPassword) {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return ValidateMasterPassword(
+                                                      callback: (result) {
+                                                        if (result) {
+                                                          decryptPassword(account.username!)
+                                                              .then((value) {
+                                                            if (value.isNotEmpty) {
+                                                              setState(() {
+                                                                passwordList[index] = value;
+                                                              });
+                                                            }
+                                                          });
+                                                        }
+                                                      });
+                                                },
+                                              );
+                                            } else {
+                                              decryptPassword(account.username!)
+                                                  .then((value) {
+                                                if (value.isNotEmpty) {
+                                                  setState(() {
+                                                    passwordList[index] = value;
+                                                  });
+                                                }
+                                              });
+                                            }
                                             Future.delayed(Duration(seconds: 5),
                                                 () {
                                               setState(() {
@@ -557,7 +523,18 @@ class _LoginAccountDataState extends State<LoginAccountData> {
                                     onPressed: () {
                                       if (widget.selectedData!.attributes
                                           .requireMasterPassword) {
-                                        getMasterPassword(account.username!);
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return ValidateMasterPassword(
+                                                callback: (result) {
+                                              if (result) {
+                                                copyPasswordToClipboard(
+                                                    account.username!);
+                                              }
+                                            });
+                                          },
+                                        );
                                       } else {
                                         copyPasswordToClipboard(
                                             account.username!);
