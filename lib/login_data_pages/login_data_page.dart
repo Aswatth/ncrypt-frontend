@@ -296,24 +296,71 @@ class _LoginDataPageState extends State<LoginDataPage> {
                                       children: [
                                         IconButton(
                                           onPressed: () {
-                                            Navigator.of(context)
-                                                .push(MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        EditLoginDataPage(
+                                            if (m.attributes
+                                                .requireMasterPassword) {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return ValidateMasterPassword();
+                                                },
+                                              ).then((value) {
+                                                if (value == true) {
+                                                  if (context.mounted) {
+                                                    Navigator.of(context)
+                                                        .push(
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            EditLoginDataPage(
                                                           dataToEdit: m,
-                                                        )))
-                                                .then((_) {
-                                              setState(() {
-                                                selectedData = null;
-                                                getAllLoginData();
+                                                        ),
+                                                      ),
+                                                    )
+                                                        .then((_) {
+                                                      setState(() {
+                                                        selectedData = null;
+                                                        getAllLoginData();
+                                                      });
+                                                    });
+                                                  }
+                                                }
                                               });
-                                            });
+                                            } else {
+                                              Navigator.of(context)
+                                                  .push(
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      EditLoginDataPage(
+                                                    dataToEdit: m,
+                                                  ),
+                                                ),
+                                              )
+                                                  .then((_) {
+                                                setState(() {
+                                                  selectedData = null;
+                                                  getAllLoginData();
+                                                });
+                                              });
+                                            }
                                           },
                                           icon: Icon(Icons.edit),
                                         ),
                                         IconButton(
                                           onPressed: () {
-                                            delete(m);
+                                            if (m.attributes
+                                                .requireMasterPassword) {
+                                              showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return ValidateMasterPassword();
+                                                },
+                                              ).then((value) {
+                                                if (value == true) {
+                                                  delete(m);
+                                                }
+                                              });
+                                            } else {
+                                              delete(m);
+                                            }
                                           },
                                           icon: Icon(Icons.delete),
                                         )
