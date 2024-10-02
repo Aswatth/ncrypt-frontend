@@ -4,6 +4,7 @@ import 'package:frontend/clients/system_data_client.dart';
 import 'package:frontend/general_pages/password_generator.dart';
 import 'package:frontend/general_pages/signin_page.dart';
 import 'package:frontend/models/session_timer.dart';
+import 'package:frontend/notes/note_page.dart';
 import 'package:frontend/utils/colors.dart';
 import 'package:frontend/utils/custom_toast.dart';
 import 'package:frontend/general_pages/import.dart';
@@ -254,7 +255,7 @@ class _HomeContentState extends State<HomeContent> {
           ]),
           Expanded(
             child: TabBarView(
-              children: [LoginDataPage(), Text("Note page"), SettingsPage()],
+              children: [LoginDataPage(), NotePage(), SettingsPage()],
             ),
           ),
         ],
