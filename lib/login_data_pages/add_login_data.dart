@@ -37,8 +37,7 @@ class _AddLoginDataState extends State<AddLoginData> {
       _accountList[i].password = _passwordControllerList[i].text;
     }
 
-    LoginDataClient client = LoginDataClient();
-    client
+    LoginDataClient()
         .addLoginData(LoginData(
             name: _nameController.text,
             url: _urlController.text,
@@ -149,7 +148,9 @@ class _AddLoginDataState extends State<AddLoginData> {
                             TextSpan(
                               text:
                                   "\nWill require master password to view account password",
-                              style: TextStyle(color: AppColors().textColor.withAlpha(180), fontStyle: FontStyle.italic),
+                              style: TextStyle(
+                                  color: AppColors().textColor.withAlpha(180),
+                                  fontStyle: FontStyle.italic),
                             ),
                           ],
                         ),
@@ -158,7 +159,9 @@ class _AddLoginDataState extends State<AddLoginData> {
                   ),
                 ],
               ),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [

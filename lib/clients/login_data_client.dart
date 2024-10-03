@@ -5,6 +5,14 @@ import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 
 class LoginDataClient {
+  static final LoginDataClient _instance = LoginDataClient._internal();
+
+  LoginDataClient._internal();
+
+  factory LoginDataClient() {
+    return _instance;
+  }
+
   Future<dynamic> addLoginData(LoginData data) async {
     var url = Uri.http("localhost:${System().PORT}", "/login");
 

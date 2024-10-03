@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:frontend/clients/login_data_client.dart';
-import 'package:frontend/clients/master_password_client.dart';
 import 'package:frontend/general_pages/validate_master_password.dart';
 import 'package:frontend/models/login_account.dart';
 import 'package:frontend/utils/colors.dart';
@@ -18,8 +17,6 @@ class LoginDataPage extends StatefulWidget {
 }
 
 class _LoginDataPageState extends State<LoginDataPage> {
-  late LoginDataClient client;
-
   List<LoginData> _loginDataList = [];
   List<LoginData> _filteredDataList = [];
 
@@ -31,14 +28,11 @@ class _LoginDataPageState extends State<LoginDataPage> {
   @override
   void initState() {
     super.initState();
-
-    client = LoginDataClient();
-
     getAllLoginData();
   }
 
   void getAllLoginData() {
-    client.getAllLoginData().then((value) {
+    LoginDataClient().getAllLoginData().then((value) {
       if (value is List<dynamic>) {
         setState(() {
           _loginDataList = value.map((m) => m as LoginData).toList();
@@ -49,7 +43,7 @@ class _LoginDataPageState extends State<LoginDataPage> {
   }
 
   void updateFavourite(LoginData data) {
-    client.updateLoginData(data.name, data).then((value) {
+    LoginDataClient().updateLoginData(data.name, data).then((value) {
       if (!(value != null && value is String && value.isEmpty)) {
         if (context.mounted) {
           CustomToast.error(context, "Unable to update favourites");
@@ -88,7 +82,7 @@ class _LoginDataPageState extends State<LoginDataPage> {
                         ),
                         ElevatedButton.icon(
                             onPressed: () {
-                              client.deleteLoginData(data.name).then((value) {
+                              LoginDataClient().deleteLoginData(data.name).then((value) {
                                 if (value is String && value.isEmpty) {
                                   setState(() {
                                     _loginDataList.remove(data);
