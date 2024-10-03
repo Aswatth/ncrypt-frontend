@@ -7,6 +7,8 @@ import 'package:frontend/notes/edit_note_page.dart';
 import 'package:frontend/utils/colors.dart';
 import 'package:frontend/utils/custom_toast.dart';
 
+import '../utils/DateTimeFormatter.dart';
+
 class NotePage extends StatefulWidget {
   const NotePage({super.key});
 
@@ -54,41 +56,6 @@ class _NotePageState extends State<NotePage> {
 
       selectedNote = null;
     });
-  }
-
-  String formatCreatedDateTime(DateTime dateTime) {
-    final List<String> months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec"
-    ];
-
-    int day = dateTime.day;
-    String month = months[dateTime.month - 1];
-    int year = dateTime.year;
-
-    bool isAM = true;
-    int h = dateTime.hour;
-    if (h >= 12) {
-      isAM = false;
-      if (h > 12) {
-        h = h - 12;
-      }
-    }
-
-    String hour = h.toString().padLeft(2, '0');
-    String minute = dateTime.minute.toString().padLeft(2, '0');
-
-    return "$month, $day $year\t$hour:$minute ${isAM ? "AM" : "PM"}";
   }
 
   void getAllNotes() {
@@ -295,7 +262,7 @@ class _NotePageState extends State<NotePage> {
                           ),
                         ),
                         title: Text(note.title),
-                        subtitle: Text(formatCreatedDateTime(
+                        subtitle: Text(DateTimeFormatter().formatDateTime(
                             DateTime.parse(note.createdDateTime))),
                         trailing: IconButton(
                           onPressed: () {},
@@ -347,7 +314,7 @@ class _NotePageState extends State<NotePage> {
                                     style:
                                         TextStyle(fontWeight: FontWeight.bold)),
                                 subtitle: Text(
-                                  formatCreatedDateTime(
+                                  DateTimeFormatter().formatDateTime(
                                     DateTime.parse(
                                       selectedNote!.createdDateTime,
                                     ),

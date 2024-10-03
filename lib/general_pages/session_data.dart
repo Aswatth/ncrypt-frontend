@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:frontend/clients/system_data_client.dart';
+import 'package:frontend/utils/DateTimeFormatter.dart';
 import 'package:frontend/utils/colors.dart';
 import 'package:frontend/utils/custom_toast.dart';
 import 'package:frontend/general_pages/signin_page.dart';
@@ -61,7 +62,9 @@ class _SessionDataState extends State<SessionData> {
                             ),
                             ElevatedButton(
                                 onPressed: () {
-                                  SystemDataClient().extendSession().then((value) {
+                                  SystemDataClient()
+                                      .extendSession()
+                                      .then((value) {
                                     if (value == null) {
                                       setState(() {
                                         SessionTimer().reset();
@@ -80,11 +83,11 @@ class _SessionDataState extends State<SessionData> {
                                 child: Text("Yes"),
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor:
-                                    Theme.of(context).colorScheme.primary,
+                                        Theme.of(context).colorScheme.primary,
                                     iconColor:
-                                    Theme.of(context).colorScheme.surface,
+                                        Theme.of(context).colorScheme.surface,
                                     foregroundColor:
-                                    Theme.of(context).colorScheme.surface))
+                                        Theme.of(context).colorScheme.surface))
                           ],
                         )
                       ],
@@ -117,45 +120,6 @@ class _SessionDataState extends State<SessionData> {
     });
   }
 
-  String formatLastLogin(DateTime dateTime) {
-    final List<String> months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec"
-    ];
-
-    int day = dateTime.day;
-    String month = months[dateTime.month - 1];
-    int year = dateTime.year;
-
-    bool isAM = true;
-    int h = dateTime.hour;
-    if (h >= 12) {
-      isAM = false;
-      h = h - 12;
-    }
-
-    String hour = h.toString().padLeft(2, '0');
-    String minute = dateTime.minute.toString().padLeft(2, '0');
-
-    return "$month, $day $year\t$hour:$minute ${isAM ? "AM" : "PM"}";
-  }
-
-  String formatTime(int seconds) {
-    int minutes = seconds ~/ 60;
-    int remainingSeconds = seconds % 60;
-    return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
-  }
-
   @override
   void dispose() {
     // TODO: implement dispose
@@ -175,7 +139,9 @@ class _SessionDataState extends State<SessionData> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Text(lastLogin != null ? formatLastLogin(lastLogin!) : ""),
+              Text(lastLogin != null
+                  ? DateTimeFormatter().formatDateTime(lastLogin!)
+                  : ""),
             ],
           ),
         ),
@@ -192,7 +158,7 @@ class _SessionDataState extends State<SessionData> {
               Text(
                 SessionTimer().getCurrentTimeInSeconds() == 0
                     ? "00:00"
-                    : formatTime(
+                    : DateTimeFormatter().formatTimeMMSS(
                         SessionTimer().getCurrentTimeInSeconds(),
                       ),
               )
