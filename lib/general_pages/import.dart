@@ -84,6 +84,7 @@ class _ImportPageState extends State<ImportPage> {
                   height: 20,
                 ),
                 TextFormField(
+                  enableInteractiveSelection: false,
                   controller: _passwordController,
                   obscureText: !_visibility,
                   decoration: InputDecoration(
