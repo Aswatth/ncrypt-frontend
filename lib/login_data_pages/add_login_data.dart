@@ -70,35 +70,66 @@ class _AddLoginDataState extends State<AddLoginData> {
           key: _formKey,
           child: Column(
             children: [
-              SizedBox(
-                width: double.infinity,
-                child: TextFormField(
-                  controller: _nameController,
-                  maxLength: 16,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return "Name cannot be empty";
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.account_box_outlined),
-                    filled: true,
-                    label: RichText(
-                        text: TextSpan(children: [
-                      TextSpan(
-                        text: "Name ",
-                        style: TextStyle(
-                            color: AppColors().textColor, fontSize: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: _nameController,
+                      maxLength: 16,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Name cannot be empty";
+                        }
+                        return null;
+                      },
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.account_box_outlined),
+                        filled: true,
+                        label: RichText(
+                            text: TextSpan(children: [
+                          TextSpan(
+                            text: "Name ",
+                            style: TextStyle(
+                                color: AppColors().textColor, fontSize: 16),
+                          ),
+                          TextSpan(
+                              text: "*",
+                              style: TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold))
+                        ])),
+                        hintText: "Enter a name for the login data",
                       ),
-                      TextSpan(
-                          text: "*",
-                          style: TextStyle(
-                              color: Colors.red, fontWeight: FontWeight.bold))
-                    ])),
-                    hintText: "Enter a name for the login data",
+                    ),
                   ),
-                ),
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _isFavourite = !_isFavourite;
+                      });
+                    },
+                    icon: _isFavourite
+                        ? Icon(Icons.favorite)
+                        : Icon(Icons.favorite_border),
+                  ),
+                  Text("Favourite"),
+                  Tooltip(
+                    verticalOffset: 10,
+                    message:
+                        "Requires master password to view account password, edit and delete data.",
+                    child: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _isLocked = !_isLocked;
+                        });
+                      },
+                      icon: _isLocked
+                          ? Icon(Icons.lock)
+                          : Icon(Icons.lock_outline),
+                    ),
+                  ),
+                  Text("Locked"),
+                ],
               ),
               SizedBox(
                 height: 20,
@@ -113,47 +144,6 @@ class _AddLoginDataState extends State<AddLoginData> {
                     hintText: "Enter a url for the login data",
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Row(
-                children: [
-                  Flexible(
-                    child: ListTile(
-                      leading: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _isFavourite = !_isFavourite;
-                          });
-                        },
-                        icon: _isFavourite
-                            ? Icon(Icons.favorite)
-                            : Icon(Icons.favorite_border),
-                      ),
-                      title: Text("Add to favourites"),
-                    ),
-                  ),
-                  Flexible(
-                    child: ListTile(
-                      leading: IconButton(
-                        onPressed: () {
-                          setState(() {
-                            _isLocked = !_isLocked;
-                          });
-                        },
-                        icon: _isLocked
-                            ? Icon(Icons.lock)
-                            : Icon(Icons.lock_outline),
-                      ),
-                      title: Tooltip(
-                        message:
-                            "Requires master password to view account password, edit and delete data.",
-                        child: Text("Locked"),
-                      ),
-                    ),
-                  ),
-                ],
               ),
               SizedBox(
                 height: 20,
