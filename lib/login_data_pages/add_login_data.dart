@@ -224,65 +224,64 @@ class _AddLoginDataState extends State<AddLoginData> {
                                 },
                                 obscureText: !_passwordVisibility[index],
                                 decoration: InputDecoration(
-                                    prefixIcon: Icon(
-                                      Icons.lock,
-                                    ),
-                                    label: RichText(
-                                        text: TextSpan(children: [
-                                      TextSpan(
-                                          text: "Password ",
-                                          style: TextStyle(
-                                              color: AppColors().textColor)),
-                                      TextSpan(
-                                          text: "*",
-                                          style: TextStyle(
-                                              color: Colors.red,
-                                              fontWeight: FontWeight.bold))
-                                    ])),
-                                    hintText: "Password for the account",
-                                    hintStyle: TextStyle(color: Colors.grey),
-                                    suffixIcon: SizedBox(
-                                      width: 150,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          Tooltip(
-                                            message:
-                                                "Click to generate password",
-                                            child: IconButton(
-                                              onPressed: () {
-                                                setState(() {
-                                                  _passwordVisibility[index] =
-                                                      true;
-                                                  SystemDataClient()
-                                                      .getGeneratedPassword()
-                                                      .then((value) {
-                                                    if (value != null) {
-                                                      _passwordControllerList[
-                                                              index]
-                                                          .text = value;
-                                                    }
-                                                  });
-                                                });
-                                              },
-                                              icon: Icon(Icons.password),
-                                            ),
-                                          ),
-                                          IconButton(
+                                  prefixIcon: Icon(
+                                    Icons.lock,
+                                  ),
+                                  label: RichText(
+                                      text: TextSpan(children: [
+                                    TextSpan(
+                                        text: "Password ",
+                                        style: TextStyle(
+                                            color: AppColors().textColor)),
+                                    TextSpan(
+                                        text: "*",
+                                        style: TextStyle(
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.bold))
+                                  ])),
+                                  hintText: "Password for the account",
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                  suffixIcon: SizedBox(
+                                    width: 150,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Tooltip(
+                                          message: "Click to generate password",
+                                          child: IconButton(
                                             onPressed: () {
                                               setState(() {
                                                 _passwordVisibility[index] =
-                                                    !_passwordVisibility[index];
+                                                    true;
+                                                SystemDataClient()
+                                                    .getGeneratedPassword()
+                                                    .then((value) {
+                                                  if (value != null) {
+                                                    _passwordControllerList[
+                                                            index]
+                                                        .text = value;
+                                                  }
+                                                });
                                               });
                                             },
-                                            icon: _passwordVisibility[index]
-                                                ? Icon(Icons.visibility_off)
-                                                : Icon(Icons.visibility),
+                                            icon: Icon(Icons.password),
                                           ),
-                                        ],
-                                      ),
-                                    )),
+                                        ),
+                                        IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              _passwordVisibility[index] =
+                                                  !_passwordVisibility[index];
+                                            });
+                                          },
+                                          icon: _passwordVisibility[index]
+                                              ? Icon(Icons.visibility_off)
+                                              : Icon(Icons.visibility),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                             SizedBox(
