@@ -108,36 +108,51 @@ class _NotePageState extends State<NotePage> {
           title: Text("Are you sure?"),
           contentPadding: const EdgeInsets.all(20),
           children: [
-            Text("Are you delete ${toDelete.title} note?"),
-            SimpleDialogOption(
-              child: Text("No"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            SimpleDialogOption(
-              child: Text("Yes"),
-              onPressed: () {
-                NotesClient()
-                    .deleteNote(toDelete.createdDateTime, toDelete)
-                    .then((value) {
-                  if (context.mounted) {
-                    if (value == null) {
-                      CustomToast.success(context, "Successfully deleted");
-                      setState(() {
-                        selectedNote = null;
-                        noteList.remove(toDelete);
-                        _filteredDataList = noteList;
-                        Navigator.of(context).pop();
-                      });
-                    } else {
-                      CustomToast.error(context, value);
+            Text("Delete ${toDelete.title} note?"),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: () {
                       Navigator.of(context).pop();
-                    }
-                  }
-                });
-              },
-            )
+                    },
+                    label: Text("No"),
+                    // icon: Icon(Icons.close),
+                  ),
+                  ElevatedButton.icon(
+                      onPressed: () {
+                        NotesClient()
+                            .deleteNote(toDelete.createdDateTime, toDelete)
+                            .then((value) {
+                          if (context.mounted) {
+                            if (value == null) {
+                              CustomToast.success(
+                                  context, "Successfully deleted");
+                              setState(() {
+                                selectedNote = null;
+                                noteList.remove(toDelete);
+                                _filteredDataList = noteList;
+                                Navigator.of(context).pop();
+                              });
+                            } else {
+                              CustomToast.error(context, value);
+                              Navigator.of(context).pop();
+                            }
+                          }
+                        });
+                      },
+                      label: Text("Yes"),
+                      // icon: Icon(Icons.check),
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).colorScheme.primary,
+                          iconColor: Theme.of(context).colorScheme.surface,
+                          foregroundColor:
+                              Theme.of(context).colorScheme.surface)),
+                ],
+              ),
+            ),
           ],
         );
       },
