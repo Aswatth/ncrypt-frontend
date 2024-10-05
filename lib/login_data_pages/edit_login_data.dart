@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/clients/login_data_client.dart';
+import 'package:frontend/clients/system_data_client.dart';
 import 'package:frontend/general_pages/password_generator.dart';
 import 'package:frontend/master_password_pages/update_password.dart';
 import 'package:frontend/utils/colors.dart';
@@ -69,7 +70,7 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                               "Editing ${_existingAccountList[index].username!} account password"),
                           children: [
                             SizedBox(
-                              width: 300,
+                              width: 450,
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 20.0, vertical: 0),
@@ -95,20 +96,52 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                         obscureText: !passwordVisibility,
                                         controller: _passwordController,
                                         decoration: InputDecoration(
-                                          hintText: "Enter new password",
-                                          label: Text("New password"),
-                                          suffixIcon: IconButton(
-                                            onPressed: () {
-                                              setState(() {
-                                                passwordVisibility =
-                                                    !passwordVisibility;
-                                              });
-                                            },
-                                            icon: passwordVisibility
-                                                ? Icon(Icons.visibility_off)
-                                                : Icon(Icons.visibility),
-                                          ),
-                                        ),
+                                            hintText: "Enter new password",
+                                            label: Text("New password"),
+                                            suffixIcon: SizedBox(
+                                              width: 150,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  Tooltip(
+                                                    message:
+                                                        "Click to generate password",
+                                                    child: IconButton(
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          passwordVisibility =
+                                                              true;
+                                                          SystemDataClient()
+                                                              .getGeneratedPassword()
+                                                              .then((value) {
+                                                            if (value != null) {
+                                                              _passwordController
+                                                                  .text = value;
+                                                            }
+                                                          });
+                                                        });
+                                                      },
+                                                      icon:
+                                                          Icon(Icons.password),
+                                                    ),
+                                                  ),
+                                                  IconButton(
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        passwordVisibility =
+                                                            !passwordVisibility;
+                                                      });
+                                                    },
+                                                    icon: passwordVisibility
+                                                        ? Icon(Icons
+                                                            .visibility_off)
+                                                        : Icon(
+                                                            Icons.visibility),
+                                                  ),
+                                                ],
+                                              ),
+                                            )),
                                         validator: (value) {
                                           if (value == null || value.isEmpty) {
                                             return "New password cannot be empty";
@@ -130,11 +163,10 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                             if (key.currentState!.validate()) {
                                               saveUpdates();
                                             }
-
-                                            // Navigator.of(context).pop();
                                           });
                                         },
-                                        child: Text("Update password"),
+                                        child: Text(
+                                            "Update password".toUpperCase()),
                                       ),
                                     )
                                   ],
@@ -294,72 +326,37 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                 children: [
                   Expanded(
                     child: ListTile(
-                      leading: Checkbox(
-                          value: _isFavourite,
-                          onChanged: (_) {
-                            setState(() {
-                              _isFavourite = !_isFavourite;
-                            });
-                          }),
+                      leading: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _isFavourite = !_isFavourite;
+                          });
+                        },
+                        icon: _isFavourite
+                            ? Icon(Icons.favorite)
+                            : Icon(Icons.favorite_border),
+                      ),
                       title: Text("Add to favourites"),
                     ),
                   ),
                   Expanded(
-                    child: ListTile(
-                      leading: Checkbox(
-                          value: _isLocked,
-                          onChanged: (_) {
-                            setState(() {
-                              _isLocked = !_isLocked;
-                            });
-                          }),
-                      title: RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                                text: "Locked",
-                                style: TextStyle(color: AppColors().textColor)),
-                            TextSpan(
-                              text:
-                                  "\nWill require master password to view account password",
-                              style: TextStyle(
-                                  color: AppColors().textColor.withAlpha(180),
-                                  fontStyle: FontStyle.italic),
-                            ),
-                          ],
-                        ),
-                      ),
+                    child: Tooltip(
+                      verticalOffset: 10,
+                      message:
+                          "Requires master password to view account password, edit and delete data.",
+                      child: ListTile(
+                          leading: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _isLocked = !_isLocked;
+                              });
+                            },
+                            icon: _isLocked
+                                ? Icon(Icons.lock)
+                                : Icon(Icons.lock_outline),
+                          ),
+                          title: Text("Locked")),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                      onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return PasswordGenerator();
-                            });
-                      },
-                      child: Text("Password generator".toUpperCase())),
-                  ElevatedButton.icon(
-                    onPressed: () {
-                      setState(() {
-                        _accountList.add(Account.empty());
-                        _usernameControllerList.add(TextEditingController());
-                        _passwordControllerList.add(TextEditingController());
-                        _passwordVisibility.add(false);
-                      });
-                    },
-                    label: Text("Add account".toUpperCase()),
-                    icon: Icon(Icons.add),
-                    iconAlignment: IconAlignment.start,
                   ),
                 ],
               ),
@@ -371,6 +368,7 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                   children: <Widget>[
                     // First ListView
                     Expanded(
+                      flex: 4,
                       child: Container(
                         decoration: BoxDecoration(
                             border: Border(
@@ -380,8 +378,11 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Existing accounts",
+                              "Existing accounts".toUpperCase(),
                               style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              height: 10,
                             ),
                             Flexible(
                               flex: 1,
@@ -389,54 +390,65 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                   itemCount: _existingAccountList.length,
                                   itemBuilder: (context, index) {
                                     return Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: [
                                         Expanded(
-                                          child: RichText(
-                                            text: TextSpan(
-                                              children: [
-                                                TextSpan(
-                                                  text: "Username:\t",
-                                                  style: TextStyle(
-                                                      color:
-                                                          AppColors().textColor,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                TextSpan(
-                                                    text: _existingAccountList[
-                                                            index]
-                                                        .username!,
-                                                    style: TextStyle(
-                                                      color:
-                                                          AppColors().textColor,
-                                                    ))
-                                              ],
+                                          flex: 6,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: TextFormField(
+                                              enableInteractiveSelection: false,
+                                              initialValue:
+                                                  _existingAccountList[index]
+                                                      .username!,
+                                              enabled: false,
+                                              validator: (value) {
+                                                if (value == null ||
+                                                    value.isEmpty) {
+                                                  return "Username cannot be empty";
+                                                }
+                                                return null;
+                                              },
+                                              decoration: InputDecoration(
+                                                  prefixIcon: Icon(
+                                                    Icons.person,
+                                                  ),
+                                                  label: Text("Username")),
                                             ),
                                           ),
                                         ),
-                                        Row(
-                                          children: [
-                                            ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                  backgroundColor: AppColors()
-                                                      .backgroundColor,
-                                                  elevation: 2),
-                                              onPressed: () {
-                                                editExistingPassword(index);
-                                              },
-                                              child: Text("Update password"
-                                                  .toUpperCase()),
-                                            ),
-                                            IconButton(
-                                                onPressed: () {
-                                                  setState(() {
-                                                    deleteExistingAccount(
-                                                        index);
-                                                  });
-                                                },
-                                                icon: Icon(Icons.delete))
-                                          ],
-                                        )
+                                        Expanded(
+                                          flex: 4,
+                                          child: ElevatedButton.icon(
+                                            style: ElevatedButton.styleFrom(
+                                                backgroundColor:
+                                                    AppColors().backgroundColor,
+                                                // Background color
+                                                foregroundColor:
+                                                    AppColors().textColor,
+                                                // Text color
+                                                side: BorderSide(
+                                                  color: AppColors().textColor,
+                                                  // Border color
+                                                  width: 0.2, // Border width
+                                                ),
+                                                elevation: 2),
+                                            onPressed: () {
+                                              editExistingPassword(index);
+                                            },
+                                            icon: Icon(Icons.edit),
+                                            label: Text("password"
+                                                .toUpperCase()),
+                                          ),
+                                        ),
+                                        IconButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                deleteExistingAccount(index);
+                                              });
+                                            },
+                                            icon: Icon(Icons.delete))
                                       ],
                                     );
                                   }),
@@ -446,111 +458,165 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                       ),
                     ),
                     Expanded(
-                      flex: 1,
-                      child: ListView.builder(
-                          itemCount: _accountList.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: TextFormField(
-                                      controller:
-                                          _usernameControllerList[index],
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return "Username cannot be empty";
-                                        }
-                                        return null;
-                                      },
-                                      decoration: InputDecoration(
-                                        prefixIcon: Icon(
-                                          Icons.person,
-                                        ),
-                                        label: RichText(
-                                            text: TextSpan(children: [
-                                          TextSpan(
-                                            text: "Username ",
-                                            style: TextStyle(
-                                                color: AppColors().textColor),
-                                          ),
-                                          TextSpan(
-                                              text: "*",
-                                              style: TextStyle(
-                                                  color: Colors.red,
-                                                  fontWeight: FontWeight.bold))
-                                        ])),
-                                        hintText: "Username",
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 20,
-                                  ),
-                                  Expanded(
-                                    child: TextFormField(
-                                      controller:
-                                          _passwordControllerList[index],
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return "Password cannot be empty";
-                                        }
-                                        return null;
-                                      },
-                                      obscureText: !_passwordVisibility[index],
-                                      decoration: InputDecoration(
-                                          prefixIcon: Icon(
-                                            Icons.lock,
-                                          ),
-                                          label: RichText(
-                                              text: TextSpan(children: [
-                                            TextSpan(
-                                              text: "Password ",
-                                              style: TextStyle(
-                                                  color: AppColors().textColor,
-                                                  fontSize: 16),
+                      flex: 6,
+                      child: _accountList.length > 0
+                          ? ListView.builder(
+                              itemCount: _accountList.length,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextFormField(
+                                          enableInteractiveSelection: false,
+                                          maxLength: 25,
+                                          controller:
+                                              _usernameControllerList[index],
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return "Username cannot be empty";
+                                            }
+                                            return null;
+                                          },
+                                          decoration: InputDecoration(
+                                            prefixIcon: Icon(
+                                              Icons.person,
                                             ),
-                                            TextSpan(
-                                                text: "*",
+                                            label: RichText(
+                                                text: TextSpan(children: [
+                                              TextSpan(
+                                                text: "Username ",
                                                 style: TextStyle(
-                                                    color: Colors.red,
-                                                    fontWeight:
-                                                        FontWeight.bold))
-                                          ])),
-                                          hintText: "Password",
-                                          suffixIcon: IconButton(
-                                              onPressed: () {
-                                                setState(() {
-                                                  _passwordVisibility[index] =
-                                                      !_passwordVisibility[
-                                                          index];
-                                                });
-                                              },
-                                              icon: _passwordVisibility[index]
-                                                  ? Icon(Icons.visibility_off)
-                                                  : Icon(
-                                                      Icons.visibility))),
-                                    ),
+                                                    color:
+                                                        AppColors().textColor),
+                                              ),
+                                              TextSpan(
+                                                  text: "*",
+                                                  style: TextStyle(
+                                                      color: Colors.red,
+                                                      fontWeight:
+                                                          FontWeight.bold))
+                                            ])),
+                                            hintText: "Username",
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Expanded(
+                                        child: TextFormField(
+                                          enableInteractiveSelection: false,
+                                          maxLength: 25,
+                                          controller:
+                                              _passwordControllerList[index],
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return "Password cannot be empty";
+                                            }
+                                            return null;
+                                          },
+                                          obscureText:
+                                              !_passwordVisibility[index],
+                                          decoration: InputDecoration(
+                                            prefixIcon: Icon(
+                                              Icons.lock,
+                                            ),
+                                            label: RichText(
+                                                text: TextSpan(children: [
+                                              TextSpan(
+                                                text: "Password ",
+                                                style: TextStyle(
+                                                    color:
+                                                        AppColors().textColor,
+                                                    fontSize: 16),
+                                              ),
+                                              TextSpan(
+                                                  text: "*",
+                                                  style: TextStyle(
+                                                      color: Colors.red,
+                                                      fontWeight:
+                                                          FontWeight.bold))
+                                            ])),
+                                            hintText: "Password",
+                                            suffixIcon: SizedBox(
+                                              width: 100,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  Tooltip(
+                                                    message:
+                                                        "Click to generate password",
+                                                    child: IconButton(
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          _passwordVisibility[
+                                                              index] = true;
+                                                          SystemDataClient()
+                                                              .getGeneratedPassword()
+                                                              .then((value) {
+                                                            if (value != null) {
+                                                              _passwordControllerList[
+                                                                      index]
+                                                                  .text = value;
+                                                            }
+                                                          });
+                                                        });
+                                                      },
+                                                      icon:
+                                                          Icon(Icons.password),
+                                                    ),
+                                                  ),
+                                                  IconButton(
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        _passwordVisibility[
+                                                                index] =
+                                                            !_passwordVisibility[
+                                                                index];
+                                                      });
+                                                    },
+                                                    icon: _passwordVisibility[
+                                                            index]
+                                                        ? Icon(Icons
+                                                            .visibility_off)
+                                                        : Icon(
+                                                            Icons.visibility),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              _accountList.removeAt(index);
+                                              _usernameControllerList
+                                                  .removeAt(index);
+                                              _passwordControllerList
+                                                  .removeAt(index);
+                                              _passwordVisibility
+                                                  .removeAt(index);
+                                            });
+                                          },
+                                          icon: Icon(
+                                            Icons.delete,
+                                          ))
+                                    ],
                                   ),
-                                  IconButton(
-                                      onPressed: () {
-                                        setState(() {
-                                          _accountList.removeAt(index);
-                                          _usernameControllerList
-                                              .removeAt(index);
-                                          _passwordControllerList
-                                              .removeAt(index);
-                                          _passwordVisibility.removeAt(index);
-                                        });
-                                      },
-                                      icon: Icon(
-                                        Icons.delete,
-                                      ))
-                                ],
+                                );
+                              })
+                          : Container(
+                              child: Center(
+                                child: Text("New account goes here".toUpperCase()),
                               ),
-                            );
-                          }),
+                            ),
                     ),
                   ],
                 ),
@@ -558,16 +624,73 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
               SizedBox(
                 height: 20,
               ),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      saveUpdates();
-                    }
-                  },
-                  child: Text("Save".toUpperCase()),
-                ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Row(
+                      children: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors().backgroundColor,
+                            // Background color
+                            foregroundColor: AppColors().textColor,
+                            // Text color
+                            side: BorderSide(
+                              color: AppColors().textColor, // Border color
+                              width: 2, // Border width
+                            ),
+                          ),
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return PasswordGenerator();
+                                });
+                          },
+                          child: Text(
+                            "Password generator".toUpperCase(),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors().backgroundColor,
+                            // Background color
+                            foregroundColor: AppColors().textColor,
+                            // Text color
+                            side: BorderSide(
+                              color: AppColors().textColor, // Border color
+                              width: 2, // Border width
+                            ),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _accountList.add(Account.empty());
+                              _usernameControllerList
+                                  .add(TextEditingController());
+                              _passwordControllerList
+                                  .add(TextEditingController());
+                              _passwordVisibility.add(false);
+                            });
+                          },
+                          label: Text("Add account".toUpperCase()),
+                          icon: Icon(Icons.add),
+                          iconAlignment: IconAlignment.start,
+                        ),
+                      ],
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        saveUpdates();
+                      }
+                    },
+                    child: Text("Save".toUpperCase()),
+                  ),
+                ],
               ),
             ],
           ),
