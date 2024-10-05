@@ -363,7 +363,10 @@ class _NotePageState extends State<NotePage> {
                                               ),
                                             )
                                                 .then((_) {
-                                              getAllNotes();
+                                              setState(() {
+                                                selectedNote = null;
+                                                getAllNotes();
+                                              });
                                             });
                                           }
                                         },
