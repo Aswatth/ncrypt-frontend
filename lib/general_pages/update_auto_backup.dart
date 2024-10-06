@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/clients/system_data_client.dart';
-import 'package:frontend/models/auto_backup_setting.dart';
-import 'package:frontend/utils/custom_toast.dart';
-import 'package:frontend/utils/file_loader.dart';
+import 'package:Ncrypt/clients/system_data_client.dart';
+import 'package:Ncrypt/models/auto_backup_setting.dart';
+import 'package:Ncrypt/utils/custom_toast.dart';
+import 'package:Ncrypt/utils/file_loader.dart';
 
 class UpdateAutoBackup extends StatefulWidget {
   final Function(AutoBackupSetting autoBackupSetting)? callback;

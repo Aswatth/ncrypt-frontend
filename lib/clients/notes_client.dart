@@ -1,7 +1,5 @@
-import 'package:frontend/models/note.dart';
-import 'package:frontend/utils/system.dart';
-import 'package:frontend/utils/system.dart';
-import 'package:frontend/clients/system_data_client.dart';
+import 'package:Ncrypt/models/note.dart';
+import 'package:Ncrypt/utils/system.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 

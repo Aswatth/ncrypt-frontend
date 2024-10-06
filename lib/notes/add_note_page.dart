@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/clients/notes_client.dart';
-import 'package:frontend/models/attributes.dart';
-import 'package:frontend/models/note.dart';
-import 'package:frontend/utils/colors.dart';
-import 'package:frontend/utils/custom_toast.dart';
+import 'package:Ncrypt/clients/notes_client.dart';
+import 'package:Ncrypt/models/attributes.dart';
+import 'package:Ncrypt/models/note.dart';
+import 'package:Ncrypt/utils/custom_toast.dart';
 
 class AddNotePage extends StatefulWidget {
   const AddNotePage({super.key});

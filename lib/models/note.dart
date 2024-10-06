@@ -1,4 +1,4 @@
-import 'package:frontend/models/attributes.dart';
+import 'package:Ncrypt/models/attributes.dart';
 
 class Note {
   late String createdDateTime;

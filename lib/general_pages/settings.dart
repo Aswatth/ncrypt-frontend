@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/clients/system_data_client.dart';
-import 'package:frontend/general_pages/update_auto_backup.dart';
-import 'package:frontend/models/session_timer.dart';
-import 'package:frontend/utils/custom_toast.dart';
-import 'package:frontend/master_password_pages/update_password.dart';
-import 'package:frontend/utils/system.dart';
-import 'package:frontend/utils/theme_provider.dart';
+import 'package:Ncrypt/clients/system_data_client.dart';
+import 'package:Ncrypt/general_pages/update_auto_backup.dart';
+import 'package:Ncrypt/models/session_timer.dart';
+import 'package:Ncrypt/utils/custom_toast.dart';
+import 'package:Ncrypt/master_password_pages/update_password.dart';
+import 'package:Ncrypt/utils/theme_provider.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});

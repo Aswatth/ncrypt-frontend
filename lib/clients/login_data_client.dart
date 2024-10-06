@@ -1,6 +1,6 @@
-import 'package:frontend/utils/system.dart';
-import 'package:frontend/clients/system_data_client.dart';
-import 'package:frontend/models/login.dart';
+import 'package:Ncrypt/utils/system.dart';
+import 'package:Ncrypt/clients/system_data_client.dart';
+import 'package:Ncrypt/models/login.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 

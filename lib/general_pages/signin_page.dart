@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/clients/system_data_client.dart';
-import 'package:frontend/utils/custom_toast.dart';
-import 'package:frontend/general_pages/home.dart';
-import 'package:frontend/general_pages/password_generator.dart';
+import 'package:Ncrypt/clients/system_data_client.dart';
+import 'package:Ncrypt/utils/custom_toast.dart';
+import 'package:Ncrypt/general_pages/home.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});

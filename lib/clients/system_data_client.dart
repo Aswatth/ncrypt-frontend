@@ -1,7 +1,7 @@
-import 'package:frontend/models/auto_backup_setting.dart';
-import 'package:frontend/models/password_generator_preference.dart';
-import 'package:frontend/utils/system.dart';
-import 'package:frontend/models/system_data.dart';
+import 'package:Ncrypt/models/auto_backup_setting.dart';
+import 'package:Ncrypt/models/password_generator_preference.dart';
+import 'package:Ncrypt/utils/system.dart';
+import 'package:Ncrypt/models/system_data.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 

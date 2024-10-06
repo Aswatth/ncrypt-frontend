@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/clients/notes_client.dart';
-import 'package:frontend/general_pages/validate_master_password.dart';
-import 'package:frontend/models/note.dart';
-import 'package:frontend/notes/add_note_page.dart';
-import 'package:frontend/notes/edit_note_page.dart';
-import 'package:frontend/utils/colors.dart';
-import 'package:frontend/utils/custom_toast.dart';
+import 'package:Ncrypt/clients/notes_client.dart';
+import 'package:Ncrypt/general_pages/validate_master_password.dart';
+import 'package:Ncrypt/models/note.dart';
+import 'package:Ncrypt/notes/add_note_page.dart';
+import 'package:Ncrypt/notes/edit_note_page.dart';
+import 'package:Ncrypt/utils/custom_toast.dart';
 
 import '../utils/DateTimeFormatter.dart';
 

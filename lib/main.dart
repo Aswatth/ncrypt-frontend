@@ -2,20 +2,19 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:frontend/general_pages/setup.dart';
-import 'package:frontend/models/session_timer.dart';
-import 'package:frontend/models/system_data.dart';
-import 'package:frontend/utils/colors.dart';
-import 'package:frontend/utils/system.dart';
-import 'package:frontend/clients/master_password_client.dart';
-import 'package:frontend/clients/system_data_client.dart';
-import 'package:frontend/utils/custom_toast.dart';
-import 'package:frontend/general_pages/signin_page.dart';
-import 'package:frontend/utils/theme_provider.dart';
+import 'package:Ncrypt/general_pages/setup.dart';
+import 'package:Ncrypt/models/session_timer.dart';
+import 'package:Ncrypt/utils/system.dart';
+import 'package:Ncrypt/clients/master_password_client.dart';
+import 'package:Ncrypt/clients/system_data_client.dart';
+import 'package:Ncrypt/utils/custom_toast.dart';
+import 'package:Ncrypt/general_pages/signin_page.dart';
+import 'package:Ncrypt/utils/theme_provider.dart';
 
 void main(List<String> args) async {
   System().PORT = int.parse(args[0]);
   System().IsNewUser = bool.parse(args[1]);
+  System().THEME = args[2];
 
   MasterPasswordClient();
   SessionTimer();

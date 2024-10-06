@@ -1,18 +1,15 @@
-import 'dart:math';
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend/clients/system_data_client.dart';
-import 'package:frontend/general_pages/password_generator.dart';
-import 'package:frontend/general_pages/signin_page.dart';
-import 'package:frontend/models/session_timer.dart';
-import 'package:frontend/notes/note_page.dart';
-import 'package:frontend/utils/colors.dart';
-import 'package:frontend/utils/custom_toast.dart';
-import 'package:frontend/general_pages/import.dart';
-import 'package:frontend/general_pages/session_data.dart';
-import 'package:frontend/general_pages/settings.dart';
-import 'package:frontend/login_data_pages/login_data_page.dart';
+import 'package:Ncrypt/clients/system_data_client.dart';
+import 'package:Ncrypt/general_pages/password_generator.dart';
+import 'package:Ncrypt/general_pages/signin_page.dart';
+import 'package:Ncrypt/models/session_timer.dart';
+import 'package:Ncrypt/notes/note_page.dart';
+import 'package:Ncrypt/utils/custom_toast.dart';
+import 'package:Ncrypt/general_pages/import.dart';
+import 'package:Ncrypt/general_pages/session_data.dart';
+import 'package:Ncrypt/general_pages/settings.dart';
+import 'package:Ncrypt/login_data_pages/login_data_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

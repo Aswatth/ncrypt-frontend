@@ -1,6 +1,5 @@
 import 'attributes.dart';
 import 'login_account.dart';
-import 'dart:convert';
 
 class LoginData {
   late String name;

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/clients/system_data_client.dart';
-import 'package:frontend/general_pages/signin_page.dart';
-import 'package:frontend/general_pages/update_auto_backup.dart';
-import 'package:frontend/master_password_pages/set_password.dart';
-import 'package:frontend/models/auto_backup_setting.dart';
-import 'package:frontend/utils/custom_toast.dart';
+import 'package:Ncrypt/clients/system_data_client.dart';
+import 'package:Ncrypt/general_pages/signin_page.dart';
+import 'package:Ncrypt/general_pages/update_auto_backup.dart';
+import 'package:Ncrypt/master_password_pages/set_password.dart';
+import 'package:Ncrypt/models/auto_backup_setting.dart';
+import 'package:Ncrypt/utils/custom_toast.dart';
 
 class Setup extends StatefulWidget {
   const Setup({super.key});
@@ -69,7 +69,6 @@ class _SetupState extends State<Setup> {
                 content: UpdateAutoBackup(
                   callback: (setting) {
                     autoBackupSetting = setting;
-                    print("here");
                     setup();
                   },
                 ),

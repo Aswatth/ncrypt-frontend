@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/clients/master_password_client.dart';
-import 'package:frontend/utils/custom_toast.dart';
+import 'package:Ncrypt/clients/master_password_client.dart';
+import 'package:Ncrypt/utils/custom_toast.dart';
 
 class UpdateMasterPasswordPage extends StatefulWidget {
   const UpdateMasterPasswordPage({super.key});

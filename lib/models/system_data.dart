@@ -1,4 +1,4 @@
-import 'package:frontend/models/auto_backup_setting.dart';
+import 'package:Ncrypt/models/auto_backup_setting.dart';
 
 class SystemData {
   late int loginCount;

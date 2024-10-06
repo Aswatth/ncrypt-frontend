@@ -1,11 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/clients/system_data_client.dart';
-import 'package:frontend/utils/custom_toast.dart';
-import 'package:frontend/general_pages/import.dart';
-import 'package:frontend/general_pages/signin_page.dart';
-import 'package:frontend/utils/file_loader.dart';
-
-import '../clients/master_password_client.dart';
+import 'package:Ncrypt/general_pages/import.dart';
 
 class SetPassword extends StatefulWidget {
   final Function(String)? callback;

@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/clients/login_data_client.dart';
-import 'package:frontend/clients/system_data_client.dart';
-import 'package:frontend/general_pages/password_generator.dart';
-import 'package:frontend/master_password_pages/update_password.dart';
-import 'package:frontend/utils/colors.dart';
-import 'package:frontend/utils/custom_toast.dart';
-import 'package:frontend/models/attributes.dart';
-import 'package:frontend/models/login_account.dart';
+import 'package:Ncrypt/clients/login_data_client.dart';
+import 'package:Ncrypt/clients/system_data_client.dart';
+import 'package:Ncrypt/general_pages/password_generator.dart';
+import 'package:Ncrypt/utils/custom_toast.dart';
+import 'package:Ncrypt/models/attributes.dart';
+import 'package:Ncrypt/models/login_account.dart';
 
 import '../models/login.dart';
 

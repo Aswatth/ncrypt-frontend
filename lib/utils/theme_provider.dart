@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/utils/colors.dart';
-import 'package:frontend/utils/system.dart';
+import 'package:Ncrypt/utils/colors.dart';
 
 class ThemeProvider extends InheritedWidget {
   final ThemeMode themeMode;
