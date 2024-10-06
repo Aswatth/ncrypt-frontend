@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/clients/notes_client.dart';
 import 'package:frontend/models/attributes.dart';
 import 'package:frontend/models/note.dart';
+import 'package:frontend/utils/colors.dart';
 import 'package:frontend/utils/custom_toast.dart';
 
 class AddNotePage extends StatefulWidget {
@@ -55,7 +56,22 @@ class _AddNotePageState extends State<AddNotePage> {
                     child: Container(
                       child: TextFormField(
                         controller: _titleController,
-                        decoration: InputDecoration(hintText: "Enter tile"),
+                        decoration: InputDecoration(
+                          hintText: "Enter tile",
+                          label: RichText(
+                              text: TextSpan(children: [
+                            TextSpan(
+                              text: "Title ",
+                              style: TextStyle(
+                                  color: AppColors().textColor, fontSize: 16),
+                            ),
+                            TextSpan(
+                                text: "*",
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold))
+                          ])),
+                        ),
                         maxLength: 25,
                         validator: (value) {
                           if (value == null || value.isEmpty) {

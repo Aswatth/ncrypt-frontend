@@ -4,6 +4,8 @@ import 'package:frontend/models/attributes.dart';
 import 'package:frontend/models/note.dart';
 import 'package:frontend/utils/custom_toast.dart';
 
+import '../utils/colors.dart';
+
 class EditNotePage extends StatefulWidget {
   Note noteToEdit;
 
@@ -76,7 +78,22 @@ class _EditNotePageState extends State<EditNotePage> {
                       child: TextFormField(
                         controller: _titleController,
                         maxLength: 25,
-                        decoration: InputDecoration(hintText: "Enter tile"),
+                        decoration: InputDecoration(
+                          hintText: "Enter tile",
+                          label: RichText(
+                              text: TextSpan(children: [
+                            TextSpan(
+                              text: "Title ",
+                              style: TextStyle(
+                                  color: AppColors().textColor, fontSize: 16),
+                            ),
+                            TextSpan(
+                                text: "*",
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold))
+                          ])),
+                        ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return "Title cannot be empty";
