@@ -20,7 +20,7 @@ class _SettingsPageState extends State<SettingsPage> {
       body: Column(
         children: [
           ListTile(
-            title: Text("Update master password"),
+            title: Text("Update master password".toUpperCase()),
             onTap: () {
               showDialog(
                   context: (context),
@@ -30,7 +30,7 @@ class _SettingsPageState extends State<SettingsPage> {
             },
           ),
           ListTile(
-            title: Text("Update automatic backup data"),
+            title: Text("Update automatic backup data".toUpperCase()),
             onTap: () {
               showDialog(
                   context: context,
@@ -41,7 +41,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   });
             },
           ),
-          ListTile(title: Text("Session duration"), trailing: SessionTimeout())
+          ListTile(title: Text("Session duration".toUpperCase()), trailing: SessionTimeout())
         ],
       ),
     );
@@ -77,6 +77,7 @@ class _SessionTimeoutState extends State<SessionTimeout> {
     return Padding(
       padding: const EdgeInsets.only(right: 20.0),
       child: DropdownButton<String>(
+        focusColor: Theme.of(context).scaffoldBackgroundColor,
         value: _timeoutList[selectedTimeout],
         items: _timeoutList.map((String value) {
           return DropdownMenuItem<String>(
