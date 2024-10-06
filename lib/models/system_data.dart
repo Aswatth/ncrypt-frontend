@@ -7,6 +7,7 @@ class SystemData {
   late String currentLoginDateTime;
   late AutoBackupSetting autoBackupSetting;
   late int sessionDurationInMinutes;
+  late String theme;
 
   SystemData(
       {required this.loginCount,
@@ -14,7 +15,8 @@ class SystemData {
       required this.isLoggedIn,
       required this.currentLoginDateTime,
       required this.autoBackupSetting,
-      required this.sessionDurationInMinutes});
+      required this.sessionDurationInMinutes,
+      required this.theme});
 
   factory SystemData.fromJson(Map<String, dynamic> json) {
     return SystemData(
@@ -24,11 +26,12 @@ class SystemData {
         currentLoginDateTime: json['current_login_date_time'],
         autoBackupSetting:
             AutoBackupSetting.fromJson(json['auto_backup_setting']),
-        sessionDurationInMinutes: json['session_duration_in_minutes']);
+        sessionDurationInMinutes: json['session_duration_in_minutes'],
+        theme: json['theme']);
   }
 
   @override
   String toString() {
-    return 'SystemData{loginCount: $loginCount, lastLoginDateTime: $lastLoginDateTime, isLoggedIn: $isLoggedIn, currentLoginDateTime: $currentLoginDateTime, autoBackupSetting: $autoBackupSetting, sessionDurationInMinutes: $sessionDurationInMinutes}';
+    return 'SystemData{loginCount: $loginCount, lastLoginDateTime: $lastLoginDateTime, isLoggedIn: $isLoggedIn, currentLoginDateTime: $currentLoginDateTime, autoBackupSetting: $autoBackupSetting, sessionDurationInMinutes: $sessionDurationInMinutes, theme: $theme}';
   }
 }

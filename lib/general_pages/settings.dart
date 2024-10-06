@@ -4,7 +4,8 @@ import 'package:frontend/general_pages/update_auto_backup.dart';
 import 'package:frontend/models/session_timer.dart';
 import 'package:frontend/utils/custom_toast.dart';
 import 'package:frontend/master_password_pages/update_password.dart';
-import 'package:frontend/utils/file_loader.dart';
+import 'package:frontend/utils/system.dart';
+import 'package:frontend/utils/theme_provider.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -41,7 +42,12 @@ class _SettingsPageState extends State<SettingsPage> {
                   });
             },
           ),
-          ListTile(title: Text("Session duration".toUpperCase()), trailing: SessionTimeout())
+          ListTile(
+              title: Text("Session duration".toUpperCase()),
+              trailing: SessionTimeout()),
+          ListTile(
+              title: Text("Update Theme".toUpperCase()),
+              trailing: ThemeDropDown())
         ],
       ),
     );
@@ -100,6 +106,65 @@ class _SessionTimeoutState extends State<SessionTimeout> {
               SessionTimer().setSessionTimeInMinutes(timeInMinutes);
               SessionTimer().start();
             }
+          });
+        },
+      ),
+    );
+  }
+}
+
+class ThemeDropDown extends StatefulWidget {
+  const ThemeDropDown({super.key});
+
+  @override
+  State<ThemeDropDown> createState() => _ThemeDropDownState();
+}
+
+class _ThemeDropDownState extends State<ThemeDropDown> {
+  late String selectedTheme;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      selectedTheme = SystemDataClient().SYSTEM_DATA!.theme;
+    });
+  }
+
+  void updateTheme(String theme) {
+    SystemDataClient().updateTheme(theme).then((value) {
+      if (value != null) {
+        if (context.mounted) {
+          CustomToast.error(context, value);
+        }
+      } else {
+        setState(() {
+          selectedTheme = theme;
+
+          final themeProvider = ThemeProvider.of(context);
+          themeProvider?.setThemeMode(selectedTheme);
+        });
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: DropdownButton<String>(
+        focusColor: Theme.of(context).scaffoldBackgroundColor,
+        value: selectedTheme,
+        items: ["LIGHT", "DARK", "SYSTEM"].map((String value) {
+          return DropdownMenuItem<String>(
+            child: Text(value),
+            value: value,
+          );
+        }).toList(),
+        onChanged: (value) {
+          setState(() {
+            updateTheme(value!);
           });
         },
       ),

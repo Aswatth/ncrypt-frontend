@@ -1,5 +1,3 @@
-import 'dart:io';
-
 class System {
   static final System _instance = System._internal();
 
@@ -7,6 +5,7 @@ class System {
 
   late final int PORT;
   late final bool IsNewUser;
+  late final String THEME;
 
   factory System () {
     return _instance;

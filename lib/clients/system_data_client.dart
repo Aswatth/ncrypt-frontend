@@ -144,7 +144,8 @@ class SystemDataClient {
     }
   }
 
-  Future<dynamic> updateAutomaticBackupData(AutoBackupSetting autoBackupSetting) async {
+  Future<dynamic> updateAutomaticBackupData(
+      AutoBackupSetting autoBackupSetting) async {
     var url = Uri.http(
         "localhost:${System().PORT}", "/system/automatic_backup_setting");
 
@@ -219,13 +220,31 @@ class SystemDataClient {
 
   Future<dynamic> extendSession() async {
     var url =
-    Uri.http("localhost:${System().PORT}", "/system/session_duration");
+        Uri.http("localhost:${System().PORT}", "/system/session_duration");
 
     var response = await http.get(url,
         headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
 
     if (response.statusCode == 200) {
       _instance.jwtToken = convert.jsonDecode(response.body) as String;
+      return null;
+    } else {
+      var json = convert.jsonDecode(response.body) as String;
+      return json;
+    }
+  }
+
+  Future<dynamic> updateTheme(String theme) async {
+    var url = Uri.http("localhost:${System().PORT}", "/system/theme");
+
+    String requestBody = convert.jsonEncode({"theme": theme});
+
+    var response = await http.put(url,
+        body: requestBody,
+        headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
+
+    if (response.statusCode == 200) {
+      _instance.SYSTEM_DATA!.theme = theme;
       return null;
     } else {
       var json = convert.jsonDecode(response.body) as String;
