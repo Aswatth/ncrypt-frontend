@@ -52,49 +52,49 @@ class MyApp extends StatelessWidget {
         ),
         textTheme: TextTheme(
           bodyLarge:
-              TextStyle(color: AppColors().textColor, fontSize: largeText),
+              TextStyle(fontFamily: "ChakraPetch",color: AppColors().textColor, fontSize: largeText),
           bodyMedium:
-              TextStyle(color: AppColors().textColor, fontSize: mediumText),
+              TextStyle(fontFamily: "ChakraPetch",color: AppColors().textColor, fontSize: mediumText),
           bodySmall:
-              TextStyle(color: AppColors().textColor, fontSize: smallText),
+              TextStyle(fontFamily: "ChakraPetch",color: AppColors().textColor, fontSize: smallText),
           titleLarge:
-              TextStyle(color: AppColors().textColor, fontSize: largeText),
+              TextStyle(fontFamily: "ChakraPetch",color: AppColors().textColor, fontSize: largeText),
           titleMedium:
-              TextStyle(color: AppColors().textColor, fontSize: mediumText),
+              TextStyle(fontFamily: "ChakraPetch",color: AppColors().textColor, fontSize: mediumText),
           titleSmall:
-              TextStyle(color: AppColors().textColor, fontSize: smallText),
+              TextStyle(fontFamily: "ChakraPetch",color: AppColors().textColor, fontSize: smallText),
           labelLarge:
-              TextStyle(color: AppColors().textColor, fontSize: largeText),
+              TextStyle(fontFamily: "ChakraPetch",color: AppColors().textColor, fontSize: largeText),
           labelMedium:
-              TextStyle(color: AppColors().textColor, fontSize: mediumText),
+              TextStyle(fontFamily: "ChakraPetch",color: AppColors().textColor, fontSize: mediumText),
           labelSmall:
-              TextStyle(color: AppColors().textColor, fontSize: smallText),
+              TextStyle(fontFamily: "ChakraPetch",color: AppColors().textColor, fontSize: smallText),
           displayLarge:
-              TextStyle(color: AppColors().textColor, fontSize: largeText),
+              TextStyle(fontFamily: "ChakraPetch",color: AppColors().textColor, fontSize: largeText),
           displayMedium:
-              TextStyle(color: AppColors().textColor, fontSize: mediumText),
+              TextStyle(fontFamily: "ChakraPetch",color: AppColors().textColor, fontSize: mediumText),
           displaySmall:
-              TextStyle(color: AppColors().textColor, fontSize: smallText),
+              TextStyle(fontFamily: "ChakraPetch",color: AppColors().textColor, fontSize: smallText),
         ),
         textButtonTheme: TextButtonThemeData(
             style: TextButton.styleFrom(
                 foregroundColor: AppColors().textColor,
                 textStyle:
-                    TextStyle(letterSpacing: 2, color: AppColors().textColor))),
+                    TextStyle(fontFamily: "ChakraPetch",letterSpacing: 2, color: AppColors().textColor))),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
               backgroundColor: AppColors().secondaryColor,
               foregroundColor: AppColors().textColor,
               textStyle:
-                  TextStyle(fontWeight: FontWeight.bold, letterSpacing: 2),
+                  TextStyle(fontFamily: "ChakraPetch",fontWeight: FontWeight.bold, letterSpacing: 2),
               // foregroundColor: AppColors().textColor,
               iconColor: AppColors().textColor),
         ),
         inputDecorationTheme: InputDecorationTheme(
-          hintStyle: TextStyle(color: Colors.grey),
+          hintStyle: TextStyle(fontFamily: "ChakraPetch",color: Colors.grey),
           filled: true,
           fillColor: AppColors().backgroundColor,
-          labelStyle: TextStyle(color: AppColors().textColor, fontSize: 16),
+          labelStyle: TextStyle(fontFamily: "ChakraPetch",color: AppColors().textColor, fontSize: 16),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12.0),
             borderSide:
@@ -114,18 +114,18 @@ class MyApp extends StatelessWidget {
             borderRadius: BorderRadius.circular(12.0),
             borderSide: BorderSide(color: AppColors().textColor, width: 1.0),
           ),
-          errorStyle: TextStyle(fontWeight: FontWeight.bold),
+          errorStyle: TextStyle(fontFamily: "ChakraPetch",fontWeight: FontWeight.bold),
           suffixIconColor: AppColors().textColor,
         ),
         scaffoldBackgroundColor: AppColors().backgroundColor,
         appBarTheme: AppBarTheme(
-          titleTextStyle: TextStyle(color: AppColors().textColor),
+          titleTextStyle: TextStyle(fontFamily: "ChakraPetch",color: AppColors().textColor),
           backgroundColor: AppColors().backgroundColor,
           foregroundColor: AppColors().textColor,
           iconTheme: IconThemeData(color: AppColors().primaryColor),
         ),
         listTileTheme: ListTileThemeData(
-            titleTextStyle: TextStyle(color: AppColors().textColor),
+            titleTextStyle: TextStyle(fontFamily: "ChakraPetch",color: AppColors().textColor),
             iconColor: AppColors().primaryColor,
             visualDensity: VisualDensity.comfortable),
         iconTheme: IconThemeData(
@@ -133,11 +133,11 @@ class MyApp extends StatelessWidget {
         ),
         dialogBackgroundColor: AppColors().backgroundColor,
         dialogTheme: DialogTheme(
-          titleTextStyle: TextStyle(
+          titleTextStyle: TextStyle(fontFamily: "ChakraPetch",
               fontWeight: FontWeight.bold,
               fontSize: largeText,
               color: AppColors().textColor),
-          contentTextStyle: TextStyle(
+          contentTextStyle: TextStyle(fontFamily: "ChakraPetch",
               fontWeight: FontWeight.bold,
               fontSize: mediumText,
               color: AppColors().textColor),
