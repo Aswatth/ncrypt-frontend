@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/clients/system_data_client.dart';
@@ -45,6 +47,24 @@ class _HomePageState extends State<HomePage> {
             }
           }
         });
+      }
+    });
+  }
+
+  void logout() {
+    SystemDataClient().logout().then((value) {
+      if (context.mounted) {
+        if (value.isEmpty) {
+          SessionTimer().reset();
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) => SignInPage(),
+            ),
+            (route) => false,
+          );
+        } else {
+          CustomToast.error(context, value);
+        }
       }
     });
   }
@@ -151,21 +171,23 @@ class _HomePageState extends State<HomePage> {
                         ),
                         ElevatedButton.icon(
                           onPressed: () {
-                            SystemDataClient().logout().then((value) {
-                              if (context.mounted) {
-                                if (value.isEmpty) {
-                                  SessionTimer().reset();
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(
-                                      builder: (context) => SignInPage(),
-                                    ),
-                                    (route) => false,
-                                  );
+                            //Auto backup
+                            if (SystemDataClient()
+                                .SYSTEM_DATA!
+                                .autoBackupSetting
+                                .isEnabled) {
+                              SystemDataClient().backup().then((value) {
+                                if (value is String && value.isNotEmpty) {
+                                  if (context.mounted) {
+                                    CustomToast.error(context, value);
+                                  }
                                 } else {
-                                  CustomToast.error(context, value);
+                                  logout();
                                 }
-                              }
-                            });
+                              });
+                            } else {
+                              logout();
+                            }
                           },
                           icon: Icon(Icons.logout),
                           label: Text(
