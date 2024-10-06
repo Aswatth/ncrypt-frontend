@@ -69,107 +69,110 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                           title: Text(
                               "Editing ${_existingAccountList[index].username!} account password"),
                           children: [
-                            SizedBox(
-                              width: 450,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0, vertical: 0),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Old password:",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(snapshot.data)
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    Form(
-                                      key: key,
-                                      child: TextFormField(
-                                        enableInteractiveSelection: false,
-                                        obscureText: !passwordVisibility,
-                                        controller: _passwordController,
-                                        decoration: InputDecoration(
-                                            hintText: "Enter new password",
-                                            label: Text("New password"),
-                                            suffixIcon: SizedBox(
-                                              width: 150,
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
-                                                children: [
-                                                  Tooltip(
-                                                    message:
-                                                        "Click to generate password",
-                                                    child: IconButton(
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: SizedBox(
+                                width: 450,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 0),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Old password:",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(snapshot.data)
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Form(
+                                        key: key,
+                                        child: TextFormField(
+                                          enableInteractiveSelection: false,
+                                          obscureText: !passwordVisibility,
+                                          controller: _passwordController,
+                                          decoration: InputDecoration(
+                                              hintText: "Enter new password",
+                                              label: Text("New password"),
+                                              suffixIcon: SizedBox(
+                                                width: 150,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    Tooltip(
+                                                      message:
+                                                          "Click to generate password",
+                                                      child: IconButton(
+                                                        onPressed: () {
+                                                          setState(() {
+                                                            passwordVisibility =
+                                                                true;
+                                                            SystemDataClient()
+                                                                .getGeneratedPassword()
+                                                                .then((value) {
+                                                              if (value != null) {
+                                                                _passwordController
+                                                                    .text = value;
+                                                              }
+                                                            });
+                                                          });
+                                                        },
+                                                        icon:
+                                                            Icon(Icons.password),
+                                                      ),
+                                                    ),
+                                                    IconButton(
                                                       onPressed: () {
                                                         setState(() {
                                                           passwordVisibility =
-                                                              true;
-                                                          SystemDataClient()
-                                                              .getGeneratedPassword()
-                                                              .then((value) {
-                                                            if (value != null) {
-                                                              _passwordController
-                                                                  .text = value;
-                                                            }
-                                                          });
+                                                              !passwordVisibility;
                                                         });
                                                       },
-                                                      icon:
-                                                          Icon(Icons.password),
+                                                      icon: passwordVisibility
+                                                          ? Icon(Icons
+                                                              .visibility_off)
+                                                          : Icon(
+                                                              Icons.visibility),
                                                     ),
-                                                  ),
-                                                  IconButton(
-                                                    onPressed: () {
-                                                      setState(() {
-                                                        passwordVisibility =
-                                                            !passwordVisibility;
-                                                      });
-                                                    },
-                                                    icon: passwordVisibility
-                                                        ? Icon(Icons
-                                                            .visibility_off)
-                                                        : Icon(
-                                                            Icons.visibility),
-                                                  ),
-                                                ],
-                                              ),
-                                            )),
-                                        validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return "New password cannot be empty";
-                                          }
-                                        },
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-                                    SizedBox(
-                                      width: double.infinity,
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          setState(() {
-                                            _existingAccountList[index]
-                                                    .password =
-                                                _passwordController.text;
-                                            if (key.currentState!.validate()) {
-                                              saveUpdates();
+                                                  ],
+                                                ),
+                                              )),
+                                          validator: (value) {
+                                            if (value == null || value.isEmpty) {
+                                              return "New password cannot be empty";
                                             }
-                                          });
-                                        },
-                                        child: Text(
-                                            "Update password".toUpperCase()),
+                                          },
+                                        ),
                                       ),
-                                    )
-                                  ],
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      SizedBox(
+                                        width: double.infinity,
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              _existingAccountList[index]
+                                                      .password =
+                                                  _passwordController.text;
+                                              if (key.currentState!.validate()) {
+                                                saveUpdates();
+                                              }
+                                            });
+                                          },
+                                          child: Text(
+                                              "Update password".toUpperCase()),
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                             )
@@ -197,13 +200,16 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
             children: [
               Column(
                 children: [
-                  Text.rich(TextSpan(children: [
-                    TextSpan(text: "Do you want to delete "),
-                    TextSpan(
-                        text: _existingAccountList[index].username!,
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                    TextSpan(text: " account entirely?")
-                  ])),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text.rich(TextSpan(children: [
+                      TextSpan(text: "Do you want to delete "),
+                      TextSpan(
+                          text: _existingAccountList[index].username!,
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      TextSpan(text: " account entirely?")
+                    ])),
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
@@ -213,6 +219,7 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
+                          icon: Icon(Icons.close),
                           label: Text("No"),
                         ),
                         ElevatedButton.icon(
@@ -222,6 +229,20 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                               Navigator.of(context).pop();
                             });
                           },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                            Theme.of(context).scaffoldBackgroundColor,
+                            foregroundColor:
+                            Theme.of(context).textTheme.bodyMedium?.color,
+                            side: BorderSide(
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .color!, // Border color
+                              width: 2, // Border width
+                            ),
+                          ),
+                          icon: Icon(Icons.check),
                           label: Text("Yes"),
                         ),
                       ],
@@ -269,8 +290,8 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Edit github data"),
-        elevation: 1.5,
+        title: Text("Edit ${widget.dataToEdit.name} data"),
+        elevation: 2,
       ),
       body: Form(
         key: _formKey,
@@ -283,6 +304,10 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                   Expanded(
                     child: TextFormField(
                       controller: _nameController,
+                      maxLength: 16,
+                      buildCounter: (context, {required currentLength, required isFocused, required maxLength}) {
+                        return Text("${currentLength}/${maxLength}", style: Theme.of(context).textTheme.bodyMedium,);
+                      },
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Name cannot be empty";
@@ -295,13 +320,18 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                             text: TextSpan(children: [
                           TextSpan(
                             text: "Name ",
-                            style: TextStyle(color: AppColors().textColor),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium,
                           ),
                           TextSpan(
                               text: "*",
-                              style: TextStyle(
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.bold))
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.bold))
                         ])),
                         hintText: "Enter a name for the login data",
                       ),
@@ -366,7 +396,7 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                         decoration: BoxDecoration(
                             border: Border(
                                 right: BorderSide(
-                                    color: AppColors().primaryColor))),
+                                    color: Theme.of(context).primaryColor))),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -406,6 +436,11 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                               decoration: InputDecoration(
                                                   prefixIcon: Icon(
                                                     Icons.person,
+                                                    color: Theme.of(context).textTheme.bodyMedium!.color,
+                                                  ),
+                                                  disabledBorder: OutlineInputBorder(
+                                                    borderSide: BorderSide(color: Colors.grey), // Border when disabled
+                                                    borderRadius: BorderRadius.circular(8.0),
                                                   ),
                                                   label: Text("Username")),
                                             ),
@@ -415,16 +450,23 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                           flex: 4,
                                           child: ElevatedButton.icon(
                                             style: ElevatedButton.styleFrom(
-                                                backgroundColor:
-                                                    AppColors().backgroundColor,
+                                                backgroundColor: Theme.of(
+                                                        context)
+                                                    .scaffoldBackgroundColor,
                                                 // Background color
                                                 foregroundColor:
-                                                    AppColors().textColor,
+                                                    Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium
+                                                        ?.color,
                                                 // Text color
                                                 side: BorderSide(
-                                                  color: AppColors().textColor,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium!
+                                                      .color!,
                                                   // Border color
-                                                  width: 0.2, // Border width
+                                                  width: 0.5, // Border width
                                                 ),
                                                 elevation: 2),
                                             onPressed: () {
@@ -478,6 +520,9 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                                   enableInteractiveSelection:
                                                       false,
                                                   maxLength: 25,
+                                                  buildCounter: (context, {required currentLength, required isFocused, required maxLength}) {
+                                                    return Text("${currentLength}/${maxLength}", style: Theme.of(context).textTheme.bodyMedium,);
+                                                  },
                                                   controller:
                                                       _usernameControllerList[
                                                           index],
@@ -497,17 +542,22 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                                             TextSpan(children: [
                                                       TextSpan(
                                                         text: "Username ",
-                                                        style: TextStyle(
-                                                            color: AppColors()
-                                                                .textColor),
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .bodyMedium,
                                                       ),
                                                       TextSpan(
                                                           text: "*",
-                                                          style: TextStyle(
-                                                              color: Colors.red,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold))
+                                                          style: Theme.of(
+                                                                  context)
+                                                              .textTheme
+                                                              .bodyMedium!
+                                                              .copyWith(
+                                                                  color: Colors
+                                                                      .red,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold))
                                                     ])),
                                                     hintText: "Username",
                                                   ),
@@ -521,6 +571,9 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                                   enableInteractiveSelection:
                                                       false,
                                                   maxLength: 25,
+                                                  buildCounter: (context, {required currentLength, required isFocused, required maxLength}) {
+                                                    return Text("${currentLength}/${maxLength}", style: Theme.of(context).textTheme.bodyMedium,);
+                                                  },
                                                   controller:
                                                       _passwordControllerList[
                                                           index],
@@ -542,19 +595,23 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                                         text:
                                                             TextSpan(children: [
                                                       TextSpan(
-                                                        text: "Password ",
-                                                        style: TextStyle(
-                                                            color: AppColors()
-                                                                .textColor,
-                                                            fontSize: 16),
-                                                      ),
+                                                          text: "Password ",
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .bodyMedium),
                                                       TextSpan(
                                                           text: "*",
-                                                          style: TextStyle(
-                                                              color: Colors.red,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold))
+                                                          style: Theme.of(
+                                                                  context)
+                                                              .textTheme
+                                                              .bodyMedium!
+                                                              .copyWith(
+                                                                  color: Colors
+                                                                      .red,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold))
                                                     ])),
                                                     hintText: "Password",
                                                     suffixIcon: SizedBox(
@@ -655,12 +712,17 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                       children: [
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors().backgroundColor,
+                            backgroundColor:
+                                Theme.of(context).scaffoldBackgroundColor,
                             // Background color
-                            foregroundColor: AppColors().textColor,
+                            foregroundColor:
+                                Theme.of(context).textTheme.bodyMedium?.color,
                             // Text color
                             side: BorderSide(
-                              color: AppColors().textColor, // Border color
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .color!, // Border color
                               width: 2, // Border width
                             ),
                           ),
@@ -680,12 +742,17 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                         ),
                         ElevatedButton.icon(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors().backgroundColor,
+                            backgroundColor:
+                                Theme.of(context).scaffoldBackgroundColor,
                             // Background color
-                            foregroundColor: AppColors().textColor,
+                            foregroundColor:
+                                Theme.of(context).textTheme.bodyMedium?.color,
                             // Text color
                             side: BorderSide(
-                              color: AppColors().textColor, // Border color
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .color!, // Border color
                               width: 2, // Border width
                             ),
                           ),

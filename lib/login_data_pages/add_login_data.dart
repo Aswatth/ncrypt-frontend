@@ -62,7 +62,7 @@ class _AddLoginDataState extends State<AddLoginData> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Add login data"),
-        elevation: 1.5,
+        elevation: 2,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12.0),
@@ -76,6 +76,9 @@ class _AddLoginDataState extends State<AddLoginData> {
                     child: TextFormField(
                       controller: _nameController,
                       maxLength: 16,
+                      buildCounter: (context, {required currentLength, required isFocused, required maxLength}) {
+                        return Text("${currentLength}/${maxLength}", style: Theme.of(context).textTheme.bodyMedium,);
+                      },
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Name cannot be empty";
@@ -89,8 +92,7 @@ class _AddLoginDataState extends State<AddLoginData> {
                             text: TextSpan(children: [
                           TextSpan(
                             text: "Name ",
-                            style: TextStyle(
-                                color: AppColors().textColor, fontSize: 16),
+                            style: Theme.of(context).textTheme.bodyMedium,
                           ),
                           TextSpan(
                               text: "*",
@@ -172,6 +174,9 @@ class _AddLoginDataState extends State<AddLoginData> {
                                 enableInteractiveSelection: false,
                                 controller: _usernameControllerList[index],
                                 maxLength: 25,
+                                buildCounter: (context, {required currentLength, required isFocused, required maxLength}) {
+                                  return Text("${currentLength}/${maxLength}", style: Theme.of(context).textTheme.bodyMedium,);
+                                },
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return "Username cannot be empty";
@@ -186,8 +191,9 @@ class _AddLoginDataState extends State<AddLoginData> {
                                       text: TextSpan(children: [
                                     TextSpan(
                                         text: "Username ",
-                                        style: TextStyle(
-                                            color: AppColors().textColor)),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium),
                                     TextSpan(
                                         text: "*",
                                         style: TextStyle(
@@ -205,6 +211,9 @@ class _AddLoginDataState extends State<AddLoginData> {
                               child: TextFormField(
                                 enableInteractiveSelection: false,
                                 maxLength: 25,
+                                buildCounter: (context, {required currentLength, required isFocused, required maxLength}) {
+                                  return Text("${currentLength}/${maxLength}", style: Theme.of(context).textTheme.bodyMedium,);
+                                },
                                 controller: _passwordControllerList[index],
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -221,11 +230,14 @@ class _AddLoginDataState extends State<AddLoginData> {
                                       text: TextSpan(children: [
                                     TextSpan(
                                         text: "Password ",
-                                        style: TextStyle(
-                                            color: AppColors().textColor)),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium),
                                     TextSpan(
                                         text: "*",
-                                        style: TextStyle(
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!.copyWith(
                                             color: Colors.red,
                                             fontWeight: FontWeight.bold))
                                   ])),
@@ -308,12 +320,16 @@ class _AddLoginDataState extends State<AddLoginData> {
                       children: [
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors().backgroundColor,
-                            // Background color
-                            foregroundColor: AppColors().textColor,
-                            // Text color
+                            backgroundColor:
+                                Theme.of(context).scaffoldBackgroundColor,
+                            foregroundColor:
+                                Theme.of(context).textTheme.bodyMedium?.color,
                             side: BorderSide(
-                              color: AppColors().textColor, // Border color
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .color!,
+                              // Border color
                               width: 2, // Border width
                             ),
                           ),
@@ -333,12 +349,18 @@ class _AddLoginDataState extends State<AddLoginData> {
                         ),
                         ElevatedButton.icon(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors().backgroundColor,
+                            backgroundColor:
+                                Theme.of(context).scaffoldBackgroundColor,
                             // Background color
-                            foregroundColor: AppColors().textColor,
+                            foregroundColor:
+                                Theme.of(context).textTheme.bodyMedium?.color,
                             // Text color
                             side: BorderSide(
-                              color: AppColors().textColor, // Border color
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .color!,
+                              // Border color
                               width: 2, // Border width
                             ),
                           ),

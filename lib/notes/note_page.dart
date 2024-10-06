@@ -91,9 +91,7 @@ class _NotePageState extends State<NotePage> {
         .updateNote(updatedNote.createdDateTime, updatedNote)
         .then((value) {
       if (context.mounted) {
-        if (value == null) {
-          CustomToast.success(context, "Successfully updated");
-        } else {
+        if (value != null) {
           CustomToast.error(context, value);
         }
       }
@@ -119,37 +117,48 @@ class _NotePageState extends State<NotePage> {
                       Navigator.of(context).pop();
                     },
                     label: Text("No"),
-                    // icon: Icon(Icons.close),
+                    icon: Icon(Icons.close),
                   ),
                   ElevatedButton.icon(
-                      onPressed: () {
-                        NotesClient()
-                            .deleteNote(toDelete.createdDateTime, toDelete)
-                            .then((value) {
-                          if (context.mounted) {
-                            if (value == null) {
-                              CustomToast.success(
-                                  context, "Successfully deleted");
-                              setState(() {
-                                selectedNote = null;
-                                noteList.remove(toDelete);
-                                _filteredDataList = noteList;
-                                Navigator.of(context).pop();
-                              });
-                            } else {
-                              CustomToast.error(context, value);
+                    onPressed: () {
+                      NotesClient()
+                          .deleteNote(toDelete.createdDateTime, toDelete)
+                          .then((value) {
+                        if (context.mounted) {
+                          if (value == null) {
+                            CustomToast.success(
+                                context, "Successfully deleted");
+                            setState(() {
+                              selectedNote = null;
+                              noteList.remove(toDelete);
+                              _filteredDataList = noteList;
                               Navigator.of(context).pop();
-                            }
+                            });
+                          } else {
+                            CustomToast.error(context, value);
+                            Navigator.of(context).pop();
                           }
-                        });
-                      },
-                      label: Text("Yes"),
-                      // icon: Icon(Icons.check),
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).colorScheme.primary,
-                          iconColor: Theme.of(context).colorScheme.surface,
-                          foregroundColor:
-                              Theme.of(context).colorScheme.surface)),
+                        }
+                      });
+                    },
+                    label: Text("Yes"),
+                    icon: Icon(Icons.check),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          Theme.of(context).scaffoldBackgroundColor,
+                      // Background color
+                      foregroundColor:
+                          Theme.of(context).textTheme.bodyMedium?.color,
+                      // Text color
+                      side: BorderSide(
+                        color: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .color!, // Border color
+                        width: 2, // Border width
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -184,6 +193,7 @@ class _NotePageState extends State<NotePage> {
                       child: TextFormField(
                         controller: _searchController,
                         decoration: InputDecoration(
+                            hintText: "Search",
                             prefixIcon: Icon(Icons.search),
                             filled: true,
                             suffixIcon: SizedBox(
@@ -279,10 +289,7 @@ class _NotePageState extends State<NotePage> {
                         title: Text(note.title),
                         subtitle: Text(DateTimeFormatter().formatDateTime(
                             DateTime.parse(note.createdDateTime))),
-                        trailing: IconButton(
-                          onPressed: () {},
-                          icon: Icon(Icons.chevron_right_sharp),
-                        ),
+                        trailing: Icon(Icons.chevron_right_sharp),
                         onTap: () {
                           if (note.attributes.requireMasterPassword) {
                             showDialog(
@@ -423,7 +430,7 @@ class _NotePageState extends State<NotePage> {
                               ),
                             ),
                             Divider(
-                              color: AppColors().accentColor,
+                              color: Theme.of(context).primaryColor,
                             ),
                             Expanded(
                               child: SingleChildScrollView(

@@ -78,39 +78,50 @@ class _LoginDataPageState extends State<LoginDataPage> {
                             Navigator.of(context).pop();
                           },
                           label: Text("No"),
-                          // icon: Icon(Icons.close),
+                          icon: Icon(Icons.close),
                         ),
                         ElevatedButton.icon(
-                            onPressed: () {
-                              LoginDataClient().deleteLoginData(data.name).then((value) {
-                                if (value is String && value.isEmpty) {
-                                  setState(() {
-                                    _loginDataList.remove(data);
-                                    _filteredDataList = _loginDataList;
-                                    selectedData = null;
-                                  });
+                          onPressed: () {
+                            LoginDataClient()
+                                .deleteLoginData(data.name)
+                                .then((value) {
+                              if (value is String && value.isEmpty) {
+                                setState(() {
+                                  _loginDataList.remove(data);
+                                  _filteredDataList = _loginDataList;
+                                  selectedData = null;
+                                });
 
-                                  if (context.mounted) {
-                                    Navigator.of(context).pop();
-                                    CustomToast.success(
-                                        context, "Successfully deleted!");
-                                  }
-                                } else {
-                                  if (context.mounted) {
-                                    CustomToast.error(context, value);
-                                  }
+                                if (context.mounted) {
+                                  Navigator.of(context).pop();
+                                  CustomToast.success(
+                                      context, "Successfully deleted!");
                                 }
-                              });
-                            },
-                            label: Text("Yes"),
-                            // icon: Icon(Icons.check),
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.primary,
-                                iconColor:
-                                    Theme.of(context).colorScheme.surface,
-                                foregroundColor:
-                                    Theme.of(context).colorScheme.surface)),
+                              } else {
+                                if (context.mounted) {
+                                  CustomToast.error(context, value);
+                                }
+                              }
+                            });
+                          },
+                          label: Text("Yes"),
+                          icon: Icon(Icons.check),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                Theme.of(context).scaffoldBackgroundColor,
+                            // Background color
+                            foregroundColor:
+                                Theme.of(context).textTheme.bodyMedium?.color,
+                            // Text color
+                            side: BorderSide(
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .color!, // Border color
+                              width: 2, // Border width
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   )
@@ -127,7 +138,7 @@ class _LoginDataPageState extends State<LoginDataPage> {
 
       if (_searchController.text.isNotEmpty) {
         _filteredDataList = _filteredDataList
-            .where((m) => m.name.startsWith(_searchController.text))
+            .where((m) => m.name.toLowerCase().startsWith(_searchController.text))
             .toList();
       }
 
@@ -162,6 +173,7 @@ class _LoginDataPageState extends State<LoginDataPage> {
                         child: TextFormField(
                           controller: _searchController,
                           decoration: InputDecoration(
+                              hintText: "Search",
                               prefixIcon: Icon(Icons.search),
                               filled: true,
                               suffixIcon: SizedBox(
@@ -231,10 +243,26 @@ class _LoginDataPageState extends State<LoginDataPage> {
                         child: DataTable(
                             showCheckboxColumn: false,
                             columns: [
-                              DataColumn(label: Text("Name")),
-                              DataColumn(label: Text("URL")),
-                              DataColumn(label: Text("Lock status")),
-                              DataColumn(label: Text("Actions"))
+                              DataColumn(
+                                  label: Text(
+                                "Name".toUpperCase(),
+                                style: Theme.of(context).textTheme.bodyLarge!,
+                              )),
+                              DataColumn(
+                                  label: Text(
+                                "URL".toUpperCase(),
+                                style: Theme.of(context).textTheme.bodyLarge!,
+                              )),
+                              DataColumn(
+                                  label: Text(
+                                "Lock status".toUpperCase(),
+                                style: Theme.of(context).textTheme.bodyLarge!,
+                              )),
+                              DataColumn(
+                                  label: Text(
+                                "Actions".toUpperCase(),
+                                style: Theme.of(context).textTheme.bodyLarge!,
+                              ))
                             ],
                             rows: _filteredDataList.map((m) {
                               return DataRow(
@@ -451,7 +479,7 @@ class _LoginAccountDataState extends State<LoginAccountData> {
                         },
                         icon: Icon(
                           Icons.close,
-                          color: AppColors().textColor,
+                          color: Theme.of(context).textTheme.bodyMedium?.color,
                         ),
                       )
                     ],
@@ -472,22 +500,26 @@ class _LoginAccountDataState extends State<LoginAccountData> {
                                   child: RichText(
                                     text: TextSpan(children: [
                                       TextSpan(
-                                          text: "Username: ",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: AppColors().textColor)),
+                                        text: "Username: ",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium
+                                            ?.copyWith(
+                                                fontWeight: FontWeight.bold),
+                                      ),
                                       TextSpan(
                                           text: account.username!,
-                                          style: TextStyle(
-                                              color: AppColors().textColor))
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium)
                                     ]),
                                   ),
                                 ),
                                 IconButton(
                                   onPressed: () {
-                                    Clipboard.setData(ClipboardData(
-                                            text: account.username!))
-                                        .then((_) {
+                                    Clipboard.setData(
+                                      ClipboardData(text: account.username!),
+                                    ).then((_) {
                                       if (context.mounted) {
                                         CustomToast.info(context,
                                             "Copied username to clipboard");
@@ -496,7 +528,10 @@ class _LoginAccountDataState extends State<LoginAccountData> {
                                   },
                                   icon: Icon(
                                     Icons.copy,
-                                    color: AppColors().textColor,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.color,
                                   ),
                                 ),
                               ]),
@@ -506,14 +541,20 @@ class _LoginAccountDataState extends State<LoginAccountData> {
                                     child: RichText(
                                       text: TextSpan(children: [
                                         TextSpan(
-                                            text: "Password: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: AppColors().textColor)),
+                                          text: "Password: ",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium
+                                              ?.copyWith(
+                                                  fontWeight: FontWeight.bold),
+                                        ),
                                         TextSpan(
                                             text: passwordList[index],
                                             style: TextStyle(
-                                                color: AppColors().textColor))
+                                                color: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium
+                                                    ?.color))
                                       ]),
                                     ),
                                   ),
@@ -584,13 +625,16 @@ class _LoginAccountDataState extends State<LoginAccountData> {
                                     },
                                     icon: Icon(
                                       Icons.copy,
-                                      color: AppColors().textColor,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.color,
                                     ),
                                   ),
                                 ],
                               ),
                               Divider(
-                                color: AppColors().primaryColor,
+                                color: Theme.of(context).primaryColor,
                                 thickness: 0.5,
                               )
                             ],

@@ -5,7 +5,6 @@ import 'package:frontend/utils/custom_toast.dart';
 import 'package:frontend/general_pages/signin_page.dart';
 
 class ImportPage extends StatefulWidget {
-
   const ImportPage({super.key});
 
   @override
@@ -47,7 +46,7 @@ class _ImportPageState extends State<ImportPage> {
           CustomToast.success(context, "Import successful");
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (contex) => SignInPage()),
-                (route) => false,
+            (route) => false,
           );
         } else {
           CustomToast.error(context, response);
@@ -96,10 +95,10 @@ class _ImportPageState extends State<ImportPage> {
                     hintText: "master password",
                     suffixIcon: IconButton(
                       icon: _visibility
-                          ? Icon(Icons.visibility)
+                          ? Icon(Icons.visibility_off)
                           : Icon(
-                        Icons.visibility_off,
-                      ),
+                              Icons.visibility,
+                            ),
                       onPressed: () {
                         setState(() {
                           _visibility = !_visibility;

@@ -43,6 +43,7 @@ class _AddNotePageState extends State<AddNotePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Add note"),
+        elevation: 2,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -62,8 +63,7 @@ class _AddNotePageState extends State<AddNotePage> {
                               text: TextSpan(children: [
                             TextSpan(
                               text: "Title ",
-                              style: TextStyle(
-                                  color: AppColors().textColor, fontSize: 16),
+                              style: Theme.of(context).textTheme.bodyMedium
                             ),
                             TextSpan(
                                 text: "*",
@@ -92,15 +92,19 @@ class _AddNotePageState extends State<AddNotePage> {
                         ? Icon(Icons.favorite)
                         : Icon(Icons.favorite_border),
                   ),
-                  Text("Add to favourite"),
-                  IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _isLocked = !_isLocked;
-                      });
-                    },
-                    icon:
-                        _isLocked ? Icon(Icons.lock) : Icon(Icons.lock_outline),
+                  Text("Favourite"),
+                  Tooltip(
+                    verticalOffset: 10,
+                    message: "Requires master password to view account password, edit and delete data.",
+                    child: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _isLocked = !_isLocked;
+                        });
+                      },
+                      icon:
+                          _isLocked ? Icon(Icons.lock) : Icon(Icons.lock_outline),
+                    ),
                   ),
                   Text("Locked"),
                 ],

@@ -50,15 +50,21 @@ class _SignInPageState extends State<SignInPage> {
         width: 400,
         height: 200,
         child: Card(
-          elevation: 20,
+          elevation: 10,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16), // adjust the border radius as needed
+              side: BorderSide(
+                  color: Theme.of(context).textTheme.bodyMedium!.color!
+              )
+          ),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Login".toUpperCase(),
-                  style: TextStyle(fontSize: 32),
+                  "ncrypt".toUpperCase(),
+                  style: Theme.of(context).textTheme.headlineLarge,
                 ),
                 SizedBox(
                   height: 10,
@@ -115,7 +121,7 @@ class _SignInPageState extends State<SignInPage> {
                         login();
                       }
                     },
-                    child: Text("Login".toUpperCase()),
+                    child: Text("sign in".toUpperCase()),
                   ),
                 )
               ],

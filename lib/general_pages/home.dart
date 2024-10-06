@@ -77,25 +77,24 @@ class _HomePageState extends State<HomePage> {
           Expanded(
             flex: 1,
             child: Container(
-              decoration:
-                  BoxDecoration(color: AppColors().backgroundColor, boxShadow: [
-                BoxShadow(
-                  color: AppColors().accentColor,
-                  offset: Offset(0, -2),
-                  blurRadius: 5.0,
-                  spreadRadius: 1.0,
-                )
-              ]),
+              decoration: BoxDecoration(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).primaryColor,
+                      offset: Offset(0, -2),
+                      blurRadius: 5.0,
+                      spreadRadius: 1.0,
+                    )
+                  ]),
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
-                      child: Text(
-                        "Ncrypt".toUpperCase(),
-                        style: TextStyle(fontSize: 32, letterSpacing: 3),
-                      ),
+                      child: Text("Ncrypt".toUpperCase(),
+                          style: Theme.of(context).textTheme.headlineLarge),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -113,7 +112,7 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               Icon(
                                 Icons.password,
-                                color: AppColors().textColor,
+                                color: Theme.of(context).textTheme.bodyMedium?.color,
                               ),
                               SizedBox(
                                 width: 2,
@@ -139,7 +138,7 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               Icon(
                                 Icons.upload,
-                                color: AppColors().textColor,
+                                color: Theme.of(context).textTheme.bodyMedium?.color,
                               ),
                               Text(
                                 "Import".toUpperCase(),
@@ -158,7 +157,7 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               Icon(
                                 Icons.download,
-                                color: AppColors().textColor,
+                                color: Theme.of(context).textTheme.bodyMedium?.color,
                               ),
                               Text(
                                 "Export".toUpperCase(),
@@ -208,15 +207,16 @@ class _HomePageState extends State<HomePage> {
           Expanded(
             flex: 1,
             child: Container(
-              decoration:
-                  BoxDecoration(color: AppColors().backgroundColor, boxShadow: [
-                BoxShadow(
-                  color: AppColors().accentColor,
-                  offset: Offset(0, 2),
-                  blurRadius: 5.0,
-                  spreadRadius: 1.0,
-                )
-              ]),
+              decoration: BoxDecoration(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).primaryColor,
+                      offset: Offset(0, 2),
+                      blurRadius: 5.0,
+                      spreadRadius: 1.0,
+                    )
+                  ]),
               child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
                   child: SessionData()),

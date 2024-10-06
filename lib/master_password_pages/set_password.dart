@@ -91,7 +91,7 @@ class _SetPasswordState extends State<SetPassword> {
                     hintMaxLines: 16,
                     enabled: true,
                     hintStyle: TextStyle(color: Colors.white24, fontSize: 14),
-                    hintText: "master password",
+                    hintText: "Master password",
                     suffixIcon: IconButton(
                       icon: _passwordVisibility
                           ? Icon(
@@ -173,7 +173,7 @@ class _SetPasswordState extends State<SetPassword> {
                     ),
                     hintMaxLines: 16,
                     hintStyle: TextStyle(color: Colors.white24, fontSize: 14),
-                    hintText: "master password",
+                    hintText: "Master password",
                     suffixIcon: IconButton(
                       icon: _confirmPasswordVisibility
                           ? Icon(
@@ -211,7 +211,7 @@ class _SetPasswordState extends State<SetPassword> {
                 Align(
                   alignment: Alignment.center,
                   child: Text(
-                    "This will be the only password you need to remember! ;)",
+                    "This will be the only password you need to remember!",
                     style: TextStyle(
                       fontSize: 14,
                       fontStyle: FontStyle.italic,

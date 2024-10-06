@@ -41,8 +41,8 @@ class _ValidateMasterPasswordState extends State<ValidateMasterPassword> {
                       });
                     },
                     icon: visibility
-                        ? Icon(Icons.visibility)
-                        : Icon(Icons.visibility_off))),
+                        ? Icon(Icons.visibility_off)
+                        : Icon(Icons.visibility))),
           ),
           SizedBox(
             height: 20,

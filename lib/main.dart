@@ -25,126 +25,308 @@ void main(List<String> args) async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  @override
-  Widget build(BuildContext context) {
+  ThemeData themeData(bool isDark) {
     double largeText = 18.0;
     double mediumText = 14.0;
     double smallText = 12.0;
 
-    return MaterialApp(
-      title: 'Ncrypt',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: AppColors().primaryColor,
-          primary: AppColors().primaryColor,
-          secondary: AppColors().secondaryColor,
-          surface: AppColors().backgroundColor,
-        ),
-        cardTheme: CardTheme(
-            shadowColor: AppColors().primaryColor,
-            color: AppColors().backgroundColor),
-        checkboxTheme: CheckboxThemeData(
-            // fillColor: WidgetStatePropertyAll(AppColors().backgroundColor),
-            ),
-        tabBarTheme: TabBarTheme(
-          labelColor: AppColors().primaryColor,
-          indicatorColor: AppColors().primaryColor,
-        ),
-        textTheme: TextTheme(
-          bodyLarge:
-              TextStyle(fontFamily: "ChakraPetch",color: AppColors().textColor, fontSize: largeText),
-          bodyMedium:
-              TextStyle(fontFamily: "ChakraPetch",color: AppColors().textColor, fontSize: mediumText),
-          bodySmall:
-              TextStyle(fontFamily: "ChakraPetch",color: AppColors().textColor, fontSize: smallText),
-          titleLarge:
-              TextStyle(fontFamily: "ChakraPetch",color: AppColors().textColor, fontSize: largeText),
-          titleMedium:
-              TextStyle(fontFamily: "ChakraPetch",color: AppColors().textColor, fontSize: mediumText),
-          titleSmall:
-              TextStyle(fontFamily: "ChakraPetch",color: AppColors().textColor, fontSize: smallText),
-          labelLarge:
-              TextStyle(fontFamily: "ChakraPetch",color: AppColors().textColor, fontSize: largeText),
-          labelMedium:
-              TextStyle(fontFamily: "ChakraPetch",color: AppColors().textColor, fontSize: mediumText),
-          labelSmall:
-              TextStyle(fontFamily: "ChakraPetch",color: AppColors().textColor, fontSize: smallText),
-          displayLarge:
-              TextStyle(fontFamily: "ChakraPetch",color: AppColors().textColor, fontSize: largeText),
-          displayMedium:
-              TextStyle(fontFamily: "ChakraPetch",color: AppColors().textColor, fontSize: mediumText),
-          displaySmall:
-              TextStyle(fontFamily: "ChakraPetch",color: AppColors().textColor, fontSize: smallText),
-        ),
-        textButtonTheme: TextButtonThemeData(
-            style: TextButton.styleFrom(
-                foregroundColor: AppColors().textColor,
-                textStyle:
-                    TextStyle(fontFamily: "ChakraPetch",letterSpacing: 2, color: AppColors().textColor))),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors().secondaryColor,
-              foregroundColor: AppColors().textColor,
-              textStyle:
-                  TextStyle(fontFamily: "ChakraPetch",fontWeight: FontWeight.bold, letterSpacing: 2),
-              // foregroundColor: AppColors().textColor,
-              iconColor: AppColors().textColor),
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          hintStyle: TextStyle(fontFamily: "ChakraPetch",color: Colors.grey),
-          filled: true,
-          fillColor: AppColors().backgroundColor,
-          labelStyle: TextStyle(fontFamily: "ChakraPetch",color: AppColors().textColor, fontSize: 16),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.0),
-            borderSide:
-                BorderSide(color: AppColors().secondaryColor, width: 1.0),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.0),
-            borderSide:
-                BorderSide(color: AppColors().secondaryColor, width: 1.0),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.0),
-            borderSide:
-                BorderSide(color: AppColors().secondaryColor, width: 1.0),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.0),
-            borderSide: BorderSide(color: AppColors().textColor, width: 1.0),
-          ),
-          errorStyle: TextStyle(fontFamily: "ChakraPetch",fontWeight: FontWeight.bold),
-          suffixIconColor: AppColors().textColor,
-        ),
-        scaffoldBackgroundColor: AppColors().backgroundColor,
-        appBarTheme: AppBarTheme(
-          titleTextStyle: TextStyle(fontFamily: "ChakraPetch",color: AppColors().textColor),
-          backgroundColor: AppColors().backgroundColor,
-          foregroundColor: AppColors().textColor,
-          iconTheme: IconThemeData(color: AppColors().primaryColor),
-        ),
-        listTileTheme: ListTileThemeData(
-            titleTextStyle: TextStyle(fontFamily: "ChakraPetch",color: AppColors().textColor),
-            iconColor: AppColors().primaryColor,
-            visualDensity: VisualDensity.comfortable),
-        iconTheme: IconThemeData(
-          color: AppColors().primaryColor,
-        ),
-        dialogBackgroundColor: AppColors().backgroundColor,
-        dialogTheme: DialogTheme(
-          titleTextStyle: TextStyle(fontFamily: "ChakraPetch",
-              fontWeight: FontWeight.bold,
-              fontSize: largeText,
-              color: AppColors().textColor),
-          contentTextStyle: TextStyle(fontFamily: "ChakraPetch",
-              fontWeight: FontWeight.bold,
-              fontSize: mediumText,
-              color: AppColors().textColor),
-          alignment: Alignment.center,
-        ),
+    return ThemeData(
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: isDark
+            ? AppColors().primaryColor_dark
+            : AppColors().primaryColor_light,
+        primary: isDark
+            ? AppColors().primaryColor_dark
+            : AppColors().primaryColor_light,
+        secondary: isDark
+            ? AppColors().secondaryColor_dark
+            : AppColors().secondaryColor_light,
+        surface: isDark
+            ? AppColors().backgroundColor_dark
+            : AppColors().backgroundColor_light,
       ),
-      themeMode: ThemeMode.dark,
+      cardTheme: CardTheme(
+          shadowColor: isDark
+              ? AppColors().primaryColor_dark
+              : AppColors().primaryColor_light,
+          color: isDark
+              ? AppColors().backgroundColor_dark
+              : AppColors().backgroundColor_light),
+      checkboxTheme: CheckboxThemeData(
+          // fillColor: WidgetStatePropertyAll(isDark ? AppColors().backgroundColor_dark :AppColors().backgroundColor_light),
+          ),
+      tabBarTheme: TabBarTheme(
+        unselectedLabelStyle: TextStyle(
+            color: isDark
+                ? AppColors().textColor_dark
+                : AppColors().textColor_light,
+            fontStyle: FontStyle.normal),
+        labelStyle: TextStyle(fontWeight: FontWeight.bold),
+        labelColor: isDark
+            ? AppColors().primaryColor_dark
+            : AppColors().primaryColor_light,
+        indicatorColor: isDark
+            ? AppColors().primaryColor_dark
+            : AppColors().primaryColor_light,
+      ),
+      textTheme: TextTheme(
+        headlineLarge: TextStyle(
+            fontFamily: "ChakraPetch",
+            color: isDark
+                ? AppColors().textColor_dark
+                : AppColors().textColor_light,
+            fontSize: 32,
+            letterSpacing: 3),
+        headlineMedium: TextStyle(
+            fontFamily: "ChakraPetch",
+            color: isDark
+                ? AppColors().textColor_dark
+                : AppColors().textColor_light,
+            fontSize: 28),
+        headlineSmall: TextStyle(
+            fontFamily: "ChakraPetch",
+            color: isDark
+                ? AppColors().textColor_dark
+                : AppColors().textColor_light,
+            fontSize: 24),
+        bodyLarge: TextStyle(
+            fontFamily: "ChakraPetch",
+            color: isDark
+                ? AppColors().textColor_dark
+                : AppColors().textColor_light,
+            fontSize: largeText),
+        bodyMedium: TextStyle(
+            fontFamily: "ChakraPetch",
+            color: isDark
+                ? AppColors().textColor_dark
+                : AppColors().textColor_light,
+            fontSize: mediumText),
+        bodySmall: TextStyle(
+            fontFamily: "ChakraPetch",
+            color: isDark
+                ? AppColors().textColor_dark
+                : AppColors().textColor_light,
+            fontSize: smallText),
+        titleLarge: TextStyle(
+            fontFamily: "ChakraPetch",
+            color: isDark
+                ? AppColors().textColor_dark
+                : AppColors().textColor_light,
+            fontSize: largeText),
+        titleMedium: TextStyle(
+            fontFamily: "ChakraPetch",
+            color: isDark
+                ? AppColors().textColor_dark
+                : AppColors().textColor_light,
+            fontSize: mediumText),
+        titleSmall: TextStyle(
+            fontFamily: "ChakraPetch",
+            color: isDark
+                ? AppColors().textColor_dark
+                : AppColors().textColor_light,
+            fontSize: smallText),
+        labelLarge: TextStyle(
+            fontFamily: "ChakraPetch",
+            color: isDark
+                ? AppColors().textColor_dark
+                : AppColors().textColor_light,
+            fontSize: largeText),
+        labelMedium: TextStyle(
+            fontFamily: "ChakraPetch",
+            color: isDark
+                ? AppColors().textColor_dark
+                : AppColors().textColor_light,
+            fontSize: mediumText),
+        labelSmall: TextStyle(
+            fontFamily: "ChakraPetch",
+            color: isDark
+                ? AppColors().textColor_dark
+                : AppColors().textColor_light,
+            fontSize: smallText),
+        displayLarge: TextStyle(
+            fontFamily: "ChakraPetch",
+            color: isDark
+                ? AppColors().textColor_dark
+                : AppColors().textColor_light,
+            fontSize: largeText),
+        displayMedium: TextStyle(
+            fontFamily: "ChakraPetch",
+            color: isDark
+                ? AppColors().textColor_dark
+                : AppColors().textColor_light,
+            fontSize: mediumText),
+        displaySmall: TextStyle(
+            fontFamily: "ChakraPetch",
+            color: isDark
+                ? AppColors().textColor_dark
+                : AppColors().textColor_light,
+            fontSize: smallText),
+      ),
+      textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+              foregroundColor: isDark
+                  ? AppColors().textColor_dark
+                  : AppColors().textColor_light,
+              textStyle: TextStyle(
+                  fontFamily: "ChakraPetch",
+                  letterSpacing: 2,
+                  color: isDark
+                      ? AppColors().textColor_dark
+                      : AppColors().textColor_light))),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+            backgroundColor: isDark
+                ? AppColors().secondaryColor_dark
+                : AppColors().secondaryColor_light,
+            foregroundColor: isDark
+                ? AppColors().textColor_dark
+                : AppColors().textColor_light,
+            textStyle: TextStyle(
+                fontFamily: "ChakraPetch",
+                fontWeight: FontWeight.bold,
+                letterSpacing: 2),
+            // foregroundColor: isDark ? AppColors().textColor_dark :AppColors().textColor_light,
+            iconColor: isDark
+                ? AppColors().textColor_dark
+                : AppColors().textColor_light),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        hintStyle: TextStyle(fontFamily: "ChakraPetch", color: Colors.grey),
+        filled: true,
+        fillColor: isDark
+            ? AppColors().backgroundColor_dark
+            : AppColors().backgroundColor_light,
+        labelStyle: TextStyle(
+            fontFamily: "ChakraPetch",
+            color: isDark
+                ? AppColors().textColor_dark
+                : AppColors().textColor_light,
+            fontSize: 16),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          borderSide: BorderSide(
+              color: isDark
+                  ? AppColors().secondaryColor_dark
+                  : AppColors().secondaryColor_light,
+              width: 1.0),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          borderSide: BorderSide(
+              color: isDark
+                  ? AppColors().secondaryColor_dark
+                  : AppColors().secondaryColor_light,
+              width: 1.0),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          borderSide: BorderSide(
+              color: isDark
+                  ? AppColors().secondaryColor_dark
+                  : AppColors().secondaryColor_light,
+              width: 1.0),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12.0),
+          borderSide: BorderSide(
+              color: isDark
+                  ? AppColors().textColor_dark
+                  : AppColors().textColor_light,
+              width: 1.0),
+        ),
+        errorStyle:
+            TextStyle(fontFamily: "ChakraPetch", fontWeight: FontWeight.bold),
+        suffixIconColor:
+            isDark ? AppColors().textColor_dark : AppColors().textColor_light,
+      ),
+      scaffoldBackgroundColor: isDark
+          ? AppColors().backgroundColor_dark
+          : AppColors().backgroundColor_light,
+      appBarTheme: AppBarTheme(
+        titleTextStyle: TextStyle(
+            fontFamily: "ChakraPetch",
+            color: isDark
+                ? AppColors().textColor_dark
+                : AppColors().textColor_light,
+            fontSize: 28),
+        backgroundColor: isDark
+            ? AppColors().backgroundColor_dark
+            : AppColors().backgroundColor_light,
+        foregroundColor:
+            isDark ? AppColors().textColor_dark : AppColors().textColor_light,
+        iconTheme: IconThemeData(
+            color: isDark
+                ? AppColors().primaryColor_dark
+                : AppColors().primaryColor_light),
+      ),
+      listTileTheme: ListTileThemeData(
+          titleTextStyle: TextStyle(
+              fontSize: mediumText,
+              fontFamily: "ChakraPetch",
+              color: isDark
+                  ? AppColors().textColor_dark
+                  : AppColors().textColor_light),
+          subtitleTextStyle: TextStyle(
+            fontStyle: FontStyle.italic,
+              fontFamily: "ChakraPetch",
+              color: isDark
+                  ? AppColors().textColor_dark
+                  : AppColors().textColor_light),
+          iconColor: isDark
+              ? AppColors().primaryColor_dark
+              : AppColors().primaryColor_light,
+          visualDensity: VisualDensity.comfortable),
+      iconTheme: IconThemeData(
+        color: isDark
+            ? AppColors().primaryColor_dark
+            : AppColors().primaryColor_light,
+      ),
+      dialogBackgroundColor: isDark
+          ? AppColors().backgroundColor_dark
+          : AppColors().backgroundColor_light,
+      dialogTheme: DialogTheme(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            // adjust the border radius as needed
+            side: BorderSide(
+                color: isDark
+                    ? AppColors().textColor_dark
+                    : AppColors().textColor_light)),
+        titleTextStyle: TextStyle(
+            fontFamily: "ChakraPetch",
+            fontWeight: FontWeight.bold,
+            fontSize: largeText,
+            color: isDark
+                ? AppColors().textColor_dark
+                : AppColors().textColor_light),
+        contentTextStyle: TextStyle(
+            fontFamily: "ChakraPetch",
+            fontWeight: FontWeight.bold,
+            fontSize: mediumText,
+            color: isDark
+                ? AppColors().textColor_dark
+                : AppColors().textColor_light),
+        alignment: Alignment.center,
+      ),
+    );
+  }
+
+  ThemeMode getThemeMode() {
+     switch(System().THEME) {
+       case "DARK": return ThemeMode.dark;
+       case "LIGHT": return ThemeMode.light;
+       case "SYSTEM": return ThemeMode.system;
+     }
+     return ThemeMode.light;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Ncrypt'.toUpperCase(),
+      theme: themeData(false),
+      darkTheme: themeData(true),
+      themeMode: getThemeMode(),
       home: LoadPage(),
     );
   }
@@ -191,20 +373,37 @@ class _LoadPageState extends State<LoadPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        ElevatedButton(
+                        ElevatedButton.icon(
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          child: Text("No"),
+                          icon: Icon(Icons.close),
+                          label: Text("No"),
                         ),
                         SizedBox(
                           width: 20,
                         ),
-                        ElevatedButton(
+                        ElevatedButton.icon(
                           onPressed: () {
                             exit(0);
                           },
-                          child: Text("Yes"),
+                          icon: Icon(Icons.check),
+                          label: Text("Yes"),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                Theme.of(context).scaffoldBackgroundColor,
+                            // Background color
+                            foregroundColor:
+                                Theme.of(context).textTheme.bodyMedium?.color,
+                            // Text color
+                            side: BorderSide(
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .color!, // Border color
+                              width: 2, // Border width
+                            ),
+                          ),
                         )
                       ],
                     )

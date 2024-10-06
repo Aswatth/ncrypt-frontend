@@ -148,7 +148,7 @@ class _SessionDataState extends State<SessionData> {
         Text(
           "Time left in session:\t",
           style: TextStyle(
-              fontWeight: FontWeight.bold, color: AppColors().textColor),
+              fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.bodyMedium?.color),
         ),
         SizedBox(
           width: 40,
