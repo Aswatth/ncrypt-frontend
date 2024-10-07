@@ -11,6 +11,9 @@ import 'package:Ncrypt/general_pages/session_data.dart';
 import 'package:Ncrypt/general_pages/settings.dart';
 import 'package:Ncrypt/login_data_pages/login_data_page.dart';
 
+import '../models/system_data.dart';
+import '../utils/theme_provider.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -62,6 +65,20 @@ class _HomePageState extends State<HomePage> {
         } else {
           CustomToast.error(context, value);
         }
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    final ThemeProvider? themeProvider = ThemeProvider.of(context);
+    SystemDataClient().getSystemData().then((value) {
+      if(value != null && value is SystemData) {
+        setState(() {
+          themeProvider!.setThemeMode(value.theme);
+        });
       }
     });
   }
