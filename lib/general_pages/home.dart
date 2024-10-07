@@ -12,7 +12,6 @@ import 'package:Ncrypt/general_pages/settings.dart';
 import 'package:Ncrypt/login_data_pages/login_data_page.dart';
 
 import '../models/system_data.dart';
-import '../utils/theme_provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -70,175 +69,189 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    final ThemeProvider? themeProvider = ThemeProvider.of(context);
-    SystemDataClient().getSystemData().then((value) {
-      if(value != null && value is SystemData) {
-        setState(() {
-          themeProvider!.setThemeMode(value.theme);
-        });
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            flex: 1,
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Theme.of(context).primaryColor,
-                      offset: Offset(0, -2),
-                      blurRadius: 5.0,
-                      spreadRadius: 1.0,
-                    )
-                  ]),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Text("Ncrypt".toUpperCase(),
-                          style: Theme.of(context).textTheme.headlineLarge),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return PasswordGenerator();
-                                });
-                          },
-                          child: Row(
+        body: FutureBuilder<dynamic>(
+      future: SystemDataClient().getSystemData(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          if (snapshot.data is SystemData) {
+            return Column(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Theme.of(context).primaryColor,
+                            offset: Offset(0, -2),
+                            blurRadius: 5.0,
+                            spreadRadius: 1.0,
+                          )
+                        ]),
+                    child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Text("Ncrypt".toUpperCase(),
+                                style:
+                                    Theme.of(context).textTheme.headlineLarge),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Icon(
-                                Icons.password,
-                                color: Theme.of(context).textTheme.bodyMedium?.color,
+                              TextButton(
+                                onPressed: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return PasswordGenerator();
+                                      });
+                                },
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.password,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.color,
+                                    ),
+                                    SizedBox(
+                                      width: 2,
+                                    ),
+                                    Text(
+                                      "Password generator".toUpperCase(),
+                                    ),
+                                  ],
+                                ),
                               ),
                               SizedBox(
-                                width: 2,
+                                width: 10,
                               ),
-                              Text(
-                                "Password generator".toUpperCase(),
+                              TextButton(
+                                onPressed: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return ImportPage();
+                                      });
+                                },
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.upload,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.color,
+                                    ),
+                                    Text(
+                                      "Import".toUpperCase(),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return ImportPage();
-                                });
-                          },
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.upload,
-                                color: Theme.of(context).textTheme.bodyMedium?.color,
+                              SizedBox(
+                                width: 10,
                               ),
-                              Text(
-                                "Import".toUpperCase(),
+                              TextButton(
+                                onPressed: () {
+                                  exportData();
+                                },
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.download,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.color,
+                                    ),
+                                    Text(
+                                      "Export".toUpperCase(),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            exportData();
-                          },
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.download,
-                                color: Theme.of(context).textTheme.bodyMedium?.color,
+                              SizedBox(
+                                width: 10,
                               ),
-                              Text(
-                                "Export".toUpperCase(),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        ElevatedButton.icon(
-                          onPressed: () {
-                            //Auto backup
-                            if (SystemDataClient()
-                                .SYSTEM_DATA!
-                                .autoBackupSetting
-                                .isEnabled) {
-                              SystemDataClient().backup().then((value) {
-                                if (value is String && value.isNotEmpty) {
-                                  if (context.mounted) {
-                                    CustomToast.error(context, value);
+                              ElevatedButton.icon(
+                                onPressed: () {
+                                  //Auto backup
+                                  if (SystemDataClient()
+                                      .SYSTEM_DATA!
+                                      .autoBackupSetting
+                                      .isEnabled) {
+                                    SystemDataClient().backup().then((value) {
+                                      if (value is String && value.isNotEmpty) {
+                                        if (context.mounted) {
+                                          CustomToast.error(context, value);
+                                        }
+                                      } else {
+                                        logout();
+                                      }
+                                    });
+                                  } else {
+                                    logout();
                                   }
-                                } else {
-                                  logout();
-                                }
-                              });
-                            } else {
-                              logout();
-                            }
-                          },
-                          icon: Icon(Icons.logout),
-                          label: Text(
-                            "Logout".toUpperCase(),
-                          ),
-                        )
-                      ],
-                    )
-                  ],
+                                },
+                                icon: Icon(Icons.logout),
+                                label: Text(
+                                  "Logout".toUpperCase(),
+                                ),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 8,
-            child: HomeContent(),
-          ),
-          Expanded(
-            flex: 1,
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Theme.of(context).primaryColor,
-                      offset: Offset(0, 2),
-                      blurRadius: 5.0,
-                      spreadRadius: 1.0,
-                    )
-                  ]),
-              child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
-                  child: SessionData()),
-            ),
-          )
-        ],
-      ),
-    );
+                Expanded(
+                  flex: 8,
+                  child: HomeContent(),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Theme.of(context).primaryColor,
+                            offset: Offset(0, 2),
+                            blurRadius: 5.0,
+                            spreadRadius: 1.0,
+                          )
+                        ]),
+                    child: Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 20.0, vertical: 8),
+                        child: SessionData()),
+                  ),
+                )
+              ],
+            );
+          } else {
+            return Center(
+              child: Text("Error occured while fetching system data"),
+            );
+          }
+        } else {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
+    ));
   }
 }
 
@@ -250,8 +263,6 @@ class HomeContent extends StatefulWidget {
 }
 
 class _HomeContentState extends State<HomeContent> {
-  bool isHovering = false;
-
   List<Widget> mouseExitWidget() {
     return [
       Icon(Icons.person_2_outlined),
