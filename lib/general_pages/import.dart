@@ -1,3 +1,4 @@
+import 'package:Ncrypt/models/session_timer.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:Ncrypt/clients/system_data_client.dart';
@@ -44,6 +45,7 @@ class _ImportPageState extends State<ImportPage> {
       if (context.mounted) {
         if (response != null && response is String && response.isEmpty) {
           CustomToast.success(context, "Import successful");
+          SessionTimer().reset();
           Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (contex) => SignInPage()),
             (route) => false,
