@@ -142,7 +142,7 @@ class _ThemeDropDownState extends State<ThemeDropDown> {
           selectedTheme = theme;
 
           final themeProvider = ThemeProvider.of(context);
-          themeProvider?.setThemeMode(selectedTheme);
+          themeProvider?.updateThemeMode();
         });
       }
     });

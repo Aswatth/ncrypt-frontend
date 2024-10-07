@@ -3,12 +3,12 @@ import 'package:Ncrypt/utils/colors.dart';
 
 class ThemeProvider extends InheritedWidget {
   final ThemeMode themeMode;
-  final void Function(String theme) setThemeMode;
+  final void Function() updateThemeMode;
 
   const ThemeProvider({
     super.key,
     required this.themeMode,
-    required this.setThemeMode,
+    required this.updateThemeMode,
     required super.child,
   });
 
@@ -305,6 +305,6 @@ class ThemeProvider extends InheritedWidget {
 
   @override
   bool updateShouldNotify(ThemeProvider oldWidget) {
-    return true;
+    return themeMode != oldWidget.themeMode;
   }
 }
