@@ -115,15 +115,17 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                                             SystemDataClient()
                                                                 .getGeneratedPassword()
                                                                 .then((value) {
-                                                              if (value != null) {
+                                                              if (value !=
+                                                                  null) {
                                                                 _passwordController
-                                                                    .text = value;
+                                                                        .text =
+                                                                    value;
                                                               }
                                                             });
                                                           });
                                                         },
-                                                        icon:
-                                                            Icon(Icons.password),
+                                                        icon: Icon(
+                                                            Icons.password),
                                                       ),
                                                     ),
                                                     IconButton(
@@ -143,7 +145,8 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                                 ),
                                               )),
                                           validator: (value) {
-                                            if (value == null || value.isEmpty) {
+                                            if (value == null ||
+                                                value.isEmpty) {
                                               return "New password cannot be empty";
                                             }
                                           },
@@ -160,8 +163,34 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                               _existingAccountList[index]
                                                       .password =
                                                   _passwordController.text;
-                                              if (key.currentState!.validate()) {
-                                                saveUpdates();
+                                              if (key.currentState!
+                                                  .validate()) {
+                                                widget.dataToEdit
+                                                        .accounts[index] =
+                                                    _existingAccountList[index];
+                                                LoginDataClient()
+                                                    .updateLoginData(
+                                                  widget.dataToEdit.name,
+                                                  widget.dataToEdit,
+                                                )
+                                                    .then((value) {
+                                                  if (value != null &&
+                                                      value is String &&
+                                                      value.isNotEmpty) {
+                                                    if (context.mounted) {
+                                                      CustomToast.error(
+                                                          context, value);
+                                                    }
+                                                  } else {
+                                                    if (context.mounted) {
+                                                      CustomToast.success(
+                                                          context,
+                                                          "Password updated");
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    }
+                                                  }
+                                                });
                                               }
                                             });
                                           },
@@ -229,9 +258,9 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor:
-                            Theme.of(context).scaffoldBackgroundColor,
+                                Theme.of(context).scaffoldBackgroundColor,
                             foregroundColor:
-                            Theme.of(context).textTheme.bodyMedium?.color,
+                                Theme.of(context).textTheme.bodyMedium?.color,
                             side: BorderSide(
                               color: Theme.of(context)
                                   .textTheme
@@ -303,8 +332,14 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                     child: TextFormField(
                       controller: _nameController,
                       maxLength: 16,
-                      buildCounter: (context, {required currentLength, required isFocused, required maxLength}) {
-                        return Text("${currentLength}/${maxLength}", style: Theme.of(context).textTheme.bodyMedium,);
+                      buildCounter: (context,
+                          {required currentLength,
+                          required isFocused,
+                          required maxLength}) {
+                        return Text(
+                          "${currentLength}/${maxLength}",
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        );
                       },
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -318,9 +353,7 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                             text: TextSpan(children: [
                           TextSpan(
                             text: "Name ",
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium,
+                            style: Theme.of(context).textTheme.bodyMedium,
                           ),
                           TextSpan(
                               text: "*",
@@ -434,11 +467,19 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                               decoration: InputDecoration(
                                                   prefixIcon: Icon(
                                                     Icons.person,
-                                                    color: Theme.of(context).textTheme.bodyMedium!.color,
+                                                    color: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyMedium!
+                                                        .color,
                                                   ),
-                                                  disabledBorder: OutlineInputBorder(
-                                                    borderSide: BorderSide(color: Colors.grey), // Border when disabled
-                                                    borderRadius: BorderRadius.circular(8.0),
+                                                  disabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Colors.grey),
+                                                    // Border when disabled
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8.0),
                                                   ),
                                                   label: Text("Username")),
                                             ),
@@ -518,8 +559,16 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                                   enableInteractiveSelection:
                                                       false,
                                                   maxLength: 25,
-                                                  buildCounter: (context, {required currentLength, required isFocused, required maxLength}) {
-                                                    return Text("${currentLength}/${maxLength}", style: Theme.of(context).textTheme.bodyMedium,);
+                                                  buildCounter: (context,
+                                                      {required currentLength,
+                                                      required isFocused,
+                                                      required maxLength}) {
+                                                    return Text(
+                                                      "${currentLength}/${maxLength}",
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyMedium,
+                                                    );
                                                   },
                                                   controller:
                                                       _usernameControllerList[
@@ -569,8 +618,16 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                                   enableInteractiveSelection:
                                                       false,
                                                   maxLength: 25,
-                                                  buildCounter: (context, {required currentLength, required isFocused, required maxLength}) {
-                                                    return Text("${currentLength}/${maxLength}", style: Theme.of(context).textTheme.bodyMedium,);
+                                                  buildCounter: (context,
+                                                      {required currentLength,
+                                                      required isFocused,
+                                                      required maxLength}) {
+                                                    return Text(
+                                                      "${currentLength}/${maxLength}",
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyMedium,
+                                                    );
                                                   },
                                                   controller:
                                                       _passwordControllerList[
