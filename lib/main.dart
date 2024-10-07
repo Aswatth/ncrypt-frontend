@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:Ncrypt/clients/login_data_client.dart';
+import 'package:Ncrypt/clients/notes_client.dart';
 import 'package:flutter/material.dart';
 import 'package:Ncrypt/general_pages/setup.dart';
 import 'package:Ncrypt/models/session_timer.dart';
@@ -16,7 +18,10 @@ void main(List<String> args) async {
   System().IsNewUser = bool.parse(args[1]);
   System().THEME = args[2];
 
+  SystemDataClient();
   MasterPasswordClient();
+  LoginDataClient();
+  NotesClient();
   SessionTimer();
 
   runApp(const MyApp());
