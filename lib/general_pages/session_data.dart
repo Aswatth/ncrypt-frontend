@@ -21,106 +21,94 @@ class _SessionDataState extends State<SessionData> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    SystemDataClient().getSystemData().then((value) {
-      if (value != null && value is SystemData) {
-        setState(() {
-          SessionTimer().tickCallback = () {
-            setState(() {
-              if (SessionTimer().getCurrentTimeInSeconds() == 60) {
-                showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (context) {
-                    return SimpleDialog(
-                      title: Text("Warning"),
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20.0, vertical: 12),
-                          child: Text(
-                              "Session will expire in 1 minute.\nDo you want to extend it?"),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                SystemDataClient().backup().then((value) {
-                                  if (value != null &&
-                                      (value is String && value.isNotEmpty)) {
-                                    if (context.mounted) {
-                                      CustomToast.error(context, value);
-                                    }
-                                  }
+    SessionTimer().tickCallback = () {
+      setState(() {
+        if (SessionTimer().getCurrentTimeInSeconds() == 60) {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) {
+              return SimpleDialog(
+                title: Text("Warning"),
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20.0, vertical: 12),
+                    child: Text(
+                        "Session will expire in 1 minute.\nDo you want to extend it?"),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          SystemDataClient().backup().then((value) {
+                            if (value != null &&
+                                (value is String && value.isNotEmpty)) {
+                              if (context.mounted) {
+                                CustomToast.error(context, value);
+                              }
+                            }
+                          });
+                          Navigator.of(context).pop();
+                        },
+                        child: Text("No"),
+                      ),
+                      ElevatedButton(
+                          onPressed: () {
+                            SystemDataClient().extendSession().then((value) {
+                              if (value == null) {
+                                setState(() {
+                                  SessionTimer().reset();
+                                  SessionTimer().start();
+                                  Navigator.of(context).pop();
+                                  CustomToast.info(
+                                      context, "Session extended");
                                 });
-                                Navigator.of(context).pop();
-                              },
-                              child: Text("No"),
-                            ),
-                            ElevatedButton(
-                                onPressed: () {
-                                  SystemDataClient()
-                                      .extendSession()
-                                      .then((value) {
-                                    if (value == null) {
-                                      setState(() {
-                                        SessionTimer().reset();
-                                        SessionTimer().start();
-                                        Navigator.of(context).pop();
-                                        CustomToast.info(
-                                            context, "Session extended");
-                                      });
-                                    } else {
-                                      if (context.mounted) {
-                                        CustomToast.error(context, value);
-                                      }
-                                    }
-                                  });
-                                },
-                                child: Text("Yes"),
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        Theme.of(context).colorScheme.primary,
-                                    iconColor:
-                                        Theme.of(context).colorScheme.surface,
-                                    foregroundColor:
-                                        Theme.of(context).colorScheme.surface))
-                          ],
-                        )
-                      ],
-                    );
-                  },
-                );
-              }
-            });
-          };
+                              } else {
+                                if (context.mounted) {
+                                  CustomToast.error(context, value);
+                                }
+                              }
+                            });
+                          },
+                          child: Text("Yes"),
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                              Theme.of(context).colorScheme.primary,
+                              iconColor:
+                              Theme.of(context).colorScheme.surface,
+                              foregroundColor:
+                              Theme.of(context).colorScheme.surface))
+                    ],
+                  )
+                ],
+              );
+            },
+          );
+        }
+      });
+    };
 
-          SessionTimer().timerEndCallback = () {
-            CustomToast.info(context, "Session expired!\nPlease login again");
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => SignInPage()),
-              (route) => false, // Remove all previous routes
-            );
-          };
+    SessionTimer().timerEndCallback = () {
+      CustomToast.info(context, "Session expired!\nPlease login again");
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => SignInPage()),
+            (route) => false,
+      );
+    };
 
-          SessionTimer()
-              .setSessionTimeInMinutes(value.sessionDurationInMinutes);
+    SessionTimer().setSessionTimeInMinutes(
+        SystemDataClient().SYSTEM_DATA!.sessionDurationInMinutes);
 
-          if (value.lastLoginDateTime.isNotEmpty) {
-            lastLogin = DateTime.parse(value.lastLoginDateTime).toLocal();
-          }
+    if (SystemDataClient().SYSTEM_DATA!.lastLoginDateTime.isNotEmpty) {
+      lastLogin =
+          DateTime.parse(SystemDataClient().SYSTEM_DATA!.lastLoginDateTime)
+              .toLocal();
+    }
 
-          SessionTimer().start();
-        });
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
+    SessionTimer().start();
   }
 
   @override
@@ -145,7 +133,8 @@ class _SessionDataState extends State<SessionData> {
         Text(
           "Time left in session:\t",
           style: TextStyle(
-              fontWeight: FontWeight.bold, color: Theme.of(context).textTheme.bodyMedium?.color),
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).textTheme.bodyMedium?.color),
         ),
         SizedBox(
           width: 40,
