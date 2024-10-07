@@ -3,7 +3,6 @@ import 'package:Ncrypt/clients/system_data_client.dart';
 import 'package:Ncrypt/utils/DateTimeFormatter.dart';
 import 'package:Ncrypt/utils/custom_toast.dart';
 import 'package:Ncrypt/general_pages/signin_page.dart';
-import 'package:Ncrypt/models/system_data.dart';
 
 import '../models/session_timer.dart';
 
