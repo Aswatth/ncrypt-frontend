@@ -123,7 +123,7 @@ class _NotePageState extends State<NotePage> {
                   ElevatedButton.icon(
                     onPressed: () {
                       NotesClient()
-                          .deleteNote(toDelete.createdDateTime, toDelete)
+                          .deleteNote(toDelete.createdDateTime)
                           .then((value) {
                         if (context.mounted) {
                           if (value == null) {
