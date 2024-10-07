@@ -1,5 +1,6 @@
 import 'package:Ncrypt/models/session_timer.dart';
 import 'package:Ncrypt/models/system_data.dart';
+import 'package:Ncrypt/utils/system.dart';
 import 'package:Ncrypt/utils/theme_provider.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -48,14 +49,12 @@ class _ImportPageState extends State<ImportPage> {
         if (response != null && response is String && response.isEmpty) {
           CustomToast.success(context, "Import successful");
           SessionTimer().reset();
-          SystemDataClient().getSystemData().then((value) {
-            if(value != null && value is SystemData) {
-             final ThemeProvider? themeProvider = ThemeProvider.of(context);
-             themeProvider?.setThemeMode(value.theme);
-            }
-          });
+
+          final ThemeProvider? themeProvider = ThemeProvider.of(context);
+          themeProvider?.updateThemeMode();
+
           Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (contex) => SignInPage()),
+            MaterialPageRoute(builder: (context) => SignInPage()),
             (route) => false,
           );
         } else {
