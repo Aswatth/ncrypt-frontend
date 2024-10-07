@@ -38,19 +38,21 @@ class _MyAppState extends State<MyApp> {
 
   ThemeMode _currentThemeMode = ThemeMode.system;
 
-  void setThemeMode(String theme) {
-    setState(() {
-      switch (theme) {
-        case "DARK":
-          _currentThemeMode = ThemeMode.dark;
-          break;
-        case "LIGHT":
-          _currentThemeMode = ThemeMode.light;
-          break;
-        case "SYSTEM":
-          _currentThemeMode = ThemeMode.system;
-          break;
-      }
+  void updateThemeMode() {
+    SystemDataClient().getTheme().then((theme) {
+      setState(() {
+        switch (theme) {
+          case "DARK":
+            _currentThemeMode = ThemeMode.dark;
+            break;
+          case "LIGHT":
+            _currentThemeMode = ThemeMode.light;
+            break;
+          case "SYSTEM":
+            _currentThemeMode = ThemeMode.system;
+            break;
+        }
+      });
     });
   }
 
@@ -58,13 +60,13 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    setThemeMode(System().THEME);
+    updateThemeMode();
   }
 
   @override
   Widget build(BuildContext context) {
     return ThemeProvider(
-      setThemeMode: setThemeMode,
+      updateThemeMode: updateThemeMode,
       themeMode: _currentThemeMode,
       child: MaterialApp(
         title: 'Ncrypt'.toUpperCase(),

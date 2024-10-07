@@ -254,4 +254,12 @@ class SystemDataClient {
       return json;
     }
   }
+
+  Future<String> getTheme() async {
+    var url = Uri.http("localhost:${System().PORT}", "/system/theme");
+
+    var response = await http.get(url);
+
+    return convert.jsonDecode(response.body);
+  }
 }
