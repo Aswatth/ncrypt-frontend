@@ -29,9 +29,11 @@ class DateTimeFormatter {
 
     bool isAM = true;
     int h = dateTime.hour;
-    if (h >= 12) {
+    if (h > 12) {
       isAM = false;
       h = h - 12;
+    } else if(h == 12) {
+      isAM = false;
     }
 
     String hour = h.toString().padLeft(2, '0');
