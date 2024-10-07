@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:Ncrypt/clients/login_data_client.dart';
 import 'package:Ncrypt/general_pages/validate_master_password.dart';
 import 'package:Ncrypt/models/login_account.dart';
+import 'package:Ncrypt/models/login_account.dart';
 import 'package:Ncrypt/utils/custom_toast.dart';
 import 'package:Ncrypt/login_data_pages/add_login_data.dart';
 import 'package:Ncrypt/login_data_pages/edit_login_data.dart';
@@ -137,7 +138,8 @@ class _LoginDataPageState extends State<LoginDataPage> {
 
       if (_searchController.text.isNotEmpty) {
         _filteredDataList = _filteredDataList
-            .where((m) => m.name.toLowerCase().startsWith(_searchController.text))
+            .where(
+                (m) => m.name.toLowerCase().startsWith(_searchController.text))
             .toList();
       }
 
@@ -576,15 +578,18 @@ class _LoginAccountDataState extends State<LoginAccountData> {
                                                       setState(() {
                                                         passwordList[index] =
                                                             value;
+                                                        Future.delayed(
+                                                            Duration(
+                                                                seconds: 5),
+                                                            () {
+                                                          setState(() {
+                                                            passwordList[
+                                                                    index] =
+                                                                hiddenPasswordString;
+                                                          });
+                                                        });
                                                       });
                                                     }
-                                                  });
-                                                  Future.delayed(
-                                                      Duration(seconds: 5), () {
-                                                    setState(() {
-                                                      passwordList[index] =
-                                                          hiddenPasswordString;
-                                                    });
                                                   });
                                                 }
                                               });
@@ -594,6 +599,14 @@ class _LoginAccountDataState extends State<LoginAccountData> {
                                                 if (value.isNotEmpty) {
                                                   setState(() {
                                                     passwordList[index] = value;
+                                                    Future.delayed(
+                                                        Duration(seconds: 5),
+                                                        () {
+                                                      setState(() {
+                                                        passwordList[index] =
+                                                            hiddenPasswordString;
+                                                      });
+                                                    });
                                                   });
                                                 }
                                               });
