@@ -1,3 +1,4 @@
+import 'package:Ncrypt/clients/system_data_client.dart';
 import 'package:Ncrypt/models/note.dart';
 import 'package:Ncrypt/utils/system.dart';
 import 'dart:convert' as convert;
@@ -16,7 +17,7 @@ class NotesClient {
     var url = Uri.http("localhost:${System().PORT}", "/note");
 
     var response = await http.get(url,
-        // headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"}
+        headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"}
     );
 
     if (response.statusCode == 200) {
@@ -38,7 +39,7 @@ class NotesClient {
     var url = Uri.http("localhost:${System().PORT}", "/note/${createdDateTime}");
 
     var response = await http.get(url,
-      // headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"}
+      headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"}
     );
 
     if (response.statusCode == 200) {
@@ -55,8 +56,8 @@ class NotesClient {
     String requestBody = convert.jsonEncode(note.toJson());
 
     var response = await http.post(url,
-        body: requestBody
-      // headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"}
+        body: requestBody,
+      headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"}
     );
 
     if (response.statusCode == 200) {
@@ -73,8 +74,8 @@ class NotesClient {
     String requestBody = convert.jsonEncode(updatedNote.toJson());
 
     var response = await http.put(url,
-      body: requestBody
-      // headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"}
+      body: requestBody,
+      headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"}
     );
 
     if (response.statusCode == 200) {
@@ -85,11 +86,11 @@ class NotesClient {
     }
   }
 
-  Future<dynamic> deleteNote(String createdDateTime, Note updatedNote) async {
+  Future<dynamic> deleteNote(String createdDateTime) async {
     var url = Uri.http("localhost:${System().PORT}", "/note/${createdDateTime}");
 
     var response = await http.delete(url,
-      // headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"}
+      headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"}
     );
 
     if (response.statusCode == 200) {
