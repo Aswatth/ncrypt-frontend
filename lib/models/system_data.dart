@@ -1,10 +1,12 @@
 import 'package:Ncrypt/models/auto_backup_setting.dart';
+import 'package:Ncrypt/models/password_generator_preference.dart';
 
 class SystemData {
   late int loginCount;
   late String lastLoginDateTime;
   late bool isLoggedIn;
   late String currentLoginDateTime;
+  late PasswordGeneratorPreference passwordGeneratorPreference;
   late AutoBackupSetting autoBackupSetting;
   late int sessionDurationInMinutes;
   late String theme;
@@ -14,6 +16,7 @@ class SystemData {
       required this.lastLoginDateTime,
       required this.isLoggedIn,
       required this.currentLoginDateTime,
+      required this.passwordGeneratorPreference,
       required this.autoBackupSetting,
       required this.sessionDurationInMinutes,
       required this.theme});
@@ -26,6 +29,8 @@ class SystemData {
         currentLoginDateTime: json['current_login_date_time'],
         autoBackupSetting:
             AutoBackupSetting.fromJson(json['auto_backup_setting']),
+        passwordGeneratorPreference: PasswordGeneratorPreference.fromJson(
+            json['password_generator_preference']),
         sessionDurationInMinutes: json['session_duration_in_minutes'],
         theme: json['theme']);
   }
