@@ -15,11 +15,6 @@ class _SignInPageState extends State<SignInPage> {
   final _passwordController = TextEditingController();
   bool _visibility = false;
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   void login() {
     SystemDataClient().signin(_passwordController.text).then((value) {
       if (context.mounted) {
