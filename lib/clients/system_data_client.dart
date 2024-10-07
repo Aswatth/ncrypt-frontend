@@ -156,6 +156,7 @@ class SystemDataClient {
         headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
 
     if (response.statusCode == 200) {
+      _instance.SYSTEM_DATA!.autoBackupSetting = autoBackupSetting;
       return "";
     } else {
       var json = convert.jsonDecode(response.body) as String;
@@ -191,6 +192,7 @@ class SystemDataClient {
         headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
 
     if (response.statusCode == 200) {
+      _instance.SYSTEM_DATA!.passwordGeneratorPreference = passwordGeneratorPreference;
       return "";
     } else {
       var json = convert.jsonDecode(response.body) as String;
@@ -210,6 +212,7 @@ class SystemDataClient {
         headers: {"Authorization": "Bearer ${SystemDataClient().jwtToken}"});
 
     if (response.statusCode == 200) {
+      _instance.SYSTEM_DATA!.sessionDurationInMinutes = sessionTimeoutInMinutes;
       _instance.jwtToken = convert.jsonDecode(response.body) as String;
       return null;
     } else {
