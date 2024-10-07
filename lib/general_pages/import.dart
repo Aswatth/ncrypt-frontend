@@ -48,7 +48,10 @@ class _ImportPageState extends State<ImportPage> {
       if (context.mounted) {
         if (response != null && response is String && response.isEmpty) {
           CustomToast.success(context, "Import successful");
-          SessionTimer().reset();
+
+          if (!System().IsNewUser) {
+            SessionTimer().reset();
+          }
 
           final ThemeProvider? themeProvider = ThemeProvider.of(context);
           themeProvider?.updateThemeMode();
