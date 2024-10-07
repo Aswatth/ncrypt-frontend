@@ -66,7 +66,9 @@ class _NotePageState extends State<NotePage> {
         });
       } else {
         if (context.mounted) {
-          CustomToast.error(context, value);
+          if (value != null && value is String && value.isNotEmpty) {
+            CustomToast.error(context, value);
+          }
         }
       }
     });
