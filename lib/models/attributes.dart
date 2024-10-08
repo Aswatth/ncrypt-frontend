@@ -6,12 +6,12 @@ class Attributes {
 
   factory Attributes.fromJson(Map<String, dynamic> json) {
     return Attributes(
-        isFavourite: json['isFavourite'],
-        requireMasterPassword: json['requireMasterPassword']);
+        isFavourite: json['is_favourite'],
+        requireMasterPassword: json['require_master_password']);
   }
 
   Map<String, dynamic> toJson() => {
-        'isFavourite': isFavourite,
-        'requireMasterPassword': requireMasterPassword,
+        'is_favourite': isFavourite,
+        'require_master_password': requireMasterPassword,
       };
 }
