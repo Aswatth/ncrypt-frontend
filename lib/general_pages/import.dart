@@ -79,6 +79,10 @@ class _ImportPageState extends State<ImportPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Text(
+                  "Caution:\tImporting will over-write existing data.",
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
                 ListTile(
                   leading: Icon(Icons.folder),
                   title: _selectedLocation.isEmpty
