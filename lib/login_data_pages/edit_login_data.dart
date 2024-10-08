@@ -7,6 +7,7 @@ import 'package:Ncrypt/models/attributes.dart';
 import 'package:Ncrypt/models/login_account.dart';
 
 import '../models/login.dart';
+import '../utils/NoPasteFormatter.dart';
 
 class EditLoginDataPage extends StatefulWidget {
   LoginData dataToEdit;
@@ -92,6 +93,9 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                       Form(
                                         key: key,
                                         child: TextFormField(
+                                          inputFormatters: [
+                                            NoPasteFormatter()
+                                          ],
                                           enableInteractiveSelection: false,
                                           obscureText: !passwordVisibility,
                                           controller: _passwordController,
@@ -330,6 +334,10 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                 children: [
                   Expanded(
                     child: TextFormField(
+                      enableInteractiveSelection: false,
+                      inputFormatters: [
+                        NoPasteFormatter()
+                      ],
                       controller: _nameController,
                       maxLength: 16,
                       buildCounter: (context,
@@ -458,6 +466,9 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                           child: Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: TextFormField(
+                                              inputFormatters: [
+                                                NoPasteFormatter()
+                                              ],
                                               enableInteractiveSelection: false,
                                               initialValue:
                                                   _existingAccountList[index]
@@ -562,6 +573,9 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                             children: [
                                               Expanded(
                                                 child: TextFormField(
+                                                  inputFormatters: [
+                                                    NoPasteFormatter()
+                                                  ],
                                                   enableInteractiveSelection:
                                                       false,
                                                   maxLength: 25,
@@ -621,6 +635,9 @@ class _EditLoginDataPageState extends State<EditLoginDataPage> {
                                               ),
                                               Expanded(
                                                 child: TextFormField(
+                                                  inputFormatters: [
+                                                    NoPasteFormatter()
+                                                  ],
                                                   enableInteractiveSelection:
                                                       false,
                                                   maxLength: 25,

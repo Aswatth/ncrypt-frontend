@@ -1,3 +1,4 @@
+import 'package:Ncrypt/utils/NoPasteFormatter.dart';
 import 'package:flutter/material.dart';
 import 'package:Ncrypt/clients/system_data_client.dart';
 import 'package:Ncrypt/utils/custom_toast.dart';
@@ -69,6 +70,9 @@ class _SignInPageState extends State<SignInPage> {
                     enableInteractiveSelection: false,
                     controller: _passwordController,
                     obscureText: !_visibility,
+                    inputFormatters: [
+                      NoPasteFormatter()
+                    ],
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return "Password cannot be empty";

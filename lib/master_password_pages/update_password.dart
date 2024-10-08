@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:Ncrypt/clients/master_password_client.dart';
 import 'package:Ncrypt/utils/custom_toast.dart';
 
+import '../utils/NoPasteFormatter.dart';
+
 class UpdateMasterPasswordPage extends StatefulWidget {
   const UpdateMasterPasswordPage({super.key});
 
@@ -84,6 +86,9 @@ class _UpdateMasterPasswordPageState extends State<UpdateMasterPasswordPage> {
                 SizedBox(
                   width: 300,
                   child: TextFormField(
+                    inputFormatters: [
+                      NoPasteFormatter()
+                    ],
                     enableInteractiveSelection: false,
                     controller: _oldMasterPasswordController,
                     obscureText: !_oldMasterPasswordVisibility,
@@ -124,6 +129,9 @@ class _UpdateMasterPasswordPageState extends State<UpdateMasterPasswordPage> {
                 SizedBox(
                   width: 300,
                   child: TextFormField(
+                    inputFormatters: [
+                      NoPasteFormatter()
+                    ],
                     enableInteractiveSelection: false,
                     controller: _newMasterPasswordController,
                     obscureText: !_newMasterPasswordVisibility,
@@ -212,6 +220,9 @@ class _UpdateMasterPasswordPageState extends State<UpdateMasterPasswordPage> {
                 SizedBox(
                   width: 300,
                   child: TextFormField(
+                    inputFormatters: [
+                      NoPasteFormatter()
+                    ],
                     enableInteractiveSelection: false,
                     controller: _confirmMasterPasswordController,
                     obscureText: !_confirmMasterPasswordVisibility,

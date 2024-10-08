@@ -1,3 +1,4 @@
+import 'package:Ncrypt/utils/NoPasteFormatter.dart';
 import 'package:flutter/material.dart';
 import 'package:Ncrypt/clients/login_data_client.dart';
 import 'package:Ncrypt/clients/system_data_client.dart';
@@ -73,6 +74,10 @@ class _AddLoginDataState extends State<AddLoginData> {
                 children: [
                   Expanded(
                     child: TextFormField(
+                      inputFormatters: [
+                        NoPasteFormatter()
+                      ],
+                      enableInteractiveSelection: false,
                       controller: _nameController,
                       maxLength: 16,
                       buildCounter: (context, {required currentLength, required isFocused, required maxLength}) {
@@ -176,6 +181,9 @@ class _AddLoginDataState extends State<AddLoginData> {
                           children: [
                             Expanded(
                               child: TextFormField(
+                                inputFormatters: [
+                                  NoPasteFormatter()
+                                ],
                                 enableInteractiveSelection: false,
                                 controller: _usernameControllerList[index],
                                 maxLength: 25,
@@ -214,6 +222,9 @@ class _AddLoginDataState extends State<AddLoginData> {
                             ),
                             Expanded(
                               child: TextFormField(
+                                inputFormatters: [
+                                  NoPasteFormatter()
+                                ],
                                 enableInteractiveSelection: false,
                                 maxLength: 25,
                                 buildCounter: (context, {required currentLength, required isFocused, required maxLength}) {

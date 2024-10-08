@@ -8,6 +8,8 @@ import 'package:Ncrypt/clients/system_data_client.dart';
 import 'package:Ncrypt/utils/custom_toast.dart';
 import 'package:Ncrypt/general_pages/signin_page.dart';
 
+import '../utils/NoPasteFormatter.dart';
+
 class ImportPage extends StatefulWidget {
   const ImportPage({super.key});
 
@@ -99,6 +101,9 @@ class _ImportPageState extends State<ImportPage> {
                   height: 20,
                 ),
                 TextFormField(
+                  inputFormatters: [
+                    NoPasteFormatter()
+                  ],
                   enableInteractiveSelection: false,
                   controller: _passwordController,
                   obscureText: !_visibility,

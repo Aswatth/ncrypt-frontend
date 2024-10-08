@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../clients/master_password_client.dart';
+import '../utils/NoPasteFormatter.dart';
 import '../utils/custom_toast.dart';
 
 class ValidateMasterPassword extends StatefulWidget {
@@ -24,6 +25,9 @@ class _ValidateMasterPasswordState extends State<ValidateMasterPassword> {
         contentPadding: EdgeInsets.all(12),
         children: [
           TextFormField(
+            inputFormatters: [
+              NoPasteFormatter()
+            ],
             enableInteractiveSelection: false,
             obscureText: !visibility,
             onChanged: (value) {

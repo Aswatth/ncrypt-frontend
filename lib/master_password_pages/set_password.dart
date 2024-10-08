@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:Ncrypt/general_pages/import.dart';
 
+import '../utils/NoPasteFormatter.dart';
+
 class SetPassword extends StatefulWidget {
   final Function(String)? callback;
 
@@ -75,6 +77,9 @@ class _SetPasswordState extends State<SetPassword> {
                   height: 20,
                 ),
                 TextFormField(
+                  inputFormatters: [
+                    NoPasteFormatter()
+                  ],
                   enableInteractiveSelection: false,
                   controller: _passwordController,
                   obscureText: !_passwordVisibility,
@@ -158,6 +163,9 @@ class _SetPasswordState extends State<SetPassword> {
                   height: 20,
                 ),
                 TextFormField(
+                  inputFormatters: [
+                    NoPasteFormatter()
+                  ],
                   enableInteractiveSelection: false,
                   controller: _confirmPasswordController,
                   obscureText: !_confirmPasswordVisibility,
