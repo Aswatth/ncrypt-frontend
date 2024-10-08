@@ -283,7 +283,7 @@ class _NotePageState extends State<NotePage> {
                                   ? Icon(
                                       Icons.lock,
                                     )
-                                  : Icon(Icons.lock_outline)
+                                  : Container()
                             ],
                           ),
                         ),
