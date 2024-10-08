@@ -100,7 +100,6 @@ class _UpdateMasterPasswordPageState extends State<UpdateMasterPasswordPage> {
                       enabled: true,
                       hintStyle:
                       TextStyle(color: Colors.white24, fontSize: 14),
-                      hintText: "Old master password",
                       suffixIcon: IconButton(
                         icon: _oldMasterPasswordVisibility
                             ? Icon(
@@ -137,13 +136,12 @@ class _UpdateMasterPasswordPageState extends State<UpdateMasterPasswordPage> {
                     obscureText: !_newMasterPasswordVisibility,
                     decoration: InputDecoration(
                       label: Text(
-                        "Enter master password",
+                        "Enter new master password",
                       ),
                       hintMaxLines: 16,
                       enabled: true,
                       hintStyle:
                       TextStyle(color: Colors.white24, fontSize: 14),
-                      hintText: "master password",
                       suffixIcon: IconButton(
                         icon: _newMasterPasswordVisibility
                             ? Icon(
@@ -228,12 +226,11 @@ class _UpdateMasterPasswordPageState extends State<UpdateMasterPasswordPage> {
                     obscureText: !_confirmMasterPasswordVisibility,
                     decoration: InputDecoration(
                       label: Text(
-                        "Confirm master password",
+                        "Confirm new master password",
                       ),
                       hintMaxLines: 16,
                       hintStyle:
                       TextStyle(color: Colors.white24, fontSize: 14),
-                      hintText: "master password",
                       suffixIcon: IconButton(
                         icon: _confirmMasterPasswordVisibility
                             ? Icon(

@@ -36,8 +36,7 @@ class _ValidateMasterPasswordState extends State<ValidateMasterPassword> {
               });
             },
             decoration: InputDecoration(
-                hintText: "Enter master password",
-                label: Text("Master Password"),
+                label: Text("Master password"),
                 suffixIcon: IconButton(
                     onPressed: () {
                       setState(() {
