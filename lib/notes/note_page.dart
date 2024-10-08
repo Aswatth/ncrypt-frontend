@@ -422,7 +422,7 @@ class _NotePageState extends State<NotePage> {
                                         },
                                         icon: Icon(
                                           Icons.close,
-                                          color: Colors.black,
+                                          color: Theme.of(context).textTheme.bodyMedium?.color,
                                         ),
                                       )
                                     ],
