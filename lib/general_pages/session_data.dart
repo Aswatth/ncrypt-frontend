@@ -115,19 +115,17 @@ class _SessionDataState extends State<SessionData> {
     return Row(
       children: [
         Expanded(
-          child: Row(
+          child: lastLogin != null ? Row(
             children: [
-              Text(
+               Text(
                 "Last login:\t",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Text(lastLogin != null
-                  ? DateTimeFormatter().formatDateTime(lastLogin!)
-                  : ""),
+              Text(DateTimeFormatter().formatDateTime(lastLogin!)),
             ],
-          ),
+          ) : Container(),
         ),
         Text(
           "Time left in session:\t",
