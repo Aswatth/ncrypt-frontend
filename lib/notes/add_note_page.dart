@@ -81,31 +81,39 @@ class _AddNotePageState extends State<AddNotePage> {
                       ),
                     ),
                   ),
-                  IconButton(
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                        Theme.of(context).scaffoldBackgroundColor),
                     onPressed: () {
                       setState(() {
                         _isFavourite = !_isFavourite;
                       });
                     },
-                    icon: _isFavourite
-                        ? Icon(Icons.favorite)
-                        : Icon(Icons.favorite_border),
+                    icon: Icon(_isFavourite
+                        ? Icons.favorite
+                        : Icons.favorite_border),
+                    label: Text("Favourite"),
                   ),
-                  Text("Favourite"),
                   Tooltip(
                     verticalOffset: 10,
-                    message: "Requires master password to view account password, edit and delete data.",
-                    child: IconButton(
+                    message:
+                    "Requires master password to view account password, edit and delete data.",
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                          Theme.of(context).scaffoldBackgroundColor),
                       onPressed: () {
                         setState(() {
                           _isLocked = !_isLocked;
                         });
                       },
-                      icon:
-                          _isLocked ? Icon(Icons.lock) : Icon(Icons.lock_outline),
+                      icon: _isLocked
+                          ? Icon(Icons.lock)
+                          : Icon(Icons.lock_outline),
+                      label: Text("Locked"),
                     ),
-                  ),
-                  Text("Locked"),
+                  )
                 ],
               ),
               SizedBox(
