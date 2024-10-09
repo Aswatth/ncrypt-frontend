@@ -30,6 +30,7 @@ Features:
 App icon: <a href="https://www.flaticon.com/free-icons/security" title="security icons">Security icons created by
 
 Freepik - Flaticon</a>
+
 Thanks to:
 - <a href="https://github.com/skandansn"> Skandan </a>
 - <a href="https://github.com/shishirkallapur"> Shishir </a>
