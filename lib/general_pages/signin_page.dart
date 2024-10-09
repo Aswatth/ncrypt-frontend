@@ -15,11 +15,13 @@ class _SignInPageState extends State<SignInPage> {
   final _formKey = GlobalKey<FormState>();
   final _passwordController = TextEditingController();
   bool _visibility = false;
+  FocusNode _focusNode = new FocusNode();
 
   void login() {
     SystemDataClient().signin(_passwordController.text).then((value) {
       if (context.mounted) {
         if (value.isNotEmpty) {
+          FocusScope.of(context).requestFocus(_focusNode);
           CustomToast.error(context, value);
         } else {
           Navigator.of(context)
@@ -67,8 +69,15 @@ class _SignInPageState extends State<SignInPage> {
                 Form(
                   key: _formKey,
                   child: TextFormField(
+                    autofocus: true,
+                    focusNode: _focusNode,
                     enableInteractiveSelection: false,
                     controller: _passwordController,
+                    onFieldSubmitted: (_){
+                      if(_formKey.currentState!.validate()) {
+                        login();
+                      }
+                    },
                     obscureText: !_visibility,
                     inputFormatters: [
                       NoPasteFormatter()
